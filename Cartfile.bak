@@ -1,0 +1,23 @@
+carthage build --platform Mac
+carthage update --platform Mac
+
+github "SwiftyJSON/SwiftyJSON"
+
+github "ReactiveX/RxSwift.git"
+
+github "CocoaLumberjack/CocoaLumberjack"
+
+github "realm/realm-cocoa"
+
+github "pepibumur/sugarrecord"
+
+github "antitypical/Result"
+
+github "emaloney/CleanroomLogger"
+
+
+
+
+Cartfile.private
+github "Quick/Quick"
+github "Quick/Nimble"

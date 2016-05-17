@@ -1,0 +1,789 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		DFB84E3C1CEAA72E0088090D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB84E3B1CEAA72E0088090D /* AppDelegate.swift */; };
+		DFB84E401CEAA72E0088090D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DFB84E3F1CEAA72E0088090D /* Assets.xcassets */; };
+		DFB84E4E1CEAA72E0088090D /* MailXTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB84E4D1CEAA72E0088090D /* MailXTests.swift */; };
+		DFB84E591CEAA72E0088090D /* MailXUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB84E581CEAA72E0088090D /* MailXUITests.swift */; };
+		DFB84E781CEAA8580088090D /* Codes.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB84E6B1CEAA8580088090D /* Codes.swift */; };
+		DFB84E791CEAA8580088090D /* HXAppProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = DFB84E6D1CEAA8580088090D /* HXAppProperties.m */; };
+		DFB84E7C1CEAA8580088090D /* MxErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB84E701CEAA8580088090D /* MxErrors.swift */; };
+		DFB84E7D1CEAA8580088090D /* MxLogs.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB84E711CEAA8580088090D /* MxLogs.swift */; };
+		DFB84E7E1CEAA8580088090D /* MxResults.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB84E721CEAA8580088090D /* MxResults.swift */; };
+		DFB84E7F1CEAA8580088090D /* MxUserPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB84E731CEAA8580088090D /* MxUserPreferences.swift */; };
+		DFB84E941CEAAA6E0088090D /* GTMOAuth2Window.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFB84E8D1CEAAA6E0088090D /* GTMOAuth2Window.xib */; };
+		DFB84E951CEAAA6E0088090D /* HxMainWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB84E8E1CEAAA6E0088090D /* HxMainWindowController.swift */; };
+		DFB84E971CEAAA6E0088090D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DFB84E901CEAAA6E0088090D /* Main.storyboard */; };
+		DFB84E9A1CEAAA6E0088090D /* MxLabelsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB84E931CEAAA6E0088090D /* MxLabelsViewController.swift */; };
+		DFB84EA61CEAAB8A0088090D /* Properties.plist in Resources */ = {isa = PBXBuildFile; fileRef = DFB84EA51CEAAB8A0088090D /* Properties.plist */; };
+		DFB84EAC1CEAABFF0088090D /* MxAppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB84EA81CEAABFF0088090D /* MxAppModel.swift */; };
+		DFB84EAD1CEAABFF0088090D /* MxDbObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB84EA91CEAABFF0088090D /* MxDbObjects.swift */; };
+		DFB84EAE1CEAABFF0088090D /* MxLabelsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB84EAA1CEAABFF0088090D /* MxLabelsViewModel.swift */; };
+		DFB84EAF1CEAABFF0088090D /* MxModelObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB84EAB1CEAABFF0088090D /* MxModelObjects.swift */; };
+		DFB84EB21CEAAD5B0088090D /* GTLGmail_Sources.m in Sources */ = {isa = PBXBuildFile; fileRef = DFB84EB11CEAAD5B0088090D /* GTLGmail_Sources.m */; };
+		DFB84EBA1CEAB03F0088090D /* MxDataServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB84EB61CEAB03F0088090D /* MxDataServices.swift */; };
+		DFB84EBB1CEAB03F0088090D /* MxStoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB84EB71CEAB03F0088090D /* MxStoreManager.swift */; };
+		DFB84EBC1CEAB03F0088090D /* MxSyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB84EB81CEAB03F0088090D /* MxSyncService.swift */; };
+		DFB84EC51CEAB0DD0088090D /* MxConnectionTicket.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB84EBE1CEAB0DD0088090D /* MxConnectionTicket.swift */; };
+		DFB84EC61CEAB0DD0088090D /* MxFetchLabelsTicket.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB84EBF1CEAB0DD0088090D /* MxFetchLabelsTicket.swift */; };
+		DFB84EC71CEAB0DD0088090D /* MxFetchMessagesInLabelTicket.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB84EC01CEAB0DD0088090D /* MxFetchMessagesInLabelTicket.swift */; };
+		DFB84EC81CEAB0DD0088090D /* MxGMailProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB84EC11CEAB0DD0088090D /* MxGMailProxy.swift */; };
+		DFB84EC91CEAB0DD0088090D /* MxMailboxProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB84EC21CEAB0DD0088090D /* MxMailboxProxy.swift */; };
+		DFB84ECA1CEAB0DD0088090D /* MxProxyTicket.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB84EC31CEAB0DD0088090D /* MxProxyTicket.swift */; };
+		DFB84ECB1CEAB0DD0088090D /* MxRemoteStoreHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB84EC41CEAB0DD0088090D /* MxRemoteStoreHelper.swift */; };
+		DFB84ECF1CEAB2310088090D /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFB84ECE1CEAB2310088090D /* Cocoa.framework */; };
+		DFB84ED11CEAB23C0088090D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFB84ED01CEAB23C0088090D /* Security.framework */; };
+		DFB84ED31CEAB24D0088090D /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFB84ED21CEAB24D0088090D /* SystemConfiguration.framework */; };
+		DFB84EE01CEAB2900088090D /* Pipes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFB84EDF1CEAB2900088090D /* Pipes.framework */; };
+		DFB84EE11CEAB2900088090D /* Pipes.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DFB84EDF1CEAB2900088090D /* Pipes.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		DFB84EE31CEAB2970088090D /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFB84EE21CEAB2970088090D /* Result.framework */; };
+		DFB84EE41CEAB2970088090D /* Result.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DFB84EE21CEAB2970088090D /* Result.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		DFB84EE61CEAB2A40088090D /* SugarRecordRealm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFB84EE51CEAB2A40088090D /* SugarRecordRealm.framework */; };
+		DFB84EE71CEAB2A40088090D /* SugarRecordRealm.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DFB84EE51CEAB2A40088090D /* SugarRecordRealm.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		DFB84EE91CEAB5E50088090D /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = DFB84EE81CEAB5E50088090D /* .gitignore */; };
+		DFB84EEF1CEAB62B0088090D /* CleanroomASL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFB84EEA1CEAB62B0088090D /* CleanroomASL.framework */; };
+		DFB84EF01CEAB62B0088090D /* CleanroomLogger.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFB84EEB1CEAB62B0088090D /* CleanroomLogger.framework */; };
+		DFB84EF11CEAB62B0088090D /* GTL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFB84EEC1CEAB62B0088090D /* GTL.framework */; };
+		DFB84EF21CEAB62B0088090D /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFB84EED1CEAB62B0088090D /* Realm.framework */; };
+		DFB84EF31CEAB62B0088090D /* RealmSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFB84EEE1CEAB62B0088090D /* RealmSwift.framework */; };
+		DFB84EF41CEAB6520088090D /* CleanroomASL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFB84EEA1CEAB62B0088090D /* CleanroomASL.framework */; };
+		DFB84EF51CEAB6520088090D /* CleanroomASL.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DFB84EEA1CEAB62B0088090D /* CleanroomASL.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		DFB84EF61CEAB6520088090D /* CleanroomLogger.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFB84EEB1CEAB62B0088090D /* CleanroomLogger.framework */; };
+		DFB84EF71CEAB6520088090D /* CleanroomLogger.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DFB84EEB1CEAB62B0088090D /* CleanroomLogger.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		DFB84EF81CEAB6520088090D /* GTL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFB84EEC1CEAB62B0088090D /* GTL.framework */; };
+		DFB84EF91CEAB6520088090D /* GTL.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DFB84EEC1CEAB62B0088090D /* GTL.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		DFB84EFA1CEAB6520088090D /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFB84EED1CEAB62B0088090D /* Realm.framework */; };
+		DFB84EFB1CEAB6520088090D /* Realm.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DFB84EED1CEAB62B0088090D /* Realm.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		DFB84EFC1CEAB6520088090D /* RealmSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFB84EEE1CEAB62B0088090D /* RealmSwift.framework */; };
+		DFB84EFD1CEAB6520088090D /* RealmSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DFB84EEE1CEAB62B0088090D /* RealmSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		DFB84E4A1CEAA72E0088090D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DFB84E301CEAA72D0088090D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DFB84E371CEAA72D0088090D;
+			remoteInfo = MailX;
+		};
+		DFB84E551CEAA72E0088090D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DFB84E301CEAA72D0088090D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DFB84E371CEAA72D0088090D;
+			remoteInfo = MailX;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		DFB84ED81CEAB2720088090D /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				DFB84EE71CEAB2A40088090D /* SugarRecordRealm.framework in Embed Frameworks */,
+				DFB84EE41CEAB2970088090D /* Result.framework in Embed Frameworks */,
+				DFB84EF71CEAB6520088090D /* CleanroomLogger.framework in Embed Frameworks */,
+				DFB84EF51CEAB6520088090D /* CleanroomASL.framework in Embed Frameworks */,
+				DFB84EFB1CEAB6520088090D /* Realm.framework in Embed Frameworks */,
+				DFB84EF91CEAB6520088090D /* GTL.framework in Embed Frameworks */,
+				DFB84EFD1CEAB6520088090D /* RealmSwift.framework in Embed Frameworks */,
+				DFB84EE11CEAB2900088090D /* Pipes.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		DFB84E381CEAA72E0088090D /* MailX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MailX.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		DFB84E3B1CEAA72E0088090D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		DFB84E3F1CEAA72E0088090D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		DFB84E441CEAA72E0088090D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DFB84E491CEAA72E0088090D /* MailXTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MailXTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		DFB84E4D1CEAA72E0088090D /* MailXTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailXTests.swift; sourceTree = "<group>"; };
+		DFB84E4F1CEAA72E0088090D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DFB84E541CEAA72E0088090D /* MailXUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MailXUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		DFB84E581CEAA72E0088090D /* MailXUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailXUITests.swift; sourceTree = "<group>"; };
+		DFB84E5A1CEAA72E0088090D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DFB84E661CEAA8560088090D /* MailX-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MailX-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
+		DFB84E6B1CEAA8580088090D /* Codes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Codes.swift; sourceTree = "<group>"; };
+		DFB84E6C1CEAA8580088090D /* HXAppProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXAppProperties.h; sourceTree = "<group>"; };
+		DFB84E6D1CEAA8580088090D /* HXAppProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXAppProperties.m; sourceTree = "<group>"; };
+		DFB84E701CEAA8580088090D /* MxErrors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MxErrors.swift; sourceTree = "<group>"; };
+		DFB84E711CEAA8580088090D /* MxLogs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MxLogs.swift; sourceTree = "<group>"; };
+		DFB84E721CEAA8580088090D /* MxResults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MxResults.swift; sourceTree = "<group>"; };
+		DFB84E731CEAA8580088090D /* MxUserPreferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MxUserPreferences.swift; sourceTree = "<group>"; };
+		DFB84E8D1CEAAA6E0088090D /* GTMOAuth2Window.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = GTMOAuth2Window.xib; path = View/GTMOAuth2Window.xib; sourceTree = "<group>"; };
+		DFB84E8E1CEAAA6E0088090D /* HxMainWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HxMainWindowController.swift; path = View/HxMainWindowController.swift; sourceTree = "<group>"; };
+		DFB84E901CEAAA6E0088090D /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = View/Main.storyboard; sourceTree = "<group>"; };
+		DFB84E931CEAAA6E0088090D /* MxLabelsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxLabelsViewController.swift; path = View/MxLabelsViewController.swift; sourceTree = "<group>"; };
+		DFB84E9C1CEAAA9A0088090D /* Cartfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cartfile; sourceTree = "<group>"; };
+		DFB84E9D1CEAAA9A0088090D /* Cartfile.bak */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cartfile.bak; sourceTree = "<group>"; };
+		DFB84E9E1CEAAA9A0088090D /* Cartfile.private */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cartfile.private; sourceTree = "<group>"; };
+		DFB84E9F1CEAAA9A0088090D /* Cartfile.resolved */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cartfile.resolved; sourceTree = "<group>"; };
+		DFB84EA51CEAAB8A0088090D /* Properties.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Properties.plist; sourceTree = "<group>"; };
+		DFB84EA81CEAABFF0088090D /* MxAppModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxAppModel.swift; path = Model/MxAppModel.swift; sourceTree = "<group>"; };
+		DFB84EA91CEAABFF0088090D /* MxDbObjects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxDbObjects.swift; path = Model/MxDbObjects.swift; sourceTree = "<group>"; };
+		DFB84EAA1CEAABFF0088090D /* MxLabelsViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxLabelsViewModel.swift; path = Model/MxLabelsViewModel.swift; sourceTree = "<group>"; };
+		DFB84EAB1CEAABFF0088090D /* MxModelObjects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxModelObjects.swift; path = Model/MxModelObjects.swift; sourceTree = "<group>"; };
+		DFB84EB11CEAAD5B0088090D /* GTLGmail_Sources.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GTLGmail_Sources.m; path = "../../google-api-objectivec-client/Source/Services/Gmail/Generated/GTLGmail_Sources.m"; sourceTree = "<group>"; };
+		DFB84EB31CEAAD950088090D /* GTLGmail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GTLGmail.h; path = "../../google-api-objectivec-client/Source/Services/Gmail/Generated/GTLGmail.h"; sourceTree = "<group>"; };
+		DFB84EB61CEAB03F0088090D /* MxDataServices.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxDataServices.swift; path = Services/MxDataServices.swift; sourceTree = "<group>"; };
+		DFB84EB71CEAB03F0088090D /* MxStoreManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxStoreManager.swift; path = Services/MxStoreManager.swift; sourceTree = "<group>"; };
+		DFB84EB81CEAB03F0088090D /* MxSyncService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxSyncService.swift; path = Services/MxSyncService.swift; sourceTree = "<group>"; };
+		DFB84EBE1CEAB0DD0088090D /* MxConnectionTicket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxConnectionTicket.swift; path = Services/Remote/MxConnectionTicket.swift; sourceTree = "<group>"; };
+		DFB84EBF1CEAB0DD0088090D /* MxFetchLabelsTicket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxFetchLabelsTicket.swift; path = Services/Remote/MxFetchLabelsTicket.swift; sourceTree = "<group>"; };
+		DFB84EC01CEAB0DD0088090D /* MxFetchMessagesInLabelTicket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxFetchMessagesInLabelTicket.swift; path = Services/Remote/MxFetchMessagesInLabelTicket.swift; sourceTree = "<group>"; };
+		DFB84EC11CEAB0DD0088090D /* MxGMailProxy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxGMailProxy.swift; path = Services/Remote/MxGMailProxy.swift; sourceTree = "<group>"; };
+		DFB84EC21CEAB0DD0088090D /* MxMailboxProxy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxMailboxProxy.swift; path = Services/Remote/MxMailboxProxy.swift; sourceTree = "<group>"; };
+		DFB84EC31CEAB0DD0088090D /* MxProxyTicket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxProxyTicket.swift; path = Services/Remote/MxProxyTicket.swift; sourceTree = "<group>"; };
+		DFB84EC41CEAB0DD0088090D /* MxRemoteStoreHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxRemoteStoreHelper.swift; path = Services/Remote/MxRemoteStoreHelper.swift; sourceTree = "<group>"; };
+		DFB84ECE1CEAB2310088090D /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		DFB84ED01CEAB23C0088090D /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		DFB84ED21CEAB24D0088090D /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		DFB84EDF1CEAB2900088090D /* Pipes.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = Pipes.framework; path = "/Users/tancrede/Library/Developer/Xcode/DerivedData/MailX_Workspace-dqpnrzwebkieuedpldecyxktadnv/Build/Products/Debug/Pipes.framework"; sourceTree = "<absolute>"; };
+		DFB84EE21CEAB2970088090D /* Result.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = Result.framework; path = "/Users/tancrede/Library/Developer/Xcode/DerivedData/MailX_Workspace-dqpnrzwebkieuedpldecyxktadnv/Build/Products/Debug/Result.framework"; sourceTree = "<absolute>"; };
+		DFB84EE51CEAB2A40088090D /* SugarRecordRealm.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = SugarRecordRealm.framework; path = "/Users/tancrede/Library/Developer/Xcode/DerivedData/MailX_Workspace-dqpnrzwebkieuedpldecyxktadnv/Build/Products/Debug/SugarRecordRealm.framework"; sourceTree = "<absolute>"; };
+		DFB84EE81CEAB5E50088090D /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		DFB84EEA1CEAB62B0088090D /* CleanroomASL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CleanroomASL.framework; path = Frameworks/CleanroomASL.framework; sourceTree = SOURCE_ROOT; };
+		DFB84EEB1CEAB62B0088090D /* CleanroomLogger.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CleanroomLogger.framework; path = Frameworks/CleanroomLogger.framework; sourceTree = SOURCE_ROOT; };
+		DFB84EEC1CEAB62B0088090D /* GTL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GTL.framework; path = Frameworks/GTL.framework; sourceTree = SOURCE_ROOT; };
+		DFB84EED1CEAB62B0088090D /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Realm.framework; path = Frameworks/Realm.framework; sourceTree = SOURCE_ROOT; };
+		DFB84EEE1CEAB62B0088090D /* RealmSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RealmSwift.framework; path = Frameworks/RealmSwift.framework; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		DFB84E351CEAA72D0088090D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DFB84EEF1CEAB62B0088090D /* CleanroomASL.framework in Frameworks */,
+				DFB84EF11CEAB62B0088090D /* GTL.framework in Frameworks */,
+				DFB84ED31CEAB24D0088090D /* SystemConfiguration.framework in Frameworks */,
+				DFB84ED11CEAB23C0088090D /* Security.framework in Frameworks */,
+				DFB84EF21CEAB62B0088090D /* Realm.framework in Frameworks */,
+				DFB84EE01CEAB2900088090D /* Pipes.framework in Frameworks */,
+				DFB84EF31CEAB62B0088090D /* RealmSwift.framework in Frameworks */,
+				DFB84EE31CEAB2970088090D /* Result.framework in Frameworks */,
+				DFB84EF81CEAB6520088090D /* GTL.framework in Frameworks */,
+				DFB84EFA1CEAB6520088090D /* Realm.framework in Frameworks */,
+				DFB84EF61CEAB6520088090D /* CleanroomLogger.framework in Frameworks */,
+				DFB84EF01CEAB62B0088090D /* CleanroomLogger.framework in Frameworks */,
+				DFB84EE61CEAB2A40088090D /* SugarRecordRealm.framework in Frameworks */,
+				DFB84EF41CEAB6520088090D /* CleanroomASL.framework in Frameworks */,
+				DFB84EFC1CEAB6520088090D /* RealmSwift.framework in Frameworks */,
+				DFB84ECF1CEAB2310088090D /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DFB84E461CEAA72E0088090D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DFB84E511CEAA72E0088090D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		DFB84E2F1CEAA72D0088090D = {
+			isa = PBXGroup;
+			children = (
+				DFB84EE81CEAB5E50088090D /* .gitignore */,
+				DFB84E9B1CEAAA8B0088090D /* Carthage */,
+				DFB84E3A1CEAA72E0088090D /* MailX */,
+				DFB84E4C1CEAA72E0088090D /* MailXTests */,
+				DFB84E571CEAA72E0088090D /* MailXUITests */,
+				DFB84E801CEAA88A0088090D /* Frameworks */,
+				DFB84E391CEAA72E0088090D /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		DFB84E391CEAA72E0088090D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				DFB84E381CEAA72E0088090D /* MailX.app */,
+				DFB84E491CEAA72E0088090D /* MailXTests.xctest */,
+				DFB84E541CEAA72E0088090D /* MailXUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		DFB84E3A1CEAA72E0088090D /* MailX */ = {
+			isa = PBXGroup;
+			children = (
+				DFB84E8C1CEAAA450088090D /* Views */,
+				DFB84EB41CEAB0020088090D /* Actions */,
+				DFB84EA71CEAABF30088090D /* Model */,
+				DFB84E811CEAA8BD0088090D /* Deps */,
+				DFB84EA41CEAAB4A0088090D /* Helpers */,
+				DFB84E6B1CEAA8580088090D /* Codes.swift */,
+				DFB84E661CEAA8560088090D /* MailX-Bridging-Header.h */,
+				DFB84E3B1CEAA72E0088090D /* AppDelegate.swift */,
+				DFB84E3F1CEAA72E0088090D /* Assets.xcassets */,
+				DFB84E441CEAA72E0088090D /* Info.plist */,
+			);
+			path = MailX;
+			sourceTree = "<group>";
+		};
+		DFB84E4C1CEAA72E0088090D /* MailXTests */ = {
+			isa = PBXGroup;
+			children = (
+				DFB84E4D1CEAA72E0088090D /* MailXTests.swift */,
+				DFB84E4F1CEAA72E0088090D /* Info.plist */,
+			);
+			path = MailXTests;
+			sourceTree = "<group>";
+		};
+		DFB84E571CEAA72E0088090D /* MailXUITests */ = {
+			isa = PBXGroup;
+			children = (
+				DFB84E581CEAA72E0088090D /* MailXUITests.swift */,
+				DFB84E5A1CEAA72E0088090D /* Info.plist */,
+			);
+			path = MailXUITests;
+			sourceTree = "<group>";
+		};
+		DFB84E801CEAA88A0088090D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				DFB84EEA1CEAB62B0088090D /* CleanroomASL.framework */,
+				DFB84EEB1CEAB62B0088090D /* CleanroomLogger.framework */,
+				DFB84EEC1CEAB62B0088090D /* GTL.framework */,
+				DFB84EED1CEAB62B0088090D /* Realm.framework */,
+				DFB84EEE1CEAB62B0088090D /* RealmSwift.framework */,
+				DFB84EE51CEAB2A40088090D /* SugarRecordRealm.framework */,
+				DFB84EE21CEAB2970088090D /* Result.framework */,
+				DFB84EDF1CEAB2900088090D /* Pipes.framework */,
+				DFB84ED21CEAB24D0088090D /* SystemConfiguration.framework */,
+				DFB84ED01CEAB23C0088090D /* Security.framework */,
+				DFB84ECE1CEAB2310088090D /* Cocoa.framework */,
+			);
+			name = Frameworks;
+			path = MailX;
+			sourceTree = "<group>";
+		};
+		DFB84E811CEAA8BD0088090D /* Deps */ = {
+			isa = PBXGroup;
+			children = (
+				DFB84EB01CEAAC450088090D /* GTL */,
+			);
+			name = Deps;
+			sourceTree = "<group>";
+		};
+		DFB84E8C1CEAAA450088090D /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				DFB84E8D1CEAAA6E0088090D /* GTMOAuth2Window.xib */,
+				DFB84E8E1CEAAA6E0088090D /* HxMainWindowController.swift */,
+				DFB84E901CEAAA6E0088090D /* Main.storyboard */,
+				DFB84E931CEAAA6E0088090D /* MxLabelsViewController.swift */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+		DFB84E9B1CEAAA8B0088090D /* Carthage */ = {
+			isa = PBXGroup;
+			children = (
+				DFB84E9C1CEAAA9A0088090D /* Cartfile */,
+				DFB84E9D1CEAAA9A0088090D /* Cartfile.bak */,
+				DFB84E9E1CEAAA9A0088090D /* Cartfile.private */,
+				DFB84E9F1CEAAA9A0088090D /* Cartfile.resolved */,
+			);
+			name = Carthage;
+			sourceTree = "<group>";
+		};
+		DFB84EA41CEAAB4A0088090D /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				DFB84EA51CEAAB8A0088090D /* Properties.plist */,
+				DFB84E6C1CEAA8580088090D /* HXAppProperties.h */,
+				DFB84E6D1CEAA8580088090D /* HXAppProperties.m */,
+				DFB84E701CEAA8580088090D /* MxErrors.swift */,
+				DFB84E711CEAA8580088090D /* MxLogs.swift */,
+				DFB84E721CEAA8580088090D /* MxResults.swift */,
+				DFB84E731CEAA8580088090D /* MxUserPreferences.swift */,
+			);
+			name = Helpers;
+			sourceTree = "<group>";
+		};
+		DFB84EA71CEAABF30088090D /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				DFB84EA81CEAABFF0088090D /* MxAppModel.swift */,
+				DFB84EA91CEAABFF0088090D /* MxDbObjects.swift */,
+				DFB84EAA1CEAABFF0088090D /* MxLabelsViewModel.swift */,
+				DFB84EAB1CEAABFF0088090D /* MxModelObjects.swift */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		DFB84EB01CEAAC450088090D /* GTL */ = {
+			isa = PBXGroup;
+			children = (
+				DFB84EB31CEAAD950088090D /* GTLGmail.h */,
+				DFB84EB11CEAAD5B0088090D /* GTLGmail_Sources.m */,
+			);
+			name = GTL;
+			sourceTree = "<group>";
+		};
+		DFB84EB41CEAB0020088090D /* Actions */ = {
+			isa = PBXGroup;
+			children = (
+				DFB84EBD1CEAB0BC0088090D /* RemoteServices */,
+				DFB84EB61CEAB03F0088090D /* MxDataServices.swift */,
+				DFB84EB71CEAB03F0088090D /* MxStoreManager.swift */,
+				DFB84EB81CEAB03F0088090D /* MxSyncService.swift */,
+			);
+			name = Actions;
+			sourceTree = "<group>";
+		};
+		DFB84EBD1CEAB0BC0088090D /* RemoteServices */ = {
+			isa = PBXGroup;
+			children = (
+				DFB84ECD1CEAB1090088090D /* Tickets */,
+				DFB84ECC1CEAB0EA0088090D /* Proxies */,
+				DFB84EC41CEAB0DD0088090D /* MxRemoteStoreHelper.swift */,
+			);
+			name = RemoteServices;
+			sourceTree = "<group>";
+		};
+		DFB84ECC1CEAB0EA0088090D /* Proxies */ = {
+			isa = PBXGroup;
+			children = (
+				DFB84EC11CEAB0DD0088090D /* MxGMailProxy.swift */,
+				DFB84EC21CEAB0DD0088090D /* MxMailboxProxy.swift */,
+			);
+			name = Proxies;
+			sourceTree = "<group>";
+		};
+		DFB84ECD1CEAB1090088090D /* Tickets */ = {
+			isa = PBXGroup;
+			children = (
+				DFB84EBE1CEAB0DD0088090D /* MxConnectionTicket.swift */,
+				DFB84EBF1CEAB0DD0088090D /* MxFetchLabelsTicket.swift */,
+				DFB84EC01CEAB0DD0088090D /* MxFetchMessagesInLabelTicket.swift */,
+				DFB84EC31CEAB0DD0088090D /* MxProxyTicket.swift */,
+			);
+			name = Tickets;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		DFB84E371CEAA72D0088090D /* MailX */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DFB84E5D1CEAA72E0088090D /* Build configuration list for PBXNativeTarget "MailX" */;
+			buildPhases = (
+				DFB84E341CEAA72D0088090D /* Sources */,
+				DFB84E351CEAA72D0088090D /* Frameworks */,
+				DFB84E361CEAA72D0088090D /* Resources */,
+				DFB84ED81CEAB2720088090D /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MailX;
+			productName = MailX;
+			productReference = DFB84E381CEAA72E0088090D /* MailX.app */;
+			productType = "com.apple.product-type.application";
+		};
+		DFB84E481CEAA72E0088090D /* MailXTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DFB84E601CEAA72E0088090D /* Build configuration list for PBXNativeTarget "MailXTests" */;
+			buildPhases = (
+				DFB84E451CEAA72E0088090D /* Sources */,
+				DFB84E461CEAA72E0088090D /* Frameworks */,
+				DFB84E471CEAA72E0088090D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DFB84E4B1CEAA72E0088090D /* PBXTargetDependency */,
+			);
+			name = MailXTests;
+			productName = MailXTests;
+			productReference = DFB84E491CEAA72E0088090D /* MailXTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		DFB84E531CEAA72E0088090D /* MailXUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DFB84E631CEAA72E0088090D /* Build configuration list for PBXNativeTarget "MailXUITests" */;
+			buildPhases = (
+				DFB84E501CEAA72E0088090D /* Sources */,
+				DFB84E511CEAA72E0088090D /* Frameworks */,
+				DFB84E521CEAA72E0088090D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DFB84E561CEAA72E0088090D /* PBXTargetDependency */,
+			);
+			name = MailXUITests;
+			productName = MailXUITests;
+			productReference = DFB84E541CEAA72E0088090D /* MailXUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		DFB84E301CEAA72D0088090D /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0730;
+				LastUpgradeCheck = 0730;
+				ORGANIZATIONNAME = rxdesign;
+				TargetAttributes = {
+					DFB84E371CEAA72D0088090D = {
+						CreatedOnToolsVersion = 7.3;
+					};
+					DFB84E481CEAA72E0088090D = {
+						CreatedOnToolsVersion = 7.3;
+						TestTargetID = DFB84E371CEAA72D0088090D;
+					};
+					DFB84E531CEAA72E0088090D = {
+						CreatedOnToolsVersion = 7.3;
+						TestTargetID = DFB84E371CEAA72D0088090D;
+					};
+				};
+			};
+			buildConfigurationList = DFB84E331CEAA72D0088090D /* Build configuration list for PBXProject "MailX" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = DFB84E2F1CEAA72D0088090D;
+			productRefGroup = DFB84E391CEAA72E0088090D /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				DFB84E371CEAA72D0088090D /* MailX */,
+				DFB84E481CEAA72E0088090D /* MailXTests */,
+				DFB84E531CEAA72E0088090D /* MailXUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		DFB84E361CEAA72D0088090D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DFB84EE91CEAB5E50088090D /* .gitignore in Resources */,
+				DFB84E401CEAA72E0088090D /* Assets.xcassets in Resources */,
+				DFB84E971CEAAA6E0088090D /* Main.storyboard in Resources */,
+				DFB84E941CEAAA6E0088090D /* GTMOAuth2Window.xib in Resources */,
+				DFB84EA61CEAAB8A0088090D /* Properties.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DFB84E471CEAA72E0088090D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DFB84E521CEAA72E0088090D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		DFB84E341CEAA72D0088090D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DFB84EAC1CEAABFF0088090D /* MxAppModel.swift in Sources */,
+				DFB84E951CEAAA6E0088090D /* HxMainWindowController.swift in Sources */,
+				DFB84EBC1CEAB03F0088090D /* MxSyncService.swift in Sources */,
+				DFB84EAE1CEAABFF0088090D /* MxLabelsViewModel.swift in Sources */,
+				DFB84EBA1CEAB03F0088090D /* MxDataServices.swift in Sources */,
+				DFB84EC81CEAB0DD0088090D /* MxGMailProxy.swift in Sources */,
+				DFB84E7E1CEAA8580088090D /* MxResults.swift in Sources */,
+				DFB84E781CEAA8580088090D /* Codes.swift in Sources */,
+				DFB84EB21CEAAD5B0088090D /* GTLGmail_Sources.m in Sources */,
+				DFB84E791CEAA8580088090D /* HXAppProperties.m in Sources */,
+				DFB84ECB1CEAB0DD0088090D /* MxRemoteStoreHelper.swift in Sources */,
+				DFB84ECA1CEAB0DD0088090D /* MxProxyTicket.swift in Sources */,
+				DFB84EC61CEAB0DD0088090D /* MxFetchLabelsTicket.swift in Sources */,
+				DFB84E9A1CEAAA6E0088090D /* MxLabelsViewController.swift in Sources */,
+				DFB84E7F1CEAA8580088090D /* MxUserPreferences.swift in Sources */,
+				DFB84EAF1CEAABFF0088090D /* MxModelObjects.swift in Sources */,
+				DFB84E3C1CEAA72E0088090D /* AppDelegate.swift in Sources */,
+				DFB84EBB1CEAB03F0088090D /* MxStoreManager.swift in Sources */,
+				DFB84EC91CEAB0DD0088090D /* MxMailboxProxy.swift in Sources */,
+				DFB84EC51CEAB0DD0088090D /* MxConnectionTicket.swift in Sources */,
+				DFB84E7C1CEAA8580088090D /* MxErrors.swift in Sources */,
+				DFB84E7D1CEAA8580088090D /* MxLogs.swift in Sources */,
+				DFB84EAD1CEAABFF0088090D /* MxDbObjects.swift in Sources */,
+				DFB84EC71CEAB0DD0088090D /* MxFetchMessagesInLabelTicket.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DFB84E451CEAA72E0088090D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DFB84E4E1CEAA72E0088090D /* MailXTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DFB84E501CEAA72E0088090D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DFB84E591CEAA72E0088090D /* MailXUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		DFB84E4B1CEAA72E0088090D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DFB84E371CEAA72D0088090D /* MailX */;
+			targetProxy = DFB84E4A1CEAA72E0088090D /* PBXContainerItemProxy */;
+		};
+		DFB84E561CEAA72E0088090D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DFB84E371CEAA72D0088090D /* MailX */;
+			targetProxy = DFB84E551CEAA72E0088090D /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		DFB84E5B1CEAA72E0088090D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		DFB84E5C1CEAA72E0088090D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		DFB84E5E1CEAA72E0088090D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/MailX/Frameworks",
+					"$(PROJECT_DIR)/Frameworks",
+				);
+				INFOPLIST_FILE = MailX/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = io.rxdesign.MailX;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "MailX-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		DFB84E5F1CEAA72E0088090D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/MailX/Frameworks",
+					"$(PROJECT_DIR)/Frameworks",
+				);
+				INFOPLIST_FILE = MailX/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = io.rxdesign.MailX;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "MailX-Bridging-Header.h";
+			};
+			name = Release;
+		};
+		DFB84E611CEAA72E0088090D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = MailXTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = io.rxdesign.MailXTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MailX.app/Contents/MacOS/MailX";
+			};
+			name = Debug;
+		};
+		DFB84E621CEAA72E0088090D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = MailXTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = io.rxdesign.MailXTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MailX.app/Contents/MacOS/MailX";
+			};
+			name = Release;
+		};
+		DFB84E641CEAA72E0088090D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = MailXUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = io.rxdesign.MailXUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = MailX;
+			};
+			name = Debug;
+		};
+		DFB84E651CEAA72E0088090D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = MailXUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = io.rxdesign.MailXUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = MailX;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		DFB84E331CEAA72D0088090D /* Build configuration list for PBXProject "MailX" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DFB84E5B1CEAA72E0088090D /* Debug */,
+				DFB84E5C1CEAA72E0088090D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DFB84E5D1CEAA72E0088090D /* Build configuration list for PBXNativeTarget "MailX" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DFB84E5E1CEAA72E0088090D /* Debug */,
+				DFB84E5F1CEAA72E0088090D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		DFB84E601CEAA72E0088090D /* Build configuration list for PBXNativeTarget "MailXTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DFB84E611CEAA72E0088090D /* Debug */,
+				DFB84E621CEAA72E0088090D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		DFB84E631CEAA72E0088090D /* Build configuration list for PBXNativeTarget "MailXUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DFB84E641CEAA72E0088090D /* Debug */,
+				DFB84E651CEAA72E0088090D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = DFB84E301CEAA72D0088090D /* Project object */;
+}
