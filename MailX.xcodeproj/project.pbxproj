@@ -11,7 +11,6 @@
 		DFB84E401CEAA72E0088090D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DFB84E3F1CEAA72E0088090D /* Assets.xcassets */; };
 		DFB84E4E1CEAA72E0088090D /* MailXTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB84E4D1CEAA72E0088090D /* MailXTests.swift */; };
 		DFB84E591CEAA72E0088090D /* MailXUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB84E581CEAA72E0088090D /* MailXUITests.swift */; };
-		DFB84E781CEAA8580088090D /* Codes.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB84E6B1CEAA8580088090D /* Codes.swift */; };
 		DFB84E791CEAA8580088090D /* HXAppProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = DFB84E6D1CEAA8580088090D /* HXAppProperties.m */; };
 		DFB84E7C1CEAA8580088090D /* MxErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB84E701CEAA8580088090D /* MxErrors.swift */; };
 		DFB84E7D1CEAA8580088090D /* MxLogs.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB84E711CEAA8580088090D /* MxLogs.swift */; };
@@ -22,9 +21,7 @@
 		DFB84E971CEAAA6E0088090D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DFB84E901CEAAA6E0088090D /* Main.storyboard */; };
 		DFB84E9A1CEAAA6E0088090D /* MxLabelsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB84E931CEAAA6E0088090D /* MxLabelsViewController.swift */; };
 		DFB84EA61CEAAB8A0088090D /* Properties.plist in Resources */ = {isa = PBXBuildFile; fileRef = DFB84EA51CEAAB8A0088090D /* Properties.plist */; };
-		DFB84EAC1CEAABFF0088090D /* MxAppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB84EA81CEAABFF0088090D /* MxAppModel.swift */; };
-		DFB84EAD1CEAABFF0088090D /* MxDbObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB84EA91CEAABFF0088090D /* MxDbObjects.swift */; };
-		DFB84EAE1CEAABFF0088090D /* MxLabelsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB84EAA1CEAABFF0088090D /* MxLabelsViewModel.swift */; };
+		DFB84EAD1CEAABFF0088090D /* MxDBObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB84EA91CEAABFF0088090D /* MxDBObjects.swift */; };
 		DFB84EAF1CEAABFF0088090D /* MxModelObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB84EAB1CEAABFF0088090D /* MxModelObjects.swift */; };
 		DFB84EB21CEAAD5B0088090D /* GTLGmail_Sources.m in Sources */ = {isa = PBXBuildFile; fileRef = DFB84EB11CEAAD5B0088090D /* GTLGmail_Sources.m */; };
 		DFB84EBA1CEAB03F0088090D /* MxDataServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB84EB61CEAB03F0088090D /* MxDataServices.swift */; };
@@ -114,7 +111,6 @@
 		DFB84E581CEAA72E0088090D /* MailXUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailXUITests.swift; sourceTree = "<group>"; };
 		DFB84E5A1CEAA72E0088090D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DFB84E661CEAA8560088090D /* MailX-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MailX-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
-		DFB84E6B1CEAA8580088090D /* Codes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Codes.swift; sourceTree = "<group>"; };
 		DFB84E6C1CEAA8580088090D /* HXAppProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXAppProperties.h; sourceTree = "<group>"; };
 		DFB84E6D1CEAA8580088090D /* HXAppProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXAppProperties.m; sourceTree = "<group>"; };
 		DFB84E701CEAA8580088090D /* MxErrors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MxErrors.swift; sourceTree = "<group>"; };
@@ -130,9 +126,7 @@
 		DFB84E9E1CEAAA9A0088090D /* Cartfile.private */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cartfile.private; sourceTree = "<group>"; };
 		DFB84E9F1CEAAA9A0088090D /* Cartfile.resolved */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cartfile.resolved; sourceTree = "<group>"; };
 		DFB84EA51CEAAB8A0088090D /* Properties.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Properties.plist; sourceTree = "<group>"; };
-		DFB84EA81CEAABFF0088090D /* MxAppModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxAppModel.swift; path = Model/MxAppModel.swift; sourceTree = "<group>"; };
-		DFB84EA91CEAABFF0088090D /* MxDbObjects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxDbObjects.swift; path = Model/MxDbObjects.swift; sourceTree = "<group>"; };
-		DFB84EAA1CEAABFF0088090D /* MxLabelsViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxLabelsViewModel.swift; path = Model/MxLabelsViewModel.swift; sourceTree = "<group>"; };
+		DFB84EA91CEAABFF0088090D /* MxDBObjects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxDBObjects.swift; path = Model/MxDBObjects.swift; sourceTree = "<group>"; };
 		DFB84EAB1CEAABFF0088090D /* MxModelObjects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxModelObjects.swift; path = Model/MxModelObjects.swift; sourceTree = "<group>"; };
 		DFB84EB11CEAAD5B0088090D /* GTLGmail_Sources.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GTLGmail_Sources.m; path = "../../google-api-objectivec-client/Source/Services/Gmail/Generated/GTLGmail_Sources.m"; sourceTree = "<group>"; };
 		DFB84EB31CEAAD950088090D /* GTLGmail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GTLGmail.h; path = "../../google-api-objectivec-client/Source/Services/Gmail/Generated/GTLGmail.h"; sourceTree = "<group>"; };
@@ -228,11 +222,10 @@
 			isa = PBXGroup;
 			children = (
 				DFB84E8C1CEAAA450088090D /* Views */,
+				DFB84EFE1CEABA2F0088090D /* State */,
 				DFB84EB41CEAB0020088090D /* Actions */,
-				DFB84EA71CEAABF30088090D /* Model */,
 				DFB84E811CEAA8BD0088090D /* Deps */,
 				DFB84EA41CEAAB4A0088090D /* Helpers */,
-				DFB84E6B1CEAA8580088090D /* Codes.swift */,
 				DFB84E661CEAA8560088090D /* MailX-Bridging-Header.h */,
 				DFB84E3B1CEAA72E0088090D /* AppDelegate.swift */,
 				DFB84E3F1CEAA72E0088090D /* Assets.xcassets */,
@@ -317,7 +310,6 @@
 				DFB84E701CEAA8580088090D /* MxErrors.swift */,
 				DFB84E711CEAA8580088090D /* MxLogs.swift */,
 				DFB84E721CEAA8580088090D /* MxResults.swift */,
-				DFB84E731CEAA8580088090D /* MxUserPreferences.swift */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -325,9 +317,7 @@
 		DFB84EA71CEAABF30088090D /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				DFB84EA81CEAABFF0088090D /* MxAppModel.swift */,
-				DFB84EA91CEAABFF0088090D /* MxDbObjects.swift */,
-				DFB84EAA1CEAABFF0088090D /* MxLabelsViewModel.swift */,
+				DFB84EA91CEAABFF0088090D /* MxDBObjects.swift */,
 				DFB84EAB1CEAABFF0088090D /* MxModelObjects.swift */,
 			);
 			name = Model;
@@ -345,10 +335,7 @@
 		DFB84EB41CEAB0020088090D /* Actions */ = {
 			isa = PBXGroup;
 			children = (
-				DFB84EBD1CEAB0BC0088090D /* RemoteServices */,
-				DFB84EB61CEAB03F0088090D /* MxDataServices.swift */,
-				DFB84EB71CEAB03F0088090D /* MxStoreManager.swift */,
-				DFB84EB81CEAB03F0088090D /* MxSyncService.swift */,
+				DFB84EFF1CEABAE10088090D /* Services */,
 			);
 			name = Actions;
 			sourceTree = "<group>";
@@ -381,6 +368,26 @@
 				DFB84EC31CEAB0DD0088090D /* MxProxyTicket.swift */,
 			);
 			name = Tickets;
+			sourceTree = "<group>";
+		};
+		DFB84EFE1CEABA2F0088090D /* State */ = {
+			isa = PBXGroup;
+			children = (
+				DFB84EA71CEAABF30088090D /* Model */,
+			);
+			name = State;
+			sourceTree = "<group>";
+		};
+		DFB84EFF1CEABAE10088090D /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				DFB84EBD1CEAB0BC0088090D /* RemoteServices */,
+				DFB84EB61CEAB03F0088090D /* MxDataServices.swift */,
+				DFB84EB71CEAB03F0088090D /* MxStoreManager.swift */,
+				DFB84EB81CEAB03F0088090D /* MxSyncService.swift */,
+				DFB84E731CEAA8580088090D /* MxUserPreferences.swift */,
+			);
+			name = Services;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -517,14 +524,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DFB84EAC1CEAABFF0088090D /* MxAppModel.swift in Sources */,
 				DFB84E951CEAAA6E0088090D /* HxMainWindowController.swift in Sources */,
 				DFB84EBC1CEAB03F0088090D /* MxSyncService.swift in Sources */,
-				DFB84EAE1CEAABFF0088090D /* MxLabelsViewModel.swift in Sources */,
 				DFB84EBA1CEAB03F0088090D /* MxDataServices.swift in Sources */,
 				DFB84EC81CEAB0DD0088090D /* MxGMailProxy.swift in Sources */,
 				DFB84E7E1CEAA8580088090D /* MxResults.swift in Sources */,
-				DFB84E781CEAA8580088090D /* Codes.swift in Sources */,
 				DFB84EB21CEAAD5B0088090D /* GTLGmail_Sources.m in Sources */,
 				DFB84E791CEAA8580088090D /* HXAppProperties.m in Sources */,
 				DFB84ECB1CEAB0DD0088090D /* MxRemoteStoreHelper.swift in Sources */,
@@ -539,7 +543,7 @@
 				DFB84EC51CEAB0DD0088090D /* MxConnectionTicket.swift in Sources */,
 				DFB84E7C1CEAA8580088090D /* MxErrors.swift in Sources */,
 				DFB84E7D1CEAA8580088090D /* MxLogs.swift in Sources */,
-				DFB84EAD1CEAABFF0088090D /* MxDbObjects.swift in Sources */,
+				DFB84EAD1CEAABFF0088090D /* MxDBObjects.swift in Sources */,
 				DFB84EC71CEAB0DD0088090D /* MxFetchMessagesInLabelTicket.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
