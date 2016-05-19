@@ -1,0 +1,18 @@
+#carthage build --platform Mac
+#carthage update --platform Mac
+
+#Cartfile
+github "realm/realm-cocoa"
+github "pepibumur/sugarrecord"
+github "antitypical/Result"
+github "emaloney/CleanroomLogger"
+github "ReSwift/ReSwift"
+github "jarsen/pipes"
+
+
+
+
+
+#Cartfile.private
+github "Quick/Quick"
+github "Quick/Nimble"

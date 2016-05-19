@@ -12,7 +12,6 @@ import Foundation
 
 import RealmSwift
 import Result
-import RxSwift
 import Pipes
 import SugarRecordRealm
 
@@ -51,7 +50,7 @@ class MxStoreManager {
     
     // MARK: - Providers
     
-    func insertProvider( provider provider: MxProvider) -> Result<Bool, MxDbError> {
+    func insertProvider( provider provider: MxProviderModel) -> Result<Bool, MxDbError> {
         MxLog.verbose("... Processing. Args: provider=\(provider)")
         
         do {
@@ -75,19 +74,14 @@ class MxStoreManager {
     
     // MARK: - Mailboxes
     
-    func rx_fetchMailboxes() -> RxSwift.Observable<[MxMailbox]> {
-        return db.rx_fetch( Request<MxMailboxDBO>())
-            .map({$0.toModels()})
-    }
-    
-    func fetchMailbox( mailboxId mailboxId: MxMailbox.Id) -> Result<MxMailbox, MxDbError> {
+    func fetchMailbox( mailboxId mailboxId: MxModelId) -> Result<MxMailboxModel, MxDbError> {
         MxLog.verbose("... Processing. Args: mailboxId\(mailboxId)")
         
         return fetchMailboxDBO( mailboxId: mailboxId.value)
             |> (flatMap, {$0.toModel()})
     }
     
-    func fetchMailboxes() -> Result<MxMailboxes, MxDbError> {
+    func fetchMailboxes() -> Result<MxMailboxModelArray, MxDbError> {
         MxLog.verbose("... Processing")
         
         let result = fetchMailboxDBOs()
@@ -112,7 +106,7 @@ class MxStoreManager {
 //        }
     }
     
-    func insertMailbox( mailbox mailbox: MxMailbox) -> Result<Bool, MxDbError> {
+    func insertMailbox( mailbox mailbox: MxMailboxModel) -> Result<Bool, MxDbError> {
         MxLog.verbose("... Processing. Args: mailbox=\(mailbox)")
         
         let providerId = mailbox.providerId.value
@@ -137,7 +131,7 @@ class MxStoreManager {
                         let newLabelDbo: MxLabelDBO = try context.create()
                         newLabelDbo.id = labelId
                         newLabelDbo.name = labelProperty[ k_Label_Name]!
-                        newLabelDbo.ownerType = MxLabel.MxLabelOwnerType.SYSTEM.rawValue
+                        newLabelDbo.ownerType = MxLabelModel.MxLabelOwnerType.SYSTEM.rawValue
                         newLabelDbo.mailbox = newMailboxDbo
 
                     })
@@ -166,19 +160,7 @@ class MxStoreManager {
     
     // MARK: - Labels
     
-    func rx_fetchLabels() -> Observable<MxLabels> {
-        return db.rx_fetch( Request<MxLabelDBO>()).map( MxLabelDBOs.toModels)
-    }
-    
-    func rx_fetchLabels( mailboxId mailboxId: MxMailbox.Id) -> Observable<MxLabels> {
-        
-        let predicate = NSPredicate( format: "mailbox.id == %@", mailboxId.value)
-        let request = Request<MxLabelDBO>().filteredWith( predicate: predicate)
-        
-        return db.rx_fetch( request).map( MxLabelDBOs.toModels)
-    }
-    
-    func fetchLabels( mailboxId mailboxId: MxMailbox.Id) -> Result<MxLabels, MxDbError> {
+    func fetchLabels( mailboxId mailboxId: MxModelId) -> Result<MxLabelModelArray, MxDbError> {
         MxLog.verbose("... Processing. Args: mailboxId=\(mailboxId)")
         
         switch fetchMailboxDBO( mailboxId: mailboxId.value) {
@@ -201,14 +183,14 @@ class MxStoreManager {
         }
     }
     
-    func deleteLabels( mailboxId mailboxId: MxMailbox.Id) -> Result< [MxLabel.Id], MxDbError> {
+    func deleteLabels( mailboxId mailboxId: MxModelId) -> Result< [MxModelId], MxDbError> {
         MxLog.verbose("... Processing. Args: mailboxId=\(mailboxId)")
         
         switch fetchMailboxDBO( mailboxId: mailboxId.value) {
         case let .Success(mailbox):
             
             // one can delete only USER labels
-            let labels = mailbox.labels.filter({ $0.ownerType == MxLabel.MxLabelOwnerType.USER.rawValue})
+            let labels = mailbox.labels.filter({ $0.ownerType == MxLabelModel.MxLabelOwnerType.USER.rawValue})
             
             // delete only labels whose ids are passed in as argument
 //            if (labelIds != nil) {
@@ -223,7 +205,7 @@ class MxStoreManager {
                 }
                 
                 // return array of ids of deleted labels
-                return .Success( labels.map({ MxLabel.Id(value: $0.id)}))
+                return .Success( labels.map({ MxModelId(value: $0.id)}))
             } catch {
                 return .Failure(
                     MxDbError.DbOperationDidFail(
@@ -239,11 +221,7 @@ class MxStoreManager {
     
     // MARK: - Messages
     
-    func rx_fetchMessagess() -> Observable<MxMessages> {
-        return db.rx_fetch( Request<MxMessageDBO>()).map( MxMessagesDBOs.toModels)
-    }
-    
-    func deleteMessages( mailboxId mailboxId: MxMailbox.Id, labelId: MxLabel.Id) -> Result< AnyObject?,MxDbError>{
+    func deleteMessages( mailboxId mailboxId: MxModelId, labelId: MxModelId) -> Result< AnyObject?,MxDbError>{
         MxLog.verbose("... Processing. Args: mailboxId=\(mailboxId), labelId=\(labelId)")
         
         switch fetchMessageDBOs(mailboxId: mailboxId.value, labelId: labelId.value) {

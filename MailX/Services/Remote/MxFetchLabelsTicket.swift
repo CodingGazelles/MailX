@@ -13,7 +13,7 @@ import Foundation
 
 
 
-typealias MxFetchLabelsCompletionHandler = (labels: MxLabels?, error: NSError?) -> Void
+typealias MxFetchLabelsCompletionHandler = (labels: MxLabelModelArray?, error: NSError?) -> Void
 
 class MxFetchLabelsTicket : MxProxyTicket {
     
@@ -38,7 +38,7 @@ class MxFetchLabelsTicket : MxProxyTicket {
         MxLog.verbose("... Done")
     }
     
-    func proxyDidFetchLabels( labels labels: MxLabels?, error: NSError?) {
+    func proxyDidFetchLabels( labels labels: MxLabelModelArray?, error: NSError?) {
         MxLog.verbose("...")
         
         MxLog.debug("Fetch labels ticket received response of proxy: \(proxy.getProviderId().value+"/"+proxy.getMailboxId().value)")

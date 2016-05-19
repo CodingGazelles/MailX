@@ -13,22 +13,22 @@ protocol MxMailboxProxy {
     
     func connect( completionHandler completionHandler: MxConnectCompletionHandler)
     func sendFetchLabelsRequest( completionHandler completionHandler: MxFetchLabelsCompletionHandler)
-    func sendFetchMessagesInLabelRequest(labelId labelId: MxLabel.Id, completionHandler: MxFetchMessagesInLabelCompletionHandler)
+    func sendFetchMessagesInLabelRequest(labelId labelId: MxLabelModel.Id, completionHandler: MxFetchMessagesInLabelCompletionHandler)
     
 //    func didFetchMessagesHandler( selector: Selector, error: NSError)
     
-//    func sendFetchThreadsRequest(label: MxLabel)
+//    func sendFetchThreadsRequest(label: MxLabelModel)
 //    func didFetchThreadsHandler( selector: Selector, error: NSError)
     
-    func getMailboxId() -> MxMailbox.Id
-    func getProviderId() -> MxProvider.Id
+    func getMailboxId() -> MxMailboxModel.Id
+    func getProviderId() -> MxProviderModel.Id
     
 }
 
 class MxProxyFactory {
     static func gmailProxy(
-        providerId providerId: MxProvider.Id,
-        mailboxId: MxMailbox.Id) -> MxMailboxProxy
+        providerId providerId: MxProviderModel.Id,
+        mailboxId: MxMailboxModel.Id) -> MxMailboxProxy
     {
         return MxGMailProxy( providerId: providerId, mailboxId: mailboxId)
     }

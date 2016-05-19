@@ -1,3 +1,2 @@
-github "robrix/Box" "1.2.2"
-github "antitypical/Result" "0.4.5"
-github "jarsen/pipes" "v0.1"
+github "ReSwift/ReSwift" "1.0.0"
+github "ReSwift/ReSwift-Recorder" "0.2.5"

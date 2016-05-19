@@ -20,7 +20,7 @@ class MxRemoteStoreHelper {
     private var operationsQueue: NSOperationQueue
     
     
-    init( mailbox: MxMailbox){
+    init( mailbox: MxMailboxModel){
         MxLog.verbose("... Processing. Args: mailbox=\(mailbox)")
         
         let proxy = MxProxyFactory.gmailProxy( providerId: mailbox.providerId, mailboxId: mailbox.id)
@@ -67,7 +67,7 @@ class MxRemoteStoreHelper {
         MxLog.verbose("... Done")
     }
     
-    func proxyDidFetchLabels(labels labels: MxLabels?, error: NSError?) {
+    func proxyDidFetchLabels(labels labels: MxLabelModelArray?, error: NSError?) {
         MxLog.verbose("... Processing. Args: labels=\(labels), error=\(error)")
         
         
@@ -77,7 +77,7 @@ class MxRemoteStoreHelper {
     
     // MARK: - Fetch messages
     
-    func fetchMessagesInLabel( labelId labelId: MxLabel.Id) {
+    func fetchMessagesInLabel( labelId labelId: MxLabelModel.Id) {
         MxLog.verbose("... Processing.")
         
         MxLog.debug("Creating fetch messages ticket to proxy: \(proxy.getProviderId().value+"/"+proxy.getMailboxId().value)")
@@ -87,7 +87,7 @@ class MxRemoteStoreHelper {
         MxLog.verbose("... Done")
     }
     
-    func proxyDidFetchMessagesInLabel( messages messages: MxMessages?, error: NSError?) {
+    func proxyDidFetchMessagesInLabel( messages messages: MxMessageModelArray?, error: NSError?) {
         MxLog.verbose("... Processing. Args: messages=\(messages), error=\(error)")
         
         
@@ -102,7 +102,7 @@ class MxRemoteStoreHelper {
     Push local alterations to remote mailbox
     */
     
-    func pushTickets( mailboxId mailboxId: MxMailbox.Id){
+    func pushTickets( mailboxId mailboxId: MxMailboxModel.Id){
     
     }
 }

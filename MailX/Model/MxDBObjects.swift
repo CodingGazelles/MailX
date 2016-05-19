@@ -27,7 +27,7 @@ protocol ModelConvertible: MxDBOType {
 
 final class MxProviderDBO: Object, MxDBOType {
     
-    typealias AssociatedModel = MxProvider
+    typealias AssociatedModel = MxProviderModel
     
     // properties
     dynamic var id: String = ""
@@ -48,7 +48,7 @@ final class MxProviderDBO: Object, MxDBOType {
 
 final class MxMailboxDBO : Object, MxDBOType {
     
-    typealias AssociatedModel = MxMailbox
+    typealias AssociatedModel = MxMailboxModel
     
     // properties
     dynamic var id: String = ""
@@ -70,7 +70,7 @@ final class MxMailboxDBO : Object, MxDBOType {
 
 final class MxLabelDBO: Object, MxDBOType {
     
-    typealias AssociatedModel = MxLabel
+    typealias AssociatedModel = MxLabelModel
     
     // properties
     dynamic var id: String = ""
@@ -94,7 +94,7 @@ final class MxLabelDBO: Object, MxDBOType {
 
 final class MxMessageDBO: Object, MxDBOType {
     
-    typealias AssociatedModel = MxMessage
+    typealias AssociatedModel = MxMessageModel
     
     // properties
     dynamic var id: String = ""
@@ -125,12 +125,12 @@ extension MxProviderDBO: ModelConvertible {
 
 extension MxMailboxDBO: ModelConvertible {
     
-    func toModel() -> Result<MxMailbox, MxDbError> {
+    func toModel() -> Result<MxMailboxModel, MxDbError> {
         guard let provider = self.provider else {
             let error =  MxDbError.DbObjectInconsistent(object: self, errorMessage: "Mailbox without provider")
             return Result.Failure( error)
         }
-        let result = MxMailbox(id: MxMailbox.Id(value: self.id), providerId: MxProvider.Id(value: provider.id))
+        let result = MxMailboxModel(id: MxMailboxModel.Id(value: self.id), providerId: MxProviderModel.Id(value: provider.id))
         return Result.Success( result)
     }
     
@@ -142,8 +142,8 @@ extension MxMailboxDBO: ModelConvertible {
 
 extension MxLabelDBO: ModelConvertible {
     
-    func toModel() -> Result<MxLabel, MxDbError> {
-        guard let ownerType = MxLabel.MxLabelOwnerType(rawValue: self.ownerType) else {
+    func toModel() -> Result<MxLabelModel, MxDbError> {
+        guard let ownerType = MxLabelModel.MxLabelOwnerType(rawValue: self.ownerType) else {
             let error = MxDbError.DbObjectInconsistent(object: self, errorMessage: "Label without identificable owner type")
             return Result.Failure( error)
         }
@@ -151,11 +151,11 @@ extension MxLabelDBO: ModelConvertible {
             let error = MxDbError.DbObjectInconsistent(object: self, errorMessage: "Label without mailbox id")
             return Result.Failure( error)
         }
-        let result =  MxLabel(
-            id: MxLabel.Id(value: self.id)
+        let result =  MxLabelModel(
+            id: MxLabelModel.Id(value: self.id)
             , name: self.name
             , type: ownerType
-            , mailboxId: MxMailbox.Id(value: mailboxId))
+            , mailboxId: MxMailboxModel.Id(value: mailboxId))
         return Result.Success(result)
     }
     
@@ -196,14 +196,14 @@ typealias MxMessageOptDBOs = [MxMessageDBO?]
 
 extension Array where Element:MxMailboxDBO {
     
-    func toModels() -> MxMailboxeOpts {
+    func toModels() -> MxMailboxModelOptArray {
         return self.map{$0.toModel()}.map{$0.unwrap()}
     }
 }
 
 extension Array where Element:MxLabelDBO {
     
-    func toModels() -> MxLabelOpts {
+    func toModels() -> MxLabelModelOptArray {
         return self.map{$0.toModel()}.map{$0.unwrap()}
     }
     

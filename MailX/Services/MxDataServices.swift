@@ -11,10 +11,6 @@ import Foundation
 
 
 
-import RxSwift
-
-
-
 class MxDataServices {
     
     private let localStore = MxStoreManager.sharedDb()
@@ -22,7 +18,7 @@ class MxDataServices {
     
     //MARK: - Get data
     
-    func getMailbox( mailboxId mailboxId: MxMailbox.Id) -> MxMailbox? {
+    func getMailbox( mailboxId mailboxId: MxModelId) -> MxMailboxModel? {
         MxLog.verbose("... Processing. Args: mailboxId= \(mailboxId)")
         
         switch localStore.fetchMailbox(mailboxId: mailboxId) {
@@ -35,7 +31,7 @@ class MxDataServices {
         }
     }
     
-    func getMailboxes() -> MxMailboxes {
+    func getMailboxes() -> MxMailboxModelArray {
         MxLog.verbose("... Processing.")
         
         switch localStore.fetchMailboxes() {
@@ -44,11 +40,11 @@ class MxDataServices {
             
         case let .Failure(error):
             sendErrorNotification( message: "Unable to fetch mailboxes.",error: error)
-            return MxMailboxes()
+            return MxMailboxModelArray()
         }
     }
     
-    func getLabels( mailboxId mailboxId: MxMailbox.Id) -> MxLabels {
+    func getLabels( mailboxId mailboxId: MxModelId) -> MxLabelModelArray {
         MxLog.verbose("... Processing. Args: mailboxId= \(mailboxId)")
         
         switch localStore.fetchLabels(mailboxId: mailboxId) {
@@ -57,7 +53,7 @@ class MxDataServices {
             
         case let .Failure(error):
             sendErrorNotification( message: "Unable to fetch labels with mailboxId= \(mailboxId)",error: error)
-            return MxLabels()
+            return MxLabelModelArray()
         }
     }
     
@@ -71,40 +67,15 @@ class MxDataServices {
         MxLog.verbose("... Processing")
         
         localStore.insertProvider(
-            provider: MxProvider(
-                id: MxProvider.Id( value: "GMAIL")))
+            provider: MxProviderModel(
+                id: MxModelId( value: "GMAIL")))
         
         localStore.insertMailbox(
-            mailbox: MxMailbox(
-                id: MxMailbox.Id(value: "t4ncr3d3@gmail.com"),
-                providerId: MxProvider.Id( value: "GMAIL")))
+            mailbox: MxMailboxModel(
+                id: MxModelId(value: "t4ncr3d3@gmail.com"),
+                providerId: MxModelId( value: "GMAIL")))
         
         MxLog.verbose("... Done")
-    }
-    
-    
-}
-
-
-    // MARK: - Rx
-
-extension MxDataServices {
-    
-    
-    func rx_getMailboxes() -> Observable<MxMailboxes> {
-        return localStore.rx_fetchMailboxes()
-    }
-    
-//    func rx_getLabels(mailboxId mailboxId: MxMailbox.Id) -> Observable<MxLabels> {
-//        return localStore.rx_fetchLabels(mailboxId: mailboxId)
-//    }
-    
-    func rx_getLabels() -> Observable<MxLabels> {
-        return localStore.rx_fetchLabels()
-    }
-    
-    func rx_getMessages() -> Observable<MxMessages> {
-        return localStore.rx_fetchMessages()
     }
     
     

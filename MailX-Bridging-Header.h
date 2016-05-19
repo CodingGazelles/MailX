@@ -3,6 +3,3 @@
 //
 
 #import "HXAppProperties.h"
-
-#import "GTL/GTMOAuth2WindowController.h"
-#import "GTLGmail.h"

@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		78156F2C38FF98059753DA3D /* Pods_MailX.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 666015A3551CB8A57FA51D6C /* Pods_MailX.framework */; };
+		DF44793C1CEB680700E3A685 /* MxProviderModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF44793B1CEB680700E3A685 /* MxProviderModel.swift */; };
+		DF44793E1CEB684D00E3A685 /* MxMailboxModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF44793D1CEB684D00E3A685 /* MxMailboxModel.swift */; };
+		DF4479401CEB689000E3A685 /* MxLabelModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF44793F1CEB689000E3A685 /* MxLabelModel.swift */; };
 		DFB84E3C1CEAA72E0088090D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB84E3B1CEAA72E0088090D /* AppDelegate.swift */; };
 		DFB84E401CEAA72E0088090D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DFB84E3F1CEAA72E0088090D /* Assets.xcassets */; };
 		DFB84E4E1CEAA72E0088090D /* MailXTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB84E4D1CEAA72E0088090D /* MailXTests.swift */; };
@@ -16,14 +20,9 @@
 		DFB84E7D1CEAA8580088090D /* MxLogs.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB84E711CEAA8580088090D /* MxLogs.swift */; };
 		DFB84E7E1CEAA8580088090D /* MxResults.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB84E721CEAA8580088090D /* MxResults.swift */; };
 		DFB84E7F1CEAA8580088090D /* MxUserPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB84E731CEAA8580088090D /* MxUserPreferences.swift */; };
-		DFB84E941CEAAA6E0088090D /* GTMOAuth2Window.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFB84E8D1CEAAA6E0088090D /* GTMOAuth2Window.xib */; };
-		DFB84E951CEAAA6E0088090D /* HxMainWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB84E8E1CEAAA6E0088090D /* HxMainWindowController.swift */; };
-		DFB84E971CEAAA6E0088090D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DFB84E901CEAAA6E0088090D /* Main.storyboard */; };
-		DFB84E9A1CEAAA6E0088090D /* MxLabelsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB84E931CEAAA6E0088090D /* MxLabelsViewController.swift */; };
 		DFB84EA61CEAAB8A0088090D /* Properties.plist in Resources */ = {isa = PBXBuildFile; fileRef = DFB84EA51CEAAB8A0088090D /* Properties.plist */; };
 		DFB84EAD1CEAABFF0088090D /* MxDBObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB84EA91CEAABFF0088090D /* MxDBObjects.swift */; };
 		DFB84EAF1CEAABFF0088090D /* MxModelObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB84EAB1CEAABFF0088090D /* MxModelObjects.swift */; };
-		DFB84EB21CEAAD5B0088090D /* GTLGmail_Sources.m in Sources */ = {isa = PBXBuildFile; fileRef = DFB84EB11CEAAD5B0088090D /* GTLGmail_Sources.m */; };
 		DFB84EBA1CEAB03F0088090D /* MxDataServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB84EB61CEAB03F0088090D /* MxDataServices.swift */; };
 		DFB84EBB1CEAB03F0088090D /* MxStoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB84EB71CEAB03F0088090D /* MxStoreManager.swift */; };
 		DFB84EBC1CEAB03F0088090D /* MxSyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB84EB81CEAB03F0088090D /* MxSyncService.swift */; };
@@ -59,6 +58,21 @@
 		DFB84EFB1CEAB6520088090D /* Realm.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DFB84EED1CEAB62B0088090D /* Realm.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DFB84EFC1CEAB6520088090D /* RealmSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFB84EEE1CEAB62B0088090D /* RealmSwift.framework */; };
 		DFB84EFD1CEAB6520088090D /* RealmSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DFB84EEE1CEAB62B0088090D /* RealmSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		DFB84F241CEB515F0088090D /* GTMOAuth2Window.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFB84F211CEB515F0088090D /* GTMOAuth2Window.xib */; };
+		DFB84F251CEB515F0088090D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DFB84F221CEB515F0088090D /* Main.storyboard */; };
+		DFB84F261CEB515F0088090D /* MxLabelsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB84F231CEB515F0088090D /* MxLabelsViewController.swift */; };
+		DFB84F2A1CEB51980088090D /* MxAppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB84F271CEB51980088090D /* MxAppState.swift */; };
+		DFB84F2B1CEB51980088090D /* MxMailboxState.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB84F281CEB51980088090D /* MxMailboxState.swift */; };
+		DFB84F2C1CEB51980088090D /* MxProviderState.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB84F291CEB51980088090D /* MxProviderState.swift */; };
+		DFE26F021CEBF7BA00FB401A /* ReSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFE26F011CEBF7BA00FB401A /* ReSwift.framework */; };
+		DFE26F031CEBF7EC00FB401A /* ReSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFE26F011CEBF7BA00FB401A /* ReSwift.framework */; };
+		DFE26F041CEBF7EC00FB401A /* ReSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DFE26F011CEBF7BA00FB401A /* ReSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		DFE26F081CEC097000FB401A /* MxMessageState.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE26F071CEC097000FB401A /* MxMessageState.swift */; };
+		DFE26F0A1CEC09A900FB401A /* MxLabelState.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE26F091CEC09A900FB401A /* MxLabelState.swift */; };
+		DFE26F0C1CEC09B600FB401A /* MxMessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE26F0B1CEC09B600FB401A /* MxMessageModel.swift */; };
+		DFE26F121CED5E9B00FB401A /* MxLabelReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE26F111CED5E9B00FB401A /* MxLabelReducer.swift */; };
+		DFE26F141CED5EE500FB401A /* MxLabelActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE26F131CED5EE500FB401A /* MxLabelActions.swift */; };
+		DFE26F161CED5FCF00FB401A /* MxAppReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE26F151CED5FCF00FB401A /* MxAppReducer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -85,6 +99,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				DFE26F041CEBF7EC00FB401A /* ReSwift.framework in Embed Frameworks */,
 				DFB84EE71CEAB2A40088090D /* SugarRecordRealm.framework in Embed Frameworks */,
 				DFB84EE41CEAB2970088090D /* Result.framework in Embed Frameworks */,
 				DFB84EF71CEAB6520088090D /* CleanroomLogger.framework in Embed Frameworks */,
@@ -100,6 +115,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1F1446166CC5B3B0E5151E37 /* Pods-MailX.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MailX.release.xcconfig"; path = "../Pods/Target Support Files/Pods-MailX/Pods-MailX.release.xcconfig"; sourceTree = "<group>"; };
+		666015A3551CB8A57FA51D6C /* Pods_MailX.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MailX.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		DF44793B1CEB680700E3A685 /* MxProviderModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxProviderModel.swift; path = Model/MxProviderModel.swift; sourceTree = "<group>"; };
+		DF44793D1CEB684D00E3A685 /* MxMailboxModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxMailboxModel.swift; path = Model/MxMailboxModel.swift; sourceTree = "<group>"; };
+		DF44793F1CEB689000E3A685 /* MxLabelModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxLabelModel.swift; path = Model/MxLabelModel.swift; sourceTree = "<group>"; };
 		DFB84E381CEAA72E0088090D /* MailX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MailX.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DFB84E3B1CEAA72E0088090D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DFB84E3F1CEAA72E0088090D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -117,27 +137,21 @@
 		DFB84E711CEAA8580088090D /* MxLogs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MxLogs.swift; sourceTree = "<group>"; };
 		DFB84E721CEAA8580088090D /* MxResults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MxResults.swift; sourceTree = "<group>"; };
 		DFB84E731CEAA8580088090D /* MxUserPreferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MxUserPreferences.swift; sourceTree = "<group>"; };
-		DFB84E8D1CEAAA6E0088090D /* GTMOAuth2Window.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = GTMOAuth2Window.xib; path = View/GTMOAuth2Window.xib; sourceTree = "<group>"; };
-		DFB84E8E1CEAAA6E0088090D /* HxMainWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HxMainWindowController.swift; path = View/HxMainWindowController.swift; sourceTree = "<group>"; };
-		DFB84E901CEAAA6E0088090D /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = View/Main.storyboard; sourceTree = "<group>"; };
-		DFB84E931CEAAA6E0088090D /* MxLabelsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxLabelsViewController.swift; path = View/MxLabelsViewController.swift; sourceTree = "<group>"; };
 		DFB84E9C1CEAAA9A0088090D /* Cartfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cartfile; sourceTree = "<group>"; };
-		DFB84E9D1CEAAA9A0088090D /* Cartfile.bak */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cartfile.bak; sourceTree = "<group>"; };
+		DFB84E9D1CEAAA9A0088090D /* CartfileExample.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CartfileExample.txt; sourceTree = "<group>"; };
 		DFB84E9E1CEAAA9A0088090D /* Cartfile.private */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cartfile.private; sourceTree = "<group>"; };
 		DFB84E9F1CEAAA9A0088090D /* Cartfile.resolved */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cartfile.resolved; sourceTree = "<group>"; };
 		DFB84EA51CEAAB8A0088090D /* Properties.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Properties.plist; sourceTree = "<group>"; };
-		DFB84EA91CEAABFF0088090D /* MxDBObjects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxDBObjects.swift; path = Model/MxDBObjects.swift; sourceTree = "<group>"; };
-		DFB84EAB1CEAABFF0088090D /* MxModelObjects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxModelObjects.swift; path = Model/MxModelObjects.swift; sourceTree = "<group>"; };
-		DFB84EB11CEAAD5B0088090D /* GTLGmail_Sources.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GTLGmail_Sources.m; path = "../../google-api-objectivec-client/Source/Services/Gmail/Generated/GTLGmail_Sources.m"; sourceTree = "<group>"; };
-		DFB84EB31CEAAD950088090D /* GTLGmail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GTLGmail.h; path = "../../google-api-objectivec-client/Source/Services/Gmail/Generated/GTLGmail.h"; sourceTree = "<group>"; };
-		DFB84EB61CEAB03F0088090D /* MxDataServices.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxDataServices.swift; path = Services/MxDataServices.swift; sourceTree = "<group>"; };
-		DFB84EB71CEAB03F0088090D /* MxStoreManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxStoreManager.swift; path = Services/MxStoreManager.swift; sourceTree = "<group>"; };
+		DFB84EA91CEAABFF0088090D /* MxDBObjects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = MxDBObjects.swift; path = Model/MxDBObjects.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		DFB84EAB1CEAABFF0088090D /* MxModelObjects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = MxModelObjects.swift; path = Model/MxModelObjects.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		DFB84EB61CEAB03F0088090D /* MxDataServices.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = MxDataServices.swift; path = Services/MxDataServices.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		DFB84EB71CEAB03F0088090D /* MxStoreManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = MxStoreManager.swift; path = Services/MxStoreManager.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		DFB84EB81CEAB03F0088090D /* MxSyncService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxSyncService.swift; path = Services/MxSyncService.swift; sourceTree = "<group>"; };
 		DFB84EBE1CEAB0DD0088090D /* MxConnectionTicket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxConnectionTicket.swift; path = Services/Remote/MxConnectionTicket.swift; sourceTree = "<group>"; };
 		DFB84EBF1CEAB0DD0088090D /* MxFetchLabelsTicket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxFetchLabelsTicket.swift; path = Services/Remote/MxFetchLabelsTicket.swift; sourceTree = "<group>"; };
 		DFB84EC01CEAB0DD0088090D /* MxFetchMessagesInLabelTicket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxFetchMessagesInLabelTicket.swift; path = Services/Remote/MxFetchMessagesInLabelTicket.swift; sourceTree = "<group>"; };
-		DFB84EC11CEAB0DD0088090D /* MxGMailProxy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxGMailProxy.swift; path = Services/Remote/MxGMailProxy.swift; sourceTree = "<group>"; };
-		DFB84EC21CEAB0DD0088090D /* MxMailboxProxy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxMailboxProxy.swift; path = Services/Remote/MxMailboxProxy.swift; sourceTree = "<group>"; };
+		DFB84EC11CEAB0DD0088090D /* MxGMailProxy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = MxGMailProxy.swift; path = Services/Remote/MxGMailProxy.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		DFB84EC21CEAB0DD0088090D /* MxMailboxProxy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = MxMailboxProxy.swift; path = Services/Remote/MxMailboxProxy.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		DFB84EC31CEAB0DD0088090D /* MxProxyTicket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxProxyTicket.swift; path = Services/Remote/MxProxyTicket.swift; sourceTree = "<group>"; };
 		DFB84EC41CEAB0DD0088090D /* MxRemoteStoreHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxRemoteStoreHelper.swift; path = Services/Remote/MxRemoteStoreHelper.swift; sourceTree = "<group>"; };
 		DFB84ECE1CEAB2310088090D /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
@@ -152,6 +166,20 @@
 		DFB84EEC1CEAB62B0088090D /* GTL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GTL.framework; path = Frameworks/GTL.framework; sourceTree = SOURCE_ROOT; };
 		DFB84EED1CEAB62B0088090D /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Realm.framework; path = Frameworks/Realm.framework; sourceTree = SOURCE_ROOT; };
 		DFB84EEE1CEAB62B0088090D /* RealmSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RealmSwift.framework; path = Frameworks/RealmSwift.framework; sourceTree = SOURCE_ROOT; };
+		DFB84F211CEB515F0088090D /* GTMOAuth2Window.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = GTMOAuth2Window.xib; path = Views/GTMOAuth2Window.xib; sourceTree = "<group>"; };
+		DFB84F221CEB515F0088090D /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = Views/Main.storyboard; sourceTree = "<group>"; };
+		DFB84F231CEB515F0088090D /* MxLabelsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxLabelsViewController.swift; path = Views/MxLabelsViewController.swift; sourceTree = "<group>"; };
+		DFB84F271CEB51980088090D /* MxAppState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = MxAppState.swift; path = State/MxAppState.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		DFB84F281CEB51980088090D /* MxMailboxState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxMailboxState.swift; path = State/MxMailboxState.swift; sourceTree = "<group>"; };
+		DFB84F291CEB51980088090D /* MxProviderState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxProviderState.swift; path = State/MxProviderState.swift; sourceTree = "<group>"; };
+		DFE26F011CEBF7BA00FB401A /* ReSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ReSwift.framework; path = Frameworks/ReSwift.framework; sourceTree = SOURCE_ROOT; };
+		DFE26F071CEC097000FB401A /* MxMessageState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxMessageState.swift; path = State/MxMessageState.swift; sourceTree = "<group>"; };
+		DFE26F091CEC09A900FB401A /* MxLabelState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxLabelState.swift; path = State/MxLabelState.swift; sourceTree = "<group>"; };
+		DFE26F0B1CEC09B600FB401A /* MxMessageModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxMessageModel.swift; path = Model/MxMessageModel.swift; sourceTree = "<group>"; };
+		DFE26F111CED5E9B00FB401A /* MxLabelReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxLabelReducer.swift; path = Reducers/MxLabelReducer.swift; sourceTree = "<group>"; };
+		DFE26F131CED5EE500FB401A /* MxLabelActions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxLabelActions.swift; path = Actions/MxLabelActions.swift; sourceTree = "<group>"; };
+		DFE26F151CED5FCF00FB401A /* MxAppReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxAppReducer.swift; path = Reducers/MxAppReducer.swift; sourceTree = "<group>"; };
+		EC59DA71744A9FBDCAD8E41A /* Pods-MailX.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MailX.debug.xcconfig"; path = "../Pods/Target Support Files/Pods-MailX/Pods-MailX.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -168,6 +196,7 @@
 				DFB84EF31CEAB62B0088090D /* RealmSwift.framework in Frameworks */,
 				DFB84EE31CEAB2970088090D /* Result.framework in Frameworks */,
 				DFB84EF81CEAB6520088090D /* GTL.framework in Frameworks */,
+				DFE26F021CEBF7BA00FB401A /* ReSwift.framework in Frameworks */,
 				DFB84EFA1CEAB6520088090D /* Realm.framework in Frameworks */,
 				DFB84EF61CEAB6520088090D /* CleanroomLogger.framework in Frameworks */,
 				DFB84EF01CEAB62B0088090D /* CleanroomLogger.framework in Frameworks */,
@@ -175,6 +204,8 @@
 				DFB84EF41CEAB6520088090D /* CleanroomASL.framework in Frameworks */,
 				DFB84EFC1CEAB6520088090D /* RealmSwift.framework in Frameworks */,
 				DFB84ECF1CEAB2310088090D /* Cocoa.framework in Frameworks */,
+				DFE26F031CEBF7EC00FB401A /* ReSwift.framework in Frameworks */,
+				78156F2C38FF98059753DA3D /* Pods_MailX.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -195,6 +226,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7B288EC49E0DDD484BDFE716 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				EC59DA71744A9FBDCAD8E41A /* Pods-MailX.debug.xcconfig */,
+				1F1446166CC5B3B0E5151E37 /* Pods-MailX.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		DFB84E2F1CEAA72D0088090D = {
 			isa = PBXGroup;
 			children = (
@@ -205,6 +245,7 @@
 				DFB84E571CEAA72E0088090D /* MailXUITests */,
 				DFB84E801CEAA88A0088090D /* Frameworks */,
 				DFB84E391CEAA72E0088090D /* Products */,
+				7B288EC49E0DDD484BDFE716 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -224,6 +265,8 @@
 				DFB84E8C1CEAAA450088090D /* Views */,
 				DFB84EFE1CEABA2F0088090D /* State */,
 				DFB84EB41CEAB0020088090D /* Actions */,
+				DFB84F2D1CEB51D70088090D /* Reducers */,
+				DFB84EFF1CEABAE10088090D /* Services */,
 				DFB84E811CEAA8BD0088090D /* Deps */,
 				DFB84EA41CEAAB4A0088090D /* Helpers */,
 				DFB84E661CEAA8560088090D /* MailX-Bridging-Header.h */,
@@ -255,6 +298,7 @@
 		DFB84E801CEAA88A0088090D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				DFE26F011CEBF7BA00FB401A /* ReSwift.framework */,
 				DFB84EEA1CEAB62B0088090D /* CleanroomASL.framework */,
 				DFB84EEB1CEAB62B0088090D /* CleanroomLogger.framework */,
 				DFB84EEC1CEAB62B0088090D /* GTL.framework */,
@@ -266,6 +310,7 @@
 				DFB84ED21CEAB24D0088090D /* SystemConfiguration.framework */,
 				DFB84ED01CEAB23C0088090D /* Security.framework */,
 				DFB84ECE1CEAB2310088090D /* Cocoa.framework */,
+				666015A3551CB8A57FA51D6C /* Pods_MailX.framework */,
 			);
 			name = Frameworks;
 			path = MailX;
@@ -282,10 +327,9 @@
 		DFB84E8C1CEAAA450088090D /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				DFB84E8D1CEAAA6E0088090D /* GTMOAuth2Window.xib */,
-				DFB84E8E1CEAAA6E0088090D /* HxMainWindowController.swift */,
-				DFB84E901CEAAA6E0088090D /* Main.storyboard */,
-				DFB84E931CEAAA6E0088090D /* MxLabelsViewController.swift */,
+				DFB84F211CEB515F0088090D /* GTMOAuth2Window.xib */,
+				DFB84F221CEB515F0088090D /* Main.storyboard */,
+				DFB84F231CEB515F0088090D /* MxLabelsViewController.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -294,7 +338,7 @@
 			isa = PBXGroup;
 			children = (
 				DFB84E9C1CEAAA9A0088090D /* Cartfile */,
-				DFB84E9D1CEAAA9A0088090D /* Cartfile.bak */,
+				DFB84E9D1CEAAA9A0088090D /* CartfileExample.txt */,
 				DFB84E9E1CEAAA9A0088090D /* Cartfile.private */,
 				DFB84E9F1CEAAA9A0088090D /* Cartfile.resolved */,
 			);
@@ -317,8 +361,11 @@
 		DFB84EA71CEAABF30088090D /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				DFB84EA91CEAABFF0088090D /* MxDBObjects.swift */,
 				DFB84EAB1CEAABFF0088090D /* MxModelObjects.swift */,
+				DF44793B1CEB680700E3A685 /* MxProviderModel.swift */,
+				DF44793D1CEB684D00E3A685 /* MxMailboxModel.swift */,
+				DF44793F1CEB689000E3A685 /* MxLabelModel.swift */,
+				DFE26F0B1CEC09B600FB401A /* MxMessageModel.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -326,8 +373,6 @@
 		DFB84EB01CEAAC450088090D /* GTL */ = {
 			isa = PBXGroup;
 			children = (
-				DFB84EB31CEAAD950088090D /* GTLGmail.h */,
-				DFB84EB11CEAAD5B0088090D /* GTLGmail_Sources.m */,
 			);
 			name = GTL;
 			sourceTree = "<group>";
@@ -335,7 +380,7 @@
 		DFB84EB41CEAB0020088090D /* Actions */ = {
 			isa = PBXGroup;
 			children = (
-				DFB84EFF1CEABAE10088090D /* Services */,
+				DFE26F131CED5EE500FB401A /* MxLabelActions.swift */,
 			);
 			name = Actions;
 			sourceTree = "<group>";
@@ -373,7 +418,11 @@
 		DFB84EFE1CEABA2F0088090D /* State */ = {
 			isa = PBXGroup;
 			children = (
-				DFB84EA71CEAABF30088090D /* Model */,
+				DFB84F271CEB51980088090D /* MxAppState.swift */,
+				DFB84F281CEB51980088090D /* MxMailboxState.swift */,
+				DFB84F291CEB51980088090D /* MxProviderState.swift */,
+				DFE26F091CEC09A900FB401A /* MxLabelState.swift */,
+				DFE26F071CEC097000FB401A /* MxMessageState.swift */,
 			);
 			name = State;
 			sourceTree = "<group>";
@@ -381,6 +430,8 @@
 		DFB84EFF1CEABAE10088090D /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				DFB84EA91CEAABFF0088090D /* MxDBObjects.swift */,
+				DFB84EA71CEAABF30088090D /* Model */,
 				DFB84EBD1CEAB0BC0088090D /* RemoteServices */,
 				DFB84EB61CEAB03F0088090D /* MxDataServices.swift */,
 				DFB84EB71CEAB03F0088090D /* MxStoreManager.swift */,
@@ -390,6 +441,15 @@
 			name = Services;
 			sourceTree = "<group>";
 		};
+		DFB84F2D1CEB51D70088090D /* Reducers */ = {
+			isa = PBXGroup;
+			children = (
+				DFE26F151CED5FCF00FB401A /* MxAppReducer.swift */,
+				DFE26F111CED5E9B00FB401A /* MxLabelReducer.swift */,
+			);
+			name = Reducers;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -397,10 +457,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = DFB84E5D1CEAA72E0088090D /* Build configuration list for PBXNativeTarget "MailX" */;
 			buildPhases = (
+				2FB1195AA47C790EFEF95780 /* 📦 Check Pods Manifest.lock */,
 				DFB84E341CEAA72D0088090D /* Sources */,
 				DFB84E351CEAA72D0088090D /* Frameworks */,
 				DFB84E361CEAA72D0088090D /* Resources */,
 				DFB84ED81CEAB2720088090D /* Embed Frameworks */,
+				EC40A0C3F58BE810E5BDDC43 /* 📦 Embed Pods Frameworks */,
+				910EB1FC6932D525084FA070 /* 📦 Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -495,11 +558,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DFB84F251CEB515F0088090D /* Main.storyboard in Resources */,
 				DFB84EE91CEAB5E50088090D /* .gitignore in Resources */,
 				DFB84E401CEAA72E0088090D /* Assets.xcassets in Resources */,
-				DFB84E971CEAAA6E0088090D /* Main.storyboard in Resources */,
-				DFB84E941CEAAA6E0088090D /* GTMOAuth2Window.xib in Resources */,
 				DFB84EA61CEAAB8A0088090D /* Properties.plist in Resources */,
+				DFB84F241CEB515F0088090D /* GTMOAuth2Window.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -519,28 +582,86 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		2FB1195AA47C790EFEF95780 /* 📦 Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "📦 Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		910EB1FC6932D525084FA070 /* 📦 Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "📦 Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/../Pods/Target Support Files/Pods-MailX/Pods-MailX-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		EC40A0C3F58BE810E5BDDC43 /* 📦 Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "📦 Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/../Pods/Target Support Files/Pods-MailX/Pods-MailX-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		DFB84E341CEAA72D0088090D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DFB84E951CEAAA6E0088090D /* HxMainWindowController.swift in Sources */,
+				DFE26F121CED5E9B00FB401A /* MxLabelReducer.swift in Sources */,
+				DFB84F2A1CEB51980088090D /* MxAppState.swift in Sources */,
 				DFB84EBC1CEAB03F0088090D /* MxSyncService.swift in Sources */,
+				DFE26F161CED5FCF00FB401A /* MxAppReducer.swift in Sources */,
+				DF4479401CEB689000E3A685 /* MxLabelModel.swift in Sources */,
 				DFB84EBA1CEAB03F0088090D /* MxDataServices.swift in Sources */,
 				DFB84EC81CEAB0DD0088090D /* MxGMailProxy.swift in Sources */,
+				DFE26F081CEC097000FB401A /* MxMessageState.swift in Sources */,
 				DFB84E7E1CEAA8580088090D /* MxResults.swift in Sources */,
-				DFB84EB21CEAAD5B0088090D /* GTLGmail_Sources.m in Sources */,
+				DFB84F2B1CEB51980088090D /* MxMailboxState.swift in Sources */,
+				DF44793C1CEB680700E3A685 /* MxProviderModel.swift in Sources */,
+				DFE26F141CED5EE500FB401A /* MxLabelActions.swift in Sources */,
 				DFB84E791CEAA8580088090D /* HXAppProperties.m in Sources */,
 				DFB84ECB1CEAB0DD0088090D /* MxRemoteStoreHelper.swift in Sources */,
 				DFB84ECA1CEAB0DD0088090D /* MxProxyTicket.swift in Sources */,
+				DFE26F0C1CEC09B600FB401A /* MxMessageModel.swift in Sources */,
+				DFB84F2C1CEB51980088090D /* MxProviderState.swift in Sources */,
 				DFB84EC61CEAB0DD0088090D /* MxFetchLabelsTicket.swift in Sources */,
-				DFB84E9A1CEAAA6E0088090D /* MxLabelsViewController.swift in Sources */,
 				DFB84E7F1CEAA8580088090D /* MxUserPreferences.swift in Sources */,
 				DFB84EAF1CEAABFF0088090D /* MxModelObjects.swift in Sources */,
 				DFB84E3C1CEAA72E0088090D /* AppDelegate.swift in Sources */,
 				DFB84EBB1CEAB03F0088090D /* MxStoreManager.swift in Sources */,
 				DFB84EC91CEAB0DD0088090D /* MxMailboxProxy.swift in Sources */,
+				DF44793E1CEB684D00E3A685 /* MxMailboxModel.swift in Sources */,
+				DFB84F261CEB515F0088090D /* MxLabelsViewController.swift in Sources */,
 				DFB84EC51CEAB0DD0088090D /* MxConnectionTicket.swift in Sources */,
+				DFE26F0A1CEC09A900FB401A /* MxLabelState.swift in Sources */,
 				DFB84E7C1CEAA8580088090D /* MxErrors.swift in Sources */,
 				DFB84E7D1CEAA8580088090D /* MxLogs.swift in Sources */,
 				DFB84EAD1CEAABFF0088090D /* MxDBObjects.swift in Sources */,
@@ -664,6 +785,7 @@
 		};
 		DFB84E5E1CEAA72E0088090D /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = EC59DA71744A9FBDCAD8E41A /* Pods-MailX.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -684,6 +806,7 @@
 		};
 		DFB84E5F1CEAA72E0088090D /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1F1446166CC5B3B0E5151E37 /* Pods-MailX.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -770,6 +893,7 @@
 				DFB84E5F1CEAA72E0088090D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		DFB84E601CEAA72E0088090D /* Build configuration list for PBXNativeTarget "MailXTests" */ = {
 			isa = XCConfigurationList;
@@ -778,6 +902,7 @@
 				DFB84E621CEAA72E0088090D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		DFB84E631CEAA72E0088090D /* Build configuration list for PBXNativeTarget "MailXUITests" */ = {
 			isa = XCConfigurationList;
@@ -786,6 +911,7 @@
 				DFB84E651CEAA72E0088090D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

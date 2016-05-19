@@ -13,15 +13,15 @@ import Foundation
 
 
 
-typealias MxFetchMessagesInLabelCompletionHandler = (messages: MxMessages?, error: NSError?) -> Void
+typealias MxFetchMessagesInLabelCompletionHandler = (messages: MxMessageModelArray?, error: NSError?) -> Void
 
 
 class MxFetchMessagesInLabelTicket : MxProxyTicket {
     
     var completionHandler: MxFetchMessagesInLabelCompletionHandler
-    var labelId: MxLabel.Id
+    var labelId: MxLabelModel.Id
     
-    init( labelId: MxLabel.Id, proxy: MxMailboxProxy, completionHandler: MxFetchMessagesInLabelCompletionHandler) {
+    init( labelId: MxLabelModel.Id, proxy: MxMailboxProxy, completionHandler: MxFetchMessagesInLabelCompletionHandler) {
         MxLog.verbose("... labelId: \(labelId)")
         
         self.completionHandler = completionHandler
@@ -40,7 +40,7 @@ class MxFetchMessagesInLabelTicket : MxProxyTicket {
         MxLog.verbose("... Done")
     }
     
-    func proxyDidFetchMessagesInLabel( messages messages: MxMessages?, error: NSError?) {
+    func proxyDidFetchMessagesInLabel( messages messages: MxMessageModelArray?, error: NSError?) {
         MxLog.verbose("...")
         
         MxLog.debug("Fetch messages ticket received response of proxy: \(proxy.getProviderId().value+"/"+proxy.getMailboxId().value)")

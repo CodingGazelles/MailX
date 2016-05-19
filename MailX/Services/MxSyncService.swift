@@ -19,7 +19,7 @@ class MxSyncServices {
     // MARK: -
     
     private let localStore = MxStoreManager.sharedDb()
-    private var remoteStores = Dictionary<MxMailbox.Id, MxRemoteStoreHelper>()
+    private var remoteStores = Dictionary<MxModelId, MxRemoteStoreHelper>()
     
     
 //    // MARK: - Shared instance
@@ -97,13 +97,13 @@ class MxSyncServices {
     }
     
     // incremental update
-    func updatePartial( mailboxId mailboxId: MxMailbox.Id){
+    func updatePartial( mailboxId mailboxId: MxModelId){
         MxLog.debug("Doing partial update of mailbox: \(mailboxId)")
         
         fatalError("Func not implemented")
     }
     
-    func updateFull(mailboxId mailboxId: MxMailbox.Id){
+    func updateFull(mailboxId mailboxId: MxModelId){
         MxLog.debug("Doing full update of mailbox: \(mailboxId)")
         
         emptyAllDataOfMailbox(mailboxId: mailboxId)
@@ -111,7 +111,7 @@ class MxSyncServices {
     }
     
     // full update
-    func emptyAllDataOfMailbox( mailboxId mailboxId: MxMailbox.Id){
+    func emptyAllDataOfMailbox( mailboxId mailboxId: MxModelId){
         MxLog.verbose("... Processing. Args: mailboxId: \(mailboxId)")
         
         MxLog.debug("Deleting messages in labels. Args: mailboxId: \(mailboxId)")
@@ -135,12 +135,12 @@ class MxSyncServices {
         MxLog.verbose("... Done");
     }
     
-    func fetchAllDataOfMailbox( mailboxId mailboxId: MxMailbox.Id){
+    func fetchAllDataOfMailbox( mailboxId mailboxId: MxModelId){
         MxLog.verbose("... mailboxId: \(mailboxId)")
         
         // fetch messages in INBOX
         MxLog.debug("Deleting messages in INBOX for mailbox: \(mailboxId)")
-        remoteStores[mailboxId]!.fetchMessagesInLabel(labelId: MxLabel.Id(value: "INBOX"))
+        remoteStores[mailboxId]!.fetchMessagesInLabel(labelId: MxLabelModel.Id(value: "INBOX"))
         
         //        // fetch labels
         //        remoteStores[mailboxId]!.fetchLabels()
@@ -149,7 +149,7 @@ class MxSyncServices {
         //        let labels = localStore.fetchLabels(mailboxId: mailboxId)
         //
         //        for label in labels {
-        //            if( label.type == MxLabel.OwnerType.SYSTEM){
+        //            if( label.type == MxLabelModel.OwnerType.SYSTEM){
         //                remoteStores[mailboxId]!.fetchMessagesInLabel(labelId: label.id)
         //            }
         //        }

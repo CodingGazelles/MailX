@@ -9,15 +9,16 @@
 import Foundation
 
 
-
+import GoogleAPIClient
+import GTMOAuth2
 
 
 
 class MxGMailProxy : NSObject , MxMailboxProxy {
     
     
-    private var mailboxId: MxMailbox.Id
-    private var providerId: MxProvider.Id
+    private var mailboxId: MxMailboxModel.Id
+    private var providerId: MxProviderModel.Id
     private var service: GTLServiceGmail
     
     private var connectCompletionHandler: MxConnectCompletionHandler?
@@ -44,7 +45,7 @@ class MxGMailProxy : NSObject , MxMailboxProxy {
     var kKeychainItemName = "Hexmail.Gmail Access Token.."
     
     
-    init( providerId: MxProvider.Id, mailboxId: MxMailbox.Id){
+    init( providerId: MxProviderModel.Id, mailboxId: MxMailboxModel.Id){
         MxLog.verbose("... Processing");
         
         self.providerId = providerId;
@@ -185,17 +186,17 @@ class MxGMailProxy : NSObject , MxMailboxProxy {
             return
         }
         
-        var labels = MxLabels()
+        var labels = MxLabelModelArray()
             
         if !labelsResponse.labels.isEmpty {
             MxLog.debug("Parsing labels...")
                 
             for response in labelsResponse.labels as! [GTLGmailLabel] {
                 
-                let label = MxLabel(
-                    id: MxLabel.Id(value: response.identifier),
+                let label = MxLabelModel(
+                    id: MxLabelModel.Id(value: response.identifier),
                     name: response.name,
-                    type: MxLabel.MxLabelOwnerType.SYSTEM,
+                    type: MxLabelModel.MxLabelOwnerType.SYSTEM,
                     mailboxId: mailboxId)
                     
                 labels.append(label)
@@ -214,7 +215,7 @@ class MxGMailProxy : NSObject , MxMailboxProxy {
     
     //MARK: - Fetch remote messages
     
-    func sendFetchMessagesInLabelRequest(labelId labelId: MxLabel.Id, completionHandler: MxFetchMessagesInLabelCompletionHandler) {
+    func sendFetchMessagesInLabelRequest(labelId labelId: MxLabelModel.Id, completionHandler: MxFetchMessagesInLabelCompletionHandler) {
         MxLog.verbose("...")
         
         self.fetchMessagesInLabelCompletionHandler = completionHandler
@@ -246,18 +247,18 @@ class MxGMailProxy : NSObject , MxMailboxProxy {
                 return
             }
             
-            var messages = MxMessages()
+            var messages = MxMessageModelArray()
             
             if ( !messagesResponse.messages.isEmpty){
                 
                 MxLog.verbose("Reading messages...")
                 
-                for response in messagesResponse.messages as [GTLGmailMessage] {
+                for response in messagesResponse.messages as! [GTLGmailMessage] {
                     
                     MxLog.debug("Message:\(response)")
                     
-                    let message = MxMessage(
-                        id: MxMessage.Id( value: response.identifier),
+                    let message = MxMessageModel(
+                        id: MxMessageModel.Id( value: response.identifier),
                         value: "",
                         labelId: nil
                     )
@@ -286,11 +287,11 @@ class MxGMailProxy : NSObject , MxMailboxProxy {
     
     //MARK: - Getters
     
-    func getMailboxId() -> MxMailbox.Id {
+    func getMailboxId() -> MxMailboxModel.Id {
         return mailboxId
     }
     
-    func getProviderId() -> MxProvider.Id {
+    func getProviderId() -> MxProviderModel.Id {
         return providerId
     }
 }
