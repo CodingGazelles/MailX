@@ -10,10 +10,11 @@ import Foundation
 
 
 
-struct MxProviderState {
+struct MxProviderState: MxStateType {
+    
     var providers = [MxProvider]()
     
-    struct MxProvider {
+    struct MxProvider: MxStateType {
         var id: String
         var name: String
         var connected: Bool

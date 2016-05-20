@@ -12,12 +12,19 @@ import ReSwift
 
 
 
-struct MxAppState: StateType {
+// Markers
+
+protocol MxStateType : StateType {}
+protocol MxStateModelType: MxStateType {}
+
+
+struct MxAppState: MxStateType {
     
     var mailboxState = MxMailboxState()
     var providerState = MxProviderState()
     var labelState = MxLabelState()
     var messageState = MxMessageState()
+    var propertiesState = MxPropertiesState()
     
     // recorder
 //    var navigationState = NavigationState()

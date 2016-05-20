@@ -10,16 +10,16 @@ import Foundation
 
 
 
-struct MxMailboxState {
+struct MxMailbox: MxStateType {
+    var id: String
+    var name: String
+    var connected: Bool
+}
+
+struct MxMailboxState: MxStateType {
     
     var allMailboxes = [MxMailbox]()
     var mailboxSelection = MxMailboxSelection.None
-    
-    struct MxMailbox {
-        var id: String
-        var name: String
-        var connected: Bool
-    }
     
     enum MxMailboxSelection {
         case All

@@ -36,13 +36,13 @@ class MxStoreManager {
     // MARK: - Shared instance
     
     private static let sharedInstance = MxStoreManager()
-    static func sharedDb() -> MxStoreManager {
+    static func defaultDb() -> MxStoreManager {
         return sharedInstance
     }
     
     lazy var db: RealmDefaultStorage = {
         var configuration = Realm.Configuration()
-        configuration.path = databasePath("hexmail.realm")
+        configuration.path = databasePath("mailx.realm")
         let _storage = RealmDefaultStorage(configuration: configuration)
         return _storage
     }()

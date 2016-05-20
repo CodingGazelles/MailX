@@ -19,12 +19,22 @@ struct MxAppReducer: Reducer {
         
         
         switch action {
+        
         case _ as MxShowAllLabelsAction:
             state.labelState.labelDisplay = MxLabelState.MxLabelDisplay.All
-            break
+            
         case _ as MxShowSelectedLabelsAction:
-            state.labelState.labelDisplay = MxLabelState.MxLabelDisplay.Selection(labelIdArray: <#T##[String]#>)
-            break
+            state.labelState.labelDisplay = MxLabelState.MxLabelDisplay.Selection
+            
+        case _ as MxSetPropertiesAction:
+            state.propertiesState = (action as! MxSetPropertiesAction).properties
+            
+        case _ as MxSetStateAction:
+            state = (action as! MxSetStateAction).state
+            
+        default:
+            MxLog.error("Reducer received an unidentified action. Unable to treat it. action: \(action)")
+            
         }
         
         return state

@@ -10,14 +10,15 @@ import Foundation
 
 
 
-struct MxLabelState {
+struct MxLabelState: MxStateType {
     
     var allLabels = [MxLabel]()
     var labelDisplay = MxLabelDisplay.All
     
-    struct MxLabel {
+    struct MxLabel: MxStateType {
         
         var id: String
+        var code: String
         var name: String
         var type: MxLabelOwnerType
         
@@ -29,17 +30,17 @@ struct MxLabelState {
     
     enum MxLabelDisplay {
         case All
-        case Selection(labelIdArray: [String])
+        case Selection
     }
     
 }
 
-//MARK: - Extensions
+//MARK: Extensions
 
 extension MxLabelState.MxLabel: MxLabelRow {}
 
 protocol MxLabelRow {
-    var id: String { get set }
+    var code: String { get set }
     var name: String { get set }
 }
 

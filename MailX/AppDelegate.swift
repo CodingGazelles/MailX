@@ -8,8 +8,7 @@
 
 import Cocoa
 
-
-
+import ReSwift
 
 
 
@@ -17,11 +16,9 @@ import Cocoa
 class AppDelegate: NSObject, NSApplicationDelegate {
     
     
-//    private var mainWindowController: MxMainWindowController!
-    private var dataService = MxDataServices()
-    private var syncService = MxSyncServices()
-    
-    
+    lazy var dataService = MxDataServices()
+    lazy var syncService = MxSyncServices()
+    lazy var store = MxStateStore()
     
     
     func applicationDidFinishLaunching(aNotification: NSNotification) {
@@ -37,6 +34,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         MxLog.info("*** App launching ***")
         
         
+        // Init AppState
+        store.initState()
+        
         
         // Init local db and connections to providers
         let queue: dispatch_queue_t = dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)
@@ -50,6 +50,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     func applicationWillTerminate(aNotification: NSNotification){
         MxLog.info("*** Application will terminate. Bye ***")
+        
+        // close db connections
+        
+        
+        // save state
+        store.saveState()
     }
     
     func applicationShouldTerminateAfterLastWindowClosed(sender: NSApplication) -> Bool {

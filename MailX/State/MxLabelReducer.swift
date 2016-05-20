@@ -1,5 +1,5 @@
 //
-//  MxLabelActions.swift
+//  MxLabelReducer.swift
 //  MailX
 //
 //  Created by Tancrède on 5/18/16.
@@ -8,8 +8,5 @@
 
 import Foundation
 
-import ReSwift
 
-
-struct MxShowAllLabelsAction: Action {}
-struct MxShowSelectedLabelsAction: Action {}
+//func labelReducer(state state: )

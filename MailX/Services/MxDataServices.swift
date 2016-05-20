@@ -82,12 +82,3 @@ class MxDataServices {
 }
 
 
-// MARK: - Error treatment
-
-func sendErrorNotification( message message: String, error: ErrorType){
-    //todo
-    
-    MxLog.error( "Error: \(error)")
-    
-    fatalError("Func not implemented")
-}

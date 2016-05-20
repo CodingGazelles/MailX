@@ -9,10 +9,11 @@
 import Foundation
 
 
-struct MxMessageState {
+
+struct MxMessageState: MxStateType {
     var messages = [MxMessageRow]()
     
-    struct MxMessage {
+    struct MxMessage: MxStateType {
         var id: String
     }
 }
