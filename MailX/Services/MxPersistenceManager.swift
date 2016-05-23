@@ -8,8 +8,6 @@
 
 import Foundation
 
-
-
 import RealmSwift
 import Result
 import Pipes
@@ -17,28 +15,26 @@ import SugarRecordRealm
 
 
 
-enum MxDbError : MxError {
-    case DbOperationDidFail( operationName: String, errorMessage: String, error: ErrorType?)
-    case DbObjectInconsistent( object: MxDBOType, errorMessage: String)
-    case DbOperationDidReturnNothing( operationName: String)
-    case DbOperationDidReturnTooManyResults( operationName: String)
-}
-
-func databasePath(name: String) -> String {
+private func databasePath(name: String) -> String {
     let documentsPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory,.UserDomainMask, true)[0] as String
     return documentsPath.stringByAppendingString("/\(name)")
 }
 
 
-class MxStoreManager {
+class MxPersistenceManager {
     
     
     // MARK: - Shared instance
     
-    private static let sharedInstance = MxStoreManager()
-    static func defaultDb() -> MxStoreManager {
-        return sharedInstance
+    private static let sharedInstance = MxPersistenceManager()
+    static func defaultManager() -> Result<MxPersistenceManager, MxError> {
+        return .Success(sharedInstance)
     }
+    
+    private init(){}
+    
+    
+    // Mark: - Default DB
     
     lazy var db: RealmDefaultStorage = {
         var configuration = Realm.Configuration()
@@ -50,7 +46,7 @@ class MxStoreManager {
     
     // MARK: - Providers
     
-    func insertProvider( provider provider: MxProviderModel) -> Result<Bool, MxDbError> {
+    func insertProvider( provider provider: MxProviderModel) -> Result<Bool, MxError> {
         MxLog.verbose("... Processing. Args: provider=\(provider)")
         
         do {
@@ -64,49 +60,33 @@ class MxStoreManager {
             return .Success(true)
         } catch {
             return Result.Failure(
-                MxDbError.DbOperationDidFail(
-                    operationName: "context.create",
-                    errorMessage: "Error while calling context.create on MxProviderDbObject",
-                    error: error))
+                MxError.OperationDidThrow(
+                    operationName: "context.create()",
+                    message: "Error while calling context.create on MxProviderDBO",
+                    rootError: error))
         }
     }
     
     
     // MARK: - Mailboxes
     
-    func fetchMailbox( mailboxId mailboxId: MxModelId) -> Result<MxMailboxModel, MxDbError> {
+    func fetchMailbox( mailboxId mailboxId: MxMailboxModelId) -> Result<MxMailboxModel, MxError> {
         MxLog.verbose("... Processing. Args: mailboxId\(mailboxId)")
         
         return fetchMailboxDBO( mailboxId: mailboxId.value)
             |> (flatMap, {$0.toModel()})
     }
     
-    func fetchMailboxes() -> Result<MxMailboxModelArray, MxDbError> {
+    func fetchMailboxes() -> Result<MxMailboxModelArray, MxError> {
         MxLog.verbose("... Processing")
         
         let result = fetchMailboxDBOs()
             |> {$0.toModels()}
         
         return result
-        
-//        switch fetchMailboxDBOs() {
-//        case let .Success(value):
-//            do {
-//                let results = try value.map(MxMailboxDBO.toModel)
-//                return Result.Success( results)
-//            } catch {
-//                return Result.Failure(
-//                    MxDbError.DbOperationDidFail(
-//                        operationName: "MxMailboxDbObject.toModel",
-//                        errorMessage: "Error while calling MxMailboxDbObject.toModel",
-//                        error: error))
-//            }
-//        case let .Failure(error):
-//            return Result.Failure(error)
-//        }
     }
     
-    func insertMailbox( mailbox mailbox: MxMailboxModel) -> Result<Bool, MxDbError> {
+    func insertMailbox( mailbox mailbox: MxMailboxModel) -> Result<Bool, MxError> {
         MxLog.verbose("... Processing. Args: mailbox=\(mailbox)")
         
         let providerId = mailbox.providerId.value
@@ -142,48 +122,42 @@ class MxStoreManager {
                 return .Success(true)
             } catch {
                 return Result.Failure(
-                    MxDbError.DbOperationDidFail(
-                        operationName: "context.create",
-                        errorMessage: "Error while calling context.create on MxMailboxDbObject",
-                        error: error))
+                    MxError.OperationDidThrow(
+                        operationName: "context.create()",
+                        message: "Error while calling context.create on MxMailboxDBO",
+                        rootError: error))
             }
         
         case let .Failure(error):
             return Result.Failure(
-                MxDbError.DbOperationDidFail(
-                    operationName: "MxLocalStoreHelper.fetchProvider",
-                    errorMessage: "Error while calling MxLocalStoreHelper.fetchProvider with args: providerId=\(providerId)",
-                    error: error))
+                MxError.OperationDidThrow(
+                    operationName: "fetchProviderDBO()",
+                    message: "Error while calling fetchProviderDBO() with args: providerId=\(providerId)",
+                    rootError: error))
         }
     }
     
     
     // MARK: - Labels
     
-    func fetchLabels( mailboxId mailboxId: MxModelId) -> Result<MxLabelModelArray, MxDbError> {
+    func fetchLabels( mailboxId mailboxId: MxMailboxModelId) -> Result<MxLabelModelArray, MxError> {
         MxLog.verbose("... Processing. Args: mailboxId=\(mailboxId)")
         
         switch fetchMailboxDBO( mailboxId: mailboxId.value) {
         case let .Success(value):
-            do {
-                let result = try value
-                    .labels
-                    .map( MxLabelDBO.toModel)
-                return .Success( result)
-            } catch {
-                return Result.Failure(
-                    MxDbError.DbOperationDidFail(
-                        operationName: "MxLabelObject.toModel",
-                        errorMessage: "Error while calling MxLabelObject.toModel with args: labels=\(value.labels)",
-                        error: error) )
-            }
+            
+            let result = value
+                .labels
+                .map( MxLabelDBO.toModel)
+            
+            return .Success( result)
+            
         case let .Failure(error):
-//            sendErrorNotification( message: "Error while calling fetchMailboxObject. Args: mailboxId= \(mailboxId)",error: error)
             return .Failure(error)
         }
     }
     
-    func deleteLabels( mailboxId mailboxId: MxModelId) -> Result< [MxModelId], MxDbError> {
+    func deleteLabels( mailboxId mailboxId: MxMailboxModelId) -> Result< Bool, MxError> {
         MxLog.verbose("... Processing. Args: mailboxId=\(mailboxId)")
         
         switch fetchMailboxDBO( mailboxId: mailboxId.value) {
@@ -205,13 +179,13 @@ class MxStoreManager {
                 }
                 
                 // return array of ids of deleted labels
-                return .Success( labels.map({ MxModelId(value: $0.id)}))
+                return .Success( true)
             } catch {
                 return .Failure(
-                    MxDbError.DbOperationDidFail(
-                        operationName: "context.remove",
-                        errorMessage: "Error while calling context.remove with args: labels\(labels)",
-                        error: error))
+                    MxError.OperationDidThrow(
+                        operationName: "context.remove()",
+                        message: "Error while calling context.remove() with args: labels\(labels)",
+                        rootError: error))
             }
         case let .Failure(error):
             return Result.Failure(error)
@@ -221,7 +195,7 @@ class MxStoreManager {
     
     // MARK: - Messages
     
-    func deleteMessages( mailboxId mailboxId: MxModelId, labelId: MxModelId) -> Result< AnyObject?,MxDbError>{
+    func deleteMessages( mailboxId mailboxId: MxMailboxModelId, labelId: MxLabelModelId) -> Result< Bool,MxError>{
         MxLog.verbose("... Processing. Args: mailboxId=\(mailboxId), labelId=\(labelId)")
         
         switch fetchMessageDBOs(mailboxId: mailboxId.value, labelId: labelId.value) {
@@ -231,24 +205,24 @@ class MxStoreManager {
                     try context.remove(messages)
                     save()
                 }
-                return .Success( nil)
+                return .Success( true)
             } catch {
                 return .Failure(
-                    MxDbError.DbOperationDidFail(
-                        operationName: "context.remove",
-                        errorMessage: "Error while calling context.remove with args: messages\(messages)",
-                        error: error))
+                    MxError.OperationDidThrow(
+                        operationName: "context.remove()",
+                        message: "Error while calling context.remove() with args: messages\(messages)",
+                        rootError: error))
             }
             
         case let .Failure(error):
-            return Result.Failure(error)
+            return .Failure(error)
         }
     }
     
     
     // MARK: - Fetch db objects
     
-    private func fetchProviderDBO( providerId providerId: String) -> Result<MxProviderDBO, MxDbError> {
+    private func fetchProviderDBO( providerId providerId: String) -> Result<MxProviderDBO, MxError> {
         MxLog.verbose("... Processing. Args: providerId=\(providerId)")
         
         let predicate: NSPredicate = NSPredicate( format: "id == %@", providerId)
@@ -257,14 +231,14 @@ class MxStoreManager {
             return Result.Success(result!)
         } catch {
             return Result.Failure(
-                MxDbError.DbOperationDidFail(
+                MxError.OperationDidThrow(
                     operationName: "db.fetch",
-                    errorMessage: "Error while fetching provider. Args: providerId=\(providerId)",
-                    error: error))
+                    message: "Error while fetching provider. Args: providerId=\(providerId)",
+                    rootError: error))
         }
     }
     
-    private func fetchMailboxDBO( mailboxId mailboxId: String) -> Result<MxMailboxDBO, MxDbError> {
+    private func fetchMailboxDBO( mailboxId mailboxId: String) -> Result<MxMailboxDBO, MxError> {
         MxLog.verbose("... Processing. Args: mailboxId=\(mailboxId)")
         
         let predicate: NSPredicate = NSPredicate( format: "id == %@", mailboxId)
@@ -273,14 +247,14 @@ class MxStoreManager {
             return Result.Success(result!)
         } catch {
             return Result.Failure(
-                MxDbError.DbOperationDidFail(
+                MxError.OperationDidThrow(
                     operationName: "db.fetch",
-                    errorMessage: "Error while fetching mailbox. Args: mailboxId=\(mailboxId)",
-                    error: error))
+                    message: "Error while fetching mailbox. Args: mailboxId=\(mailboxId)",
+                    rootError: error))
         }
     }
     
-    private func fetchMailboxDBOs() -> Result<MxMailboxDBOs, MxDbError> {
+    private func fetchMailboxDBOs() -> Result<MxMailboxDBOs, MxError> {
         MxLog.verbose("... Processing")
         
         do {
@@ -288,14 +262,14 @@ class MxStoreManager {
             return Result.Success(result)
         } catch {
             return Result.Failure(
-                MxDbError.DbOperationDidFail(
+                MxError.OperationDidThrow(
                     operationName: "db.fetch",
-                    errorMessage: "Error while fetching mailboxes.",
-                    error: error))
+                    message: "Error while fetching mailboxes.",
+                    rootError: error))
         }
     }
     
-    private func fetchMessageDBOs( mailboxId mailboxId: String, labelId: String) -> Result<MxMessageDBOs, MxDbError> {
+    private func fetchMessageDBOs( mailboxId mailboxId: String, labelId: String) -> Result<MxMessageDBOs, MxError> {
         MxLog.verbose("... Processing. Args: mailboxId=\(mailboxId), labelId=\(labelId)")
         
         switch fetchMailboxDBO( mailboxId: mailboxId) {

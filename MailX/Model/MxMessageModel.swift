@@ -10,21 +10,17 @@ import Foundation
 
 
 
-
 typealias MxMessageModelArray = [MxMessageModel]
 typealias MxMessageModelOptArray = [MxMessageModel?]
 
-
-class MxMessageModel: MxModel {
+struct MxMessageModel: MxModelType {
     
-    var id: MxModelId
+    var UID: String
+    var id: MxMessageModelId
     var value: String
-    var labelId: MxModelId?
-    
-    init(id: MxModelId, value: String, labelId: MxModelId?){
-        self.id = id
-        self.value = value
-        self.labelId = labelId
-    }
+    var labelId: MxLabelModelId?
 }
 
+struct MxMessageModelId: MxModelIdType {
+    var value: String
+}

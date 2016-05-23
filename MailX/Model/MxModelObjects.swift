@@ -9,42 +9,25 @@
 import Foundation
 
 
-// MARK: - Model error
-
-enum MxModelError : MxError {
-    case ModelObjectInconsistent( model: MxModel, errorMessage: String, rootError: ErrorType?)
-}
-
 
 // MARK: - Root model object
 
-protocol MxModel {
-    var id: MxModelId { get set }
+protocol MxModelType: MxDataObjectType {
+    associatedtype Id: MxModelIdType
+    var id: Id { get set }
 }
 
-extension MxModel {
-    var hashValue: Int {
-        return id.value.hashValue
-    }
+protocol MxModelIdType: Hashable, Equatable {
+    var value: String { get set }
 }
 
-struct MxModelId: Hashable, Equatable {
-    var value: String
-    
-    init(value: String){
-        self.value = value
-    }
-    
+extension MxModelIdType {
     var hashValue: Int {
         return value.hashValue
     }
 }
 
-func ==(lhs: MxModelId, rhs: MxModelId) -> Bool{
-    return lhs.hashValue == rhs.hashValue
-}
-
-func ==(lhs: MxModel, rhs: MxModel) -> Bool{
+func ==<Id: MxModelIdType>(lhs: Id, rhs: Id) -> Bool{
     return lhs.hashValue == rhs.hashValue
 }
 

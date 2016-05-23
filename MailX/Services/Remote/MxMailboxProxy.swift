@@ -13,15 +13,15 @@ protocol MxMailboxProxy {
     
     func connect( completionHandler completionHandler: MxConnectCompletionHandler)
     func sendFetchLabelsRequest( completionHandler completionHandler: MxFetchLabelsCompletionHandler)
-    func sendFetchMessagesInLabelRequest(labelId labelId: MxLabelModel.Id, completionHandler: MxFetchMessagesInLabelCompletionHandler)
+    func sendFetchMessagesInLabelRequest(labelId labelId: MxLabelId, completionHandler: MxFetchMessagesInLabelCompletionHandler)
     
 //    func didFetchMessagesHandler( selector: Selector, error: NSError)
     
 //    func sendFetchThreadsRequest(label: MxLabelModel)
 //    func didFetchThreadsHandler( selector: Selector, error: NSError)
     
-    func getMailboxId() -> MxMailboxModel.Id
-    func getProviderId() -> MxProviderModel.Id
+    func getMailboxId() -> MxMailboxId
+    func getProviderId() -> MxProviderId
     
 }
 

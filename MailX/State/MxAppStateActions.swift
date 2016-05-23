@@ -16,7 +16,6 @@ struct MxSetStateAction: MxAction {
     var state: MxAppState
 }
 
-
 extension MxAppState {
     
     static func readSavedState() -> MxAppState? {

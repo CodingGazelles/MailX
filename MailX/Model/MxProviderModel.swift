@@ -13,13 +13,17 @@ import Foundation
 typealias MxProviderModelArray = [MxProviderModel]
 typealias MxProviderModelOptArray = [MxProviderModel?]
 
-
-struct MxProviderModel: MxModel {
+struct MxProviderModel: MxModelType {
+    var UID: String
+    var id: MxProviderModelId
     
-    var id: MxModelId
-    
-    init(id: MxModelId){
+    init(id: MxProviderModelId){
+        self.init()
         self.id = id
     }
+}
+
+struct MxProviderModelId: MxModelIdType {
+    var value: String
 }
 

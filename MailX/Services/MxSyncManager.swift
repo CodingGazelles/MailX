@@ -8,46 +8,62 @@
 
 import Foundation
 
+import Result
 
 
 
-
-
-class MxSyncServices {
+class MxSyncManager {
     
     
-    // MARK: -
+    // MARK: - Private properties
     
-    private let localStore = MxStoreManager.sharedDb()
-    private var remoteStores = Dictionary<MxModelId, MxRemoteStoreHelper>()
-    
-    
-//    // MARK: - Shared instance
-//    
-//    private static let sharedInstance = MxSyncManager()
-//    static func sharedSyncManager() -> MxSyncManager {
-//        return sharedInstance
-//    }
-    
-    
-    
-    init() {
-        MxLog.verbose("... Processing.")
-        
-        switch localStore.fetchMailboxes() {
-        case let .Success(mailboxes):
-            for mailbox in mailboxes {
-                let remoteStore = MxRemoteStoreHelper( mailbox: mailbox)
-                remoteStores[mailbox.id] = remoteStore
-            }
+    private let localStore = { () -> MxPersistenceManager? in
+        switch MxPersistenceManager.defaultManager() {
+        case let .Success(manager):
+            return manager
             
         case let .Failure(error):
-            sendErrorNotification( message: "Unable to fetch mailboxes.",error: error)
+            MxLog.error("Unable to get persistence manager", error: error)
+            return nil
+        }
+    }()
+    
+    private var remoteStores = Dictionary<MxMailboxModelId, MxMailboxHelper>()
+    
+    
+    // MARK: - Shared instance
+    
+    private static let sharedInstance = { () -> Result<MxSyncManager, MxError> in
+        let manager = MxSyncManager()
+        
+        guard (manager.localStore != nil) else {
+            return .Failure(MxError.InternalStateIncoherent(
+                operationName: "MxSyncManager.sharedInstance"
+                , message: "localStore is nill") )
         }
         
-        MxLog.verbose("... Done.")
+        switch manager.localStore!.fetchMailboxes() {
+        case let .Success(mailboxes):
+            
+            for mailbox in mailboxes {
+                let remoteStore = MxMailboxHelper( mailbox: mailbox)
+                manager.remoteStores[mailbox.id] = remoteStore
+            }
+            return .Success(manager)
+            
+        case let .Failure(error):
+            MxLog.error("Unable to initialize sync manager", error: error)
+            return .Failure(error)
+        }
+        
+    }()
+        
+    
+    static func defaultManager() -> Result<MxSyncManager, MxError> {
+        return sharedInstance
     }
     
+    private init(){}
     
     
     //MARK: - Synchronize local mailboxes with remote store
@@ -97,13 +113,13 @@ class MxSyncServices {
     }
     
     // incremental update
-    func updatePartial( mailboxId mailboxId: MxModelId){
-        MxLog.debug("Doing partial update of mailbox: \(mailboxId)")
+    func updateIncremental( mailboxId mailboxId: MxMailboxModelId){
+        MxLog.debug("Doing incremental update of mailbox: \(mailboxId)")
         
         fatalError("Func not implemented")
     }
     
-    func updateFull(mailboxId mailboxId: MxModelId){
+    func updateFull(mailboxId mailboxId: MxMailboxModelId){
         MxLog.debug("Doing full update of mailbox: \(mailboxId)")
         
         emptyAllDataOfMailbox(mailboxId: mailboxId)
@@ -111,7 +127,7 @@ class MxSyncServices {
     }
     
     // full update
-    func emptyAllDataOfMailbox( mailboxId mailboxId: MxModelId){
+    func emptyAllDataOfMailbox( mailboxId mailboxId: MxMailboxModelId){
         MxLog.verbose("... Processing. Args: mailboxId: \(mailboxId)")
         
         MxLog.debug("Deleting messages in labels. Args: mailboxId: \(mailboxId)")
@@ -121,6 +137,7 @@ class MxSyncServices {
             for label in labels {
                 localStore.deleteMessages( mailboxId: mailboxId, labelId: label.id)
             }
+            
         case let .Failure( error):
             sendErrorNotification( message: "Unable to fetch labels. Args: mailboxId: \(mailboxId)",error: error)
         }
@@ -135,7 +152,7 @@ class MxSyncServices {
         MxLog.verbose("... Done");
     }
     
-    func fetchAllDataOfMailbox( mailboxId mailboxId: MxModelId){
+    func fetchAllDataOfMailbox( mailboxId mailboxId: MxMailboxModelId){
         MxLog.verbose("... mailboxId: \(mailboxId)")
         
         // fetch messages in INBOX

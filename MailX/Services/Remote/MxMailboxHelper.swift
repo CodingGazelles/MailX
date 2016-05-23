@@ -10,9 +10,7 @@ import Foundation
 
 
 
-
-
-class MxRemoteStoreHelper {
+class MxMailboxHelper {
     
     
     private var proxy: MxMailboxProxy

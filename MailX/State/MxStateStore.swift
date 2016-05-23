@@ -14,6 +14,11 @@ import ReSwift
 
 class MxStateStore: Store<MxAppState> {
     
+    
+    typealias MxActionCreator = (mxState: MxAppState, mxStore: MxStateStore) -> MxAction?
+    typealias ReActionCreator = (state: State, store: Store<MxAppState>) -> Action?
+    
+    
     init(){
         super.init(reducer: MxAppReducer(), state: nil, middleware: [])
     }
@@ -23,9 +28,20 @@ class MxStateStore: Store<MxAppState> {
         return super.dispatch(action)
     }
     
-    override func dispatch(actionCreatorProvider: (state: State, store: Store<State>) -> Action?) -> Any {
-        MxLog.info("Dispatching action creator: \(actionCreatorProvider)")
-        return super.dispatch(actionCreatorProvider)
+    func dispatch(mxActionCreator: (state: MxAppState, store: MxStateStore) -> MxAction?) -> Any {
+        MxLog.info("Dispatching action creator: \(mxActionCreator)")
+        
+        let reActionCreator = {
+            (state: State, store: Store<MxAppState>) -> Action? in
+            
+            let _state = state
+            let _store = store as! MxStateStore
+            let _action = mxActionCreator(state: _state, store: _store)
+            
+            return _action as? Action
+        }
+        
+        return super.dispatch(reActionCreator)
     }
     
     func initState() {
@@ -39,7 +55,9 @@ class MxStateStore: Store<MxAppState> {
             
             dispatch( MxSetPropertiesAction(properties: MxPropertiesState.readDefaultProperties()))
             
-            dispatch( funcLoadSelectedMailbox)
+            dispatch( MxMailboxActionsFactory.loadAllMailboxes)
+            
+            dispatch( MxMailboxActionsFactory.loadAllLabels)
             
         }
         

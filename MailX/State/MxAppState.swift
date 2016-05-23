@@ -14,17 +14,17 @@ import ReSwift
 
 // Markers
 
-protocol MxStateType : StateType {}
-protocol MxStateModelType: MxStateType {}
-
+protocol MxStateObjectType: MxDataObjectType {}
+protocol MxStateType : ReSwift.StateType, Loggable {}
 
 struct MxAppState: MxStateType {
     
-    var mailboxState = MxMailboxState()
-    var providerState = MxProviderState()
-    var labelState = MxLabelState()
-    var messageState = MxMessageState()
+    var mailboxesState = MxMailboxesState()
+    var providersState = MxProvidersState()
+    var labelsState = MxLabelsState()
+    var messagesState = MxMessageState()
     var propertiesState = MxPropertiesState()
+    var errorsState = MxErrorsState()
     
     // recorder
 //    var navigationState = NavigationState()

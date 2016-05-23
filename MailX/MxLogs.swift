@@ -25,10 +25,19 @@ class MxLog {
     static func info( message: String){
         Log.info?.message(message)
     }
-    static func warn( message: String){
+    static func warn( message: String, error: Loggable? = nil){
         Log.warning?.message(message)
+        if error != nil {
+            Log.warning?.message("\(error)")
+        }
     }
-    static func error( message: String){
+    static func error( message: String, error: Loggable? = nil){
         Log.error?.message(message)
+        if error != nil {
+            Log.error?.message("\(error)")
+        }
     }
 }
+
+
+

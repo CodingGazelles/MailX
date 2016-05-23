@@ -14,39 +14,37 @@ import Pipes
 
 
 struct MxSetMailboxesAction: MxAction {
-    
-    var allMailboxes: [MxMailbox]
-    var selectedMailbox: MxMailbox
-    
+    var allMailboxes: [MxMailboxSO]
+    var selectedMailbox: MxMailboxSO?
 }
 
-
-struct MxMailboxDBActionsFactory {
+let loadAllMailboxes = { (state: MxAppState, store: MxStateStore) -> MxAction in
     
-    let loadAllMailboxes = { (state: MxAppState, store: MxStateStore) -> MxAction in
+    switch MxPersistenceManager.defaultManager() {
+    case let .Success( db):
         
-        let db = MxStoreManager.defaultDb()
         switch  db.fetchMailboxes() {
-        case let .Success( mailboxes):
+        case let .Success( mailboxModels):
             
-            mailboxes
-                |> map( MxMailbox($0))
+            let mailboxes = mailboxModels
+                |> map({ MxMailboxSO(mailboxModel: $0)})
             
-            
-            return MxSetMailboxesAction(allMailboxes: , selectedMailbox)
+            return MxSetMailboxesAction(allMailboxes: mailboxes, selectedMailbox: mailboxes[0] ?? nil)
             
         case let .Failure( error):
-            
-            return MxAddErrorsAction( errors: [error])
+            MxLog.error("Error while fetching mailboxes from DB", error: error)
+            return MxAddErrorsAction( errors: [MxErrorSO( error: error)])
         }
         
+    case let .Failure(error):
+        MxLog.error("Error while initializinf Persistence Manager", error: error)
+        return MxAddErrorsAction( errors: [MxErrorSO( error: error)])
     }
 }
 
-extension MxMailbox {
-    init( mailboxModel: MxMailboxModel){
-        self.id = mailboxModel.id.value
-        self.name = mailboxModel.id.value
-    }
-}
+
+
+
+
+
 

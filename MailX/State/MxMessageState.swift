@@ -10,19 +10,30 @@ import Foundation
 
 
 
-struct MxMessageState: MxStateType {
-    var messages = [MxMessageRow]()
+struct MxMessageSO: MxStateObjectType {
     
-    struct MxMessage: MxStateType {
-        var id: String
+    var UID: String
+    var id: String
+    
+    init(id: String){
+        self.init()
+        self.id = id
+    }
+    
+    init(messageSO: MxMessageSO){
+        self.init(dataObject: messageSO)
+        self.init(id: messageSO.id)
     }
 }
 
+struct MxMessageState: MxStateType {
+    var messages = [MxMessageRow]()
+}
 
 
-extension MxMessageState.MxMessage: MxMessageRow {}
+extension MxMessageSO: MxMessageRow {}
 
-protocol MxMessageRow {
+protocol MxMessageRow: MxStateObjectType {
     var id: String { get set }
 }
 

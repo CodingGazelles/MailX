@@ -17,8 +17,8 @@ import GTMOAuth2
 class MxGMailProxy : NSObject , MxMailboxProxy {
     
     
-    private var mailboxId: MxMailboxModel.Id
-    private var providerId: MxProviderModel.Id
+    private var mailboxId: MxMailboxId
+    private var providerId: MxProviderId
     private var service: GTLServiceGmail
     
     private var connectCompletionHandler: MxConnectCompletionHandler?

@@ -11,9 +11,13 @@ import Foundation
 import Result
 
 
+
+
+
+
 // MARK: - MxReturn
 
-extension Result where Error: MxError {
+extension Result where Error: MxException {
     
     func unwrap() -> Value? {
         switch self {
