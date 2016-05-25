@@ -41,55 +41,55 @@
 	<key>SystemLabels</key>
 	<array>
 		<dict>
-			<key>Id</key>
+			<key>code</key>
 			<string>INBOX</string>
 			<key>Name</key>
 			<string>Inbox</string>
 		</dict>
 		<dict>
-			<key>Id</key>
+			<key>code</key>
 			<string>UNREAD</string>
 			<key>Name</key>
 			<string>Unread</string>
 		</dict>
 		<dict>
-			<key>Id</key>
+			<key>code</key>
 			<string>STARRED</string>
 			<key>Name</key>
 			<string>Starred</string>
 		</dict>
 		<dict>
-			<key>Id</key>
+			<key>code</key>
 			<string>ALL</string>
 			<key>Name</key>
 			<string>All</string>
 		</dict>
 		<dict>
-			<key>Id</key>
+			<key>code</key>
 			<string>SENT</string>
 			<key>Name</key>
 			<string>Sent</string>
 		</dict>
 		<dict>
-			<key>Id</key>
+			<key>code</key>
 			<string>TRASH</string>
 			<key>Name</key>
 			<string>Trash</string>
 		</dict>
 		<dict>
-			<key>Id</key>
+			<key>code</key>
 			<string>SPAM</string>
 			<key>Name</key>
 			<string>Spam</string>
 		</dict>
 		<dict>
-			<key>Id</key>
+			<key>code</key>
 			<string>DRAFT</string>
 			<key>Name</key>
 			<string>Drafts</string>
 		</dict>
 		<dict>
-			<key>Id</key>
+			<key>code</key>
 			<string>OUTBOX</string>
 			<key>Name</key>
 			<string>Outbox</string>

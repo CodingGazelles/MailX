@@ -12,24 +12,39 @@ import Result
 
 
 
-
-
-
-// MARK: - MxReturn
+// MARK: - MxResult
 
 extension Result where Error: MxException {
     
-    func unwrap() -> Value? {
-        switch self {
-        case let .Success(value):
-            return value
-        case let .Failure(error):
-            error.logIt()
-            return nil
-        }
-    }
+//    func unwrap() -> Value? {
+//        switch self {
+//        case let .Success(value):
+//            return value
+//        case let .Failure(error):
+//            MxLog.error("Failure in result", error: error)
+//            return nil
+//        }
+//    }
+//    
+//    func isSuccess() -> Bool {
+//        switch self{
+//        case .Success:
+//            return true
+//        case .Failure:
+//            return false
+//        }
+//    }
 }
 
+
+//func isSuccess(result: Result<MxDataObjectType, MxDBError>) -> Bool {
+//    switch result{
+//    case .Success:
+//        return true
+//    case .Failure:
+//        return false
+//    }
+//}
 
 
 

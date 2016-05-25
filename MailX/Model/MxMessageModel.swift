@@ -15,10 +15,17 @@ typealias MxMessageModelOptArray = [MxMessageModel?]
 
 struct MxMessageModel: MxModelType {
     
-    var UID: String
+    var UID: MxUID
     var id: MxMessageModelId
     var value: String
     var labelId: MxLabelModelId?
+    
+    init(UID: MxUID?, id: MxMessageModelId, value: String, labelId: MxLabelModelId?){
+        self.init(UID: UID)
+        self.id = id
+        self.value = value
+        self.labelId = labelId
+    }
 }
 
 struct MxMessageModelId: MxModelIdType {

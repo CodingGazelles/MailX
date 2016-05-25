@@ -12,40 +12,47 @@ import Foundation
 
 struct MxLabelSO: MxStateObjectType {
     
-    var UID: String
-    var id: String
+    var UID: MxUID
+    var id: String?
     var code: String
     var name: String
-    var ownerType: MxLabelOwnerType
+    var ownerType: String
     
-    init(id: String, code: String, name: String, ownerType: String){
+    init(){
         self.init()
+    }
+    
+    init?(UID: MxUID?, id: String?, code: String, name: String, ownerType: String){
+        
+        guard MxLabelOwnerType(rawValue: ownerType) != nil else {
+            return nil
+        }
+        
+        self.init(UID: UID)
         self.id = id
         self.code = code
         self.name = name
-        self.ownerType = MxLabelOwnerType(rawValue: ownerType)!
+        self.ownerType = ownerType
     }
     
     init(labelSO: MxLabelSO){
-        self.init(dataObject: labelSO)
-        self.init(id: labelSO.id, code: labelSO.code, name: labelSO.name, ownerType: labelSO.ownerType.rawValue)
-    }
-    
-    enum MxLabelOwnerType: String {
-        case SYSTEM = "SYSTEM"
-        case USER = "USER"
-        case UNKNOWN
+        self.init(
+            UID: labelSO.UID
+            , id: labelSO.id
+            , code: labelSO.code
+            , name: labelSO.name
+            , ownerType: labelSO.ownerType)!
     }
 }
 
 extension MxLabelSO {
     init( labelModel: MxLabelModel){
-        self.init(dataObject: labelModel)
         self.init(
-            id: labelModel.id.value
+            UID: labelModel.UID
+            , id: labelModel.id.value
             , code: labelModel.code
             , name: labelModel.name
-            , ownerType: labelModel.ownerType.rawValue)
+            , ownerType: labelModel.ownerType.rawValue)!
     }
 }
 

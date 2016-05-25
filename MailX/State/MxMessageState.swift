@@ -12,17 +12,16 @@ import Foundation
 
 struct MxMessageSO: MxStateObjectType {
     
-    var UID: String
+    var UID: MxUID
     var id: String
     
-    init(id: String){
-        self.init()
+    init(UID: MxUID?, id: String){
+        self.init(UID: UID)
         self.id = id
     }
     
     init(messageSO: MxMessageSO){
-        self.init(dataObject: messageSO)
-        self.init(id: messageSO.id)
+        self.init(UID: messageSO.UID, id: messageSO.id)
     }
 }
 

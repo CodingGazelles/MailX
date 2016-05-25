@@ -15,9 +15,19 @@ import ReSwift
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
     
+    lazy var syncManager = { () -> MxSyncManager? in
+        
+        switch MxSyncManager.defaultManager() {
+        case let .Success(manager):
+            return manager
+            
+        case let .Failure(error):
+            MxLog.error("Unable to get an instance of the sync manager", error: error)
+            return nil
+        }
+        
+    }()
     
-    lazy var dataService = MxDataServices()
-    lazy var syncService = MxSyncServices()
     lazy var store = MxStateStore()
     
     
@@ -39,10 +49,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         
         // Init local db and connections to providers
-        let queue: dispatch_queue_t = dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)
-        dispatch_async( queue, {
-            self.syncService.startSynchronization()
-        })
+        if syncManager != nil {
+            
+            let queue: dispatch_queue_t = dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)
+            dispatch_async( queue, {
+                self.syncManager!.startSynchronization()
+            })
+            
+        } else {
+            MxLog.error("Unable to start syncronization because sync manager is nil", error: nil)
+        }
         
         
         MxLog.verbose("... Done")

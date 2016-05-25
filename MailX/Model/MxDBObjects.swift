@@ -11,12 +11,22 @@ import SugarRecordRealm
 // MARK: - Protocols
 
 protocol MxDBOType: SugarRecordRealm.Entity, MxDataObjectType {
-    associatedtype AssociatedModel
+    var _UID: String { get set }
 }
 
 extension MxDBOType {
+
+    var UID: MxUID {
+        get {
+            return MxUID(value: _UID)
+        }
+        set {
+            _UID = newValue.value
+        }
+    }
+
     func primaryKey() -> String? {
-        return "UID"
+        return "_UID"
     }
 }
 
@@ -25,10 +35,8 @@ extension MxDBOType {
 
 final class MxProviderDBO: RealmSwift.Object, MxDBOType {
     
-    typealias AssociatedModel = MxProviderModel
-    
     // properties
-    dynamic var UID: String = NSUUID().UUIDString
+    dynamic var _UID = ""
     dynamic var id: String = ""
     
     // relationships
@@ -45,12 +53,12 @@ final class MxProviderDBO: RealmSwift.Object, MxDBOType {
 
 // MARK: - Mailbox
 
+typealias MxMailboxDBOResult = Result<MxMailboxDBO, MxDBError>
+
 final class MxMailboxDBO : Object, MxDBOType {
     
-    typealias AssociatedModel = MxMailboxModel
-    
     // properties
-    dynamic var UID: String = NSUUID().UUIDString
+    dynamic var _UID = ""
     dynamic var id: String = ""
     var name: String = ""
     
@@ -70,10 +78,8 @@ final class MxMailboxDBO : Object, MxDBOType {
 
 final class MxLabelDBO: Object, MxDBOType {
     
-    typealias AssociatedModel = MxLabelModel
-    
     // properties
-    dynamic var UID: String = NSUUID().UUIDString
+    dynamic var _UID = ""
     dynamic var id: String = ""
     dynamic var code: String = ""
     dynamic var name: String = ""
@@ -96,10 +102,8 @@ final class MxLabelDBO: Object, MxDBOType {
 
 final class MxMessageDBO: Object, MxDBOType {
     
-    typealias AssociatedModel = MxMessageModel
-    
     // properties
-    dynamic var UID: String = NSUUID().UUIDString
+    dynamic var _UID = ""
     dynamic var id: String = ""
     
     // relationships
@@ -114,93 +118,92 @@ final class MxMessageDBO: Object, MxDBOType {
 
 // MARK: - ModelConvertible extension
 
-protocol ModelConvertible: MxDBOType {
-    func toModel() -> Result<AssociatedModel, MxError>
-    static func fromModel( model model: AssociatedModel) -> Result<Self, MxError>
-}
+//extension MxProviderDBO: MxModelConvertible {
+//    
+//    typealias AssociatedModel = MxProviderModel
+//    
+//    func toModel() -> Result<MxProviderModel, MxDBError> {
+//        preconditionFailure("Func not implemented")
+//    }
+//    
+//    static func fromModel(model model: AssociatedModel) -> Result<MxProviderDBO, MxDBError> {
+//        preconditionFailure("Func not implemented")
+//    }
+//}
 
-extension MxProviderDBO: ModelConvertible {
-    
-    func toModel() -> Result<MxProviderModel, MxError> {
-        preconditionFailure("Func not implemented")
-    }
-    
-    static func fromModel(model model: AssociatedModel) -> Result<MxProviderDBO, MxError> {
-        preconditionFailure("Func not implemented")
-    }
-}
-
-extension MxMailboxDBO: ModelConvertible {
-    
-    func toModel() -> Result<MxMailboxModel, MxError> {
-        
-        guard self.provider != nil else {
-            let error =  MxError.DataInconsistent(
-                object: self
-                , message: "Mailbox without a provider"
-                , rootError: nil)
-            return Result.Failure( error)
-        }
-        
-        let result = MxMailboxModel(mailboxDBO: self)
-        
-        return Result.Success( result)
-    }
-    
-    static func fromModel(model model: AssociatedModel) -> Result<MxMailboxDBO, MxError> {
-        preconditionFailure("Func not implemented")
-    }
-    
-}
-
-extension MxLabelDBO: ModelConvertible {
-    
-    func toModel() -> Result<MxLabelModel, MxError> {
-        
-        guard MxLabelModel.MxLabelOwnerType(rawValue: self.ownerType) != nil else {
-            let error = MxError.DataInconsistent(
-                object: self
-                , message: "Label without identificable owner type"
-                , rootError: nil)
-            return .Failure( error)
-        }
-        
-        guard self.mailbox?.id != nil else {
-            let error = MxError.DataInconsistent(
-                object: self
-                , message: "Label without mailbox id"
-                , rootError: nil)
-            return .Failure( error)
-        }
-        
-        guard let result =  MxLabelModel( labelDBO: self) else {
-            let error = MxError.UnexpectedReturn(
-                operationName: "MxLabelModel( labelDBO: MxLabelDBO)"
-                , message: "Unable to instanciate a MxLabelModel"
-                , rootError: nil)
-            return .Failure( error)
-        }
-        
-        return Result.Success(result)
-    }
-    
-    static func fromModel(model model: AssociatedModel) -> Result<MxLabelDBO, MxError> {
-        preconditionFailure("Func not implemented")
-    }
-    
-}
-
-extension MxMessageDBO: ModelConvertible {
-
-    func toModel() -> Result<AssociatedModel, MxError> {
-        preconditionFailure("Func not implemented")
-    }
-    
-    static func fromModel(model model: AssociatedModel) -> Result<MxMessageDBO, MxError> {
-        preconditionFailure("Func not implemented")
-    }
-    
-}
+//extension MxMailboxDBO: MxModelConvertible {
+//    
+//    typealias AssociatedModel = MxMailboxModel
+//    
+//    func toModel() -> Result<MxMailboxModel, MxDBError> {
+//        
+//        guard self.provider != nil else {
+//            let error =  MxDBError.DataInconsistent(
+//                object: self
+//                , message: "Mailbox without a provider")
+//            return Result.Failure( error)
+//        }
+//        
+//        let result = MxMailboxModel(dbo: self)
+//        
+//        return Result.Success( result)
+//    }
+//    
+//    static func fromModel(model model: AssociatedModel) -> Result<MxMailboxDBO, MxDBError> {
+//        preconditionFailure("Func not implemented")
+//    }
+//    
+//}
+//
+//extension MxLabelDBO: MxModelConvertible {
+//    
+//    typealias AssociatedModel = MxLabelModel
+//    
+//    func toModel() -> Result<MxLabelModel, MxDBError> {
+//        
+//        guard MxLabelOwnerType(rawValue: self.ownerType) != nil else {
+//            let error = MxDBError.DataInconsistent(
+//                object: self
+//                , message: "Label without identificable owner type")
+//            return .Failure( error)
+//        }
+//        
+//        guard self.mailbox?.id != nil else {
+//            let error = MxDBError.DataInconsistent(
+//                object: self
+//                , message: "Label without mailbox id")
+//            return .Failure( error)
+//        }
+//        
+//        guard let result =  MxLabelModel( labelDBO: self) else {
+//            let error = MxDBError.DataInconsistent(
+//                object: self
+//                , message: "Unable to instanciate a MxLabelModel with MxLabelDBO")
+//            return .Failure( error)
+//        }
+//        
+//        return Result.Success(result)
+//    }
+//    
+//    static func fromModel(model model: AssociatedModel) -> Result<MxLabelDBO, MxDBError> {
+//        preconditionFailure("Func not implemented")
+//    }
+//    
+//}
+//
+//extension MxMessageDBO: MxModelConvertible {
+//    
+//    typealias AssociatedModel = MxMessageModel
+//
+//    func toModel() -> Result<AssociatedModel, MxDBError> {
+//        preconditionFailure("Func not implemented")
+//    }
+//    
+//    static func fromModel(model model: AssociatedModel) -> Result<MxMessageDBO, MxDBError> {
+//        preconditionFailure("Func not implemented")
+//    }
+//    
+//}
 
 
 // MARK: - Array extensions
@@ -219,20 +222,20 @@ typealias MxMessageOptDBOs = [MxMessageDBO?]
 
 
 
-extension Array where Element:MxMailboxDBO {
-    
-    func toModels() -> MxMailboxModelOptArray {
-        return self.map{$0.toModel()}.map{$0.unwrap()}
-    }
-}
-
-extension Array where Element:MxLabelDBO {
-    
-    func toModels() -> MxLabelModelOptArray {
-        return self.map{$0.toModel()}.map{$0.unwrap()}
-    }
-    
-}
+//extension Array where Element:MxMailboxDBO {
+//    
+//    func toModels() -> MxMailboxModelOptArray {
+//        return self.map{$0.toModel()}.map{$0.unwrap()}
+//    }
+//}
+//
+//extension Array where Element:MxLabelDBO {
+//    
+//    func toModels() -> MxLabelModelOptArray {
+//        return self.map{$0.toModel()}.map{$0.unwrap()}
+//    }
+//    
+//}
 
 
 

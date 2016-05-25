@@ -18,9 +18,10 @@ class MxAppProperties {
     
     // Property file entries
     static let kPFE_DefaultLabels = "DefaultLabels"
+    static let kPFE_SystemLabels = "SystemLabels"
     
     // Dictionary of properties
-    private var _rootDictionary: [String:AnyObject]
+    private var _rootDictionary = [String:AnyObject]()
     
     // shared instance
     static var sharedInstance = MxAppProperties(fileName: kFileName, fileType: kFileType)
@@ -48,6 +49,13 @@ class MxAppProperties {
             return [String]()
         }
         return result as! [String]
+    }
+    
+    func systemLabels() -> [String:String] {
+        guard let result = _rootDictionary[MxAppProperties.kPFE_SystemLabels] else {
+            return [String:String]()
+        }
+        return result as! [String:String]
     }
     
 }

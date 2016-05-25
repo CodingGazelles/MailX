@@ -11,20 +11,30 @@ import Foundation
 
 
 struct MxErrorSO: MxStateObjectType {
-    var UID: String
-    var message = ""
     
-    init(message: String){
-        self.init()
+    var UID: MxUID
+    var message: String
+    
+    init(UID: MxUID?, message: String){
+        self.init(UID: UID)
         self.message = message
+    }
+    
+    init( error: MxException){
+        self.init( UID: nil, message: error.description)
     }
 }
 
 extension MxErrorSO {
-    init( error: MxError){
-        self.message = error.description
+    init( error: MxDBError){
+        self.init(UID: nil, message: error.description)
     }
 }
+
+func errorSO( errorDBO errorDBO: MxDBError) -> MxErrorSO {
+    return MxErrorSO(error: errorDBO)
+}
+
 
 struct MxErrorsState: MxStateType {
     var errors = [MxErrorSO]()

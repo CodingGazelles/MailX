@@ -8,21 +8,22 @@
 
 import Foundation
 
+import Result
 
 
-typealias MxMailboxModelArray = [MxMailboxModel]
-typealias MxMailboxModelOptArray = [MxMailboxModel?]
+
+typealias MxMailboxModelResult = Result<MxMailboxModel, MxModelError>
 
 struct MxMailboxModel: MxModelType {
     
-    var UID: String
+    var UID: MxUID
     var id: MxMailboxModelId
     var name: String
     var connected: Bool
     var providerId: MxProviderModelId
     
-    init(id: MxMailboxModelId, name: String, connected: Bool, providerId: MxProviderModelId){
-        self.init()
+    init(UID: MxUID, id: MxMailboxModelId, name: String, connected: Bool, providerId: MxProviderModelId){
+        self.init(UID: UID)
         self.id = id
         self.name = name
         self.connected = connected
@@ -34,14 +35,33 @@ struct MxMailboxModelId: MxModelIdType{
     var value: String
 }
 
-extension MxMailboxModel {
-    init( mailboxDBO: MxMailboxDBO){
-        self.init(dataObject: mailboxDBO)
-        self.init(
-            id: MxMailboxModelId( value: mailboxDBO.id)
-            , name: mailboxDBO.name
+extension MxMailboxModel: MxInitWithDBO {
+    init?( dbo: MxMailboxDBO){
+        
+        guard dbo.provider != nil else {
+            return nil
+        }
+        
+        self.init(   
+            UID: dbo.UID
+            , id: MxMailboxModelId( value: dbo.id)
+            , name: dbo.name
             , connected: false
-            , providerId: MxProviderModelId( value: mailboxDBO.provider!.id))
+            , providerId: MxProviderModelId( value: dbo.provider!.id))
     }
+}
+
+func toModel( dbo dbo: MxMailboxDBO) -> MxMailboxModelResult {
+    
+    guard dbo.provider != nil else {
+        
+        let error =  MxModelError.UnableToConvertDBOToModel(
+            dbo: dbo
+            , message: "Mailbox without a provider"
+            , rootError: nil)
+        return Result.Failure( error)
+    }
+    
+    return Result.Success( MxMailboxModel(dbo: dbo)!)
 }
 

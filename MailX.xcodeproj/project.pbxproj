@@ -451,8 +451,8 @@
 			isa = PBXGroup;
 			children = (
 				DFB84F271CEB51980088090D /* MxAppState.swift */,
-				DFB84F281CEB51980088090D /* MxMailboxesState.swift */,
 				DFB84F291CEB51980088090D /* MxProvidersState.swift */,
+				DFB84F281CEB51980088090D /* MxMailboxesState.swift */,
 				DFE26F091CEC09A900FB401A /* MxLabelsState.swift */,
 				DFE26F071CEC097000FB401A /* MxMessageState.swift */,
 				DFE26F321CEF91B800FB401A /* MxPropertiesState.swift */,
@@ -464,8 +464,8 @@
 		DFB84EFF1CEABAE10088090D /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				DFA313061CF0E3F600500607 /* Persistence */,
 				DFB84EA71CEAABF30088090D /* ModelObjects */,
+				DFA313061CF0E3F600500607 /* Persistence */,
 				DFB84EBD1CEAB0BC0088090D /* RemoteServices */,
 				DFB84E731CEAA8580088090D /* MxUserPreferences.swift */,
 			);

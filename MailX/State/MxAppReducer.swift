@@ -29,7 +29,7 @@ struct MxAppReducer: Reducer {
         // MARK: Mailbox Actions
             
         case _ as MxSetMailboxesAction:
-            
+            state.mailboxesState.allMailboxes = (action as! MxSetMailboxesAction).allMailboxes
             
         // MARK: LabelsActions
             
@@ -39,7 +39,8 @@ struct MxAppReducer: Reducer {
         case _ as MxShowSelectedLabelsAction:
             state.labelsState.labelDisplay = MxLabelsState.MxLabelDisplay.Selection
             
-        case _ as MsSetLabelsAction:
+        case _ as MxSetLabelsAction:
+            state.labelsState.allLabels = (action as! MxSetLabelsAction).labels
             
             
         // MARK: PropertiesActions
@@ -60,7 +61,7 @@ struct MxAppReducer: Reducer {
             let message = "Reducer received an unidentified action. Unable to treat it. action: \(action)"
             
             MxLog.error( message)
-            state.errorsState.errors.appendContentsOf( [MxErrorSO(message: message)])
+            state.errorsState.errors.appendContentsOf( [MxErrorSO(UID: nil, message: message)])
             
         }
         

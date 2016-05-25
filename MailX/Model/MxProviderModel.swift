@@ -8,13 +8,15 @@
 
 import Foundation
 
+import Result
 
 
-typealias MxProviderModelArray = [MxProviderModel]
-typealias MxProviderModelOptArray = [MxProviderModel?]
+
+typealias MxProviderModelResult = Result<MxProviderModel, MxDBError>
 
 struct MxProviderModel: MxModelType {
-    var UID: String
+    
+    var UID: MxUID
     var id: MxProviderModelId
     
     init(id: MxProviderModelId){

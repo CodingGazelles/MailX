@@ -8,38 +8,51 @@
 
 import Foundation
 
+import Result
+
 
 
 struct MxMailboxSO: MxStateObjectType {
     
-    var UID: String
+    var UID: MxUID
     var id: String
     var name: String
     var connected: Bool
     
-    init(id: String, name: String, connected: Bool){
-        self.init()
+    init(UID: MxUID?, id: String, name: String, connected: Bool){
+        self.init(UID: UID)
         self.id = id
         self.name = name
         self.connected = connected
     }
     
     init(mailboxSO: MxMailboxSO){
-        self.init(dataObject: mailboxSO)
         self.init(
-            id: mailboxSO.id,
-            name: mailboxSO.name,
-            connected: mailboxSO.connected)
+            UID: mailboxSO.UID
+            , id: mailboxSO.id
+            , name: mailboxSO.name
+            , connected: mailboxSO.connected)
     }
 }
 
-extension MxMailboxSO {
-    init( mailboxModel: MxMailboxModel){
-        self.init(dataObject: mailboxModel)
+extension MxMailboxSO: MxInitWithModel {
+    init( model: MxMailboxModel){
         self.init(
-            id: mailboxModel.id.value
-            , name: mailboxModel.name
-            , connected: mailboxModel.connected)
+            UID: model.UID
+            , id: model.id.value
+            , name: model.name
+            , connected: model.connected)
+    }
+}
+
+typealias MxMailboxSOResult = Result<MxMailboxSO, MxDBError>
+
+func toSO( model model: MxMailboxModelResult) -> MxMailboxSOResult {
+    switch model {
+    case let .Success(model):
+        return Result.Success( MxMailboxSO(model: model))
+    case let .Failure( error):
+        return Result.Failure(error)
     }
 }
 

@@ -8,28 +8,29 @@
 
 import Foundation
 
+import Result
 
 
-typealias MxLabelModelArray = [MxLabelModel]
-typealias MxLabelModelOptArray = [MxLabelModel?]
+
+typealias MxLabelModelResult = Result<MxLabelModel, MxModelError>
 
 struct MxLabelModel: MxModelType {
     
-    enum MxLabelOwnerType: String {
-        case SYSTEM = "SYSTEM"
-        case USER = "USER"
-        case UNKNOWN
-    }
-    
-    var UID: String
+    var UID: MxUID
     var id: MxLabelModelId
     var code: String
     var name: String
     var ownerType: MxLabelOwnerType
     var mailboxId: MxMailboxModelId
     
-    init(id: MxLabelModelId, code: String, name: String, ownerType: MxLabelOwnerType, mailboxId: MxMailboxModelId){
-        self.init()
+    init(UID: MxUID?
+        , id: MxLabelModelId
+        , code: String
+        , name: String
+        , ownerType: MxLabelOwnerType
+        , mailboxId: MxMailboxModelId){
+        
+        self.init(UID: UID)
         self.id = id
         self.code = code
         self.name = name
@@ -42,22 +43,37 @@ struct MxLabelModelId: MxModelIdType{
     var value: String
 }
 
-extension MxLabelModel {
-    init?( labelDBO: MxLabelDBO){
+extension MxLabelModel: MxInitWithDBO {
+    init?( dbo: MxLabelDBO){
         
-        guard let ownerType = MxLabelOwnerType( rawValue: labelDBO.ownerType) else {
+        guard let ownerType = MxLabelOwnerType( rawValue: dbo.ownerType) else {
             return nil
         }
         
-        let id = MxLabelModelId( value: labelDBO.id)
-        let mailboxId = MxMailboxModelId( value: labelDBO.mailbox!.id)
+        let id = MxLabelModelId( value: dbo.id)
+        let mailboxId = MxMailboxModelId( value: dbo.mailbox!.id)
         
-        self.init(dataObject: labelDBO)
         self.init(
-            id: id
-            , code: labelDBO.code
-            , name: labelDBO.name
+            UID: dbo.UID
+            , id: id
+            , code: dbo.code
+            , name: dbo.name
             , ownerType: ownerType
             , mailboxId: mailboxId)
     }
+}
+
+func toModel( dbo dbo: MxLabelDBO) -> MxLabelModelResult {
+    
+    guard MxLabelOwnerType( rawValue: dbo.ownerType) != nil else {
+        
+        let error =  MxModelError.UnableToConvertDBOToModel(
+            dbo: dbo
+            , message: "Unable to instanciate MxLabelOwnerType with args: \(dbo.ownerType)"
+            , rootError: nil)
+        
+        return Result.Failure( error)
+    }
+    
+    return Result.Success( MxLabelModel(dbo: dbo)!)
 }

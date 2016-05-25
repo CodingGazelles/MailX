@@ -11,19 +11,19 @@ import Foundation
 
 
 struct MxProviderSO: MxStateObjectType {
-    var UID: String
+    
+    var UID: MxUID
     var id: String
     var name: String
     
-    init(id: String, name: String){
-        self.init()
+    init(UID: MxUID?, id: String, name: String){
+        self.init(UID: UID)
         self.id = id
         self.name = name
     }
     
     init(providerSO: MxProviderSO){
-        self.init(dataObject: providerSO)
-        self.init(id: providerSO.id, name: providerSO.name)
+        self.init(UID: providerSO.UID, id: providerSO.id, name: providerSO.name)
     }
 }
 

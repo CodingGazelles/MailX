@@ -10,25 +10,56 @@ import Foundation
 
 
 
+// Mark: - UID
+
+struct MxUID: Hashable, Equatable {
+    var value: String
+    init(){
+        self.value = NSUUID().UUIDString
+    }
+    init(value: String){
+        self.value = value
+    }
+    var hashValue: Int {
+        return value.hashValue
+    }
+}
+
+func ==(lhs: MxUID, rhs: MxUID) -> Bool{
+    return lhs.value == rhs.value
+}
+
+
 // Mark: - Data object
 
+enum MxDataObject {
+    case MxProvider
+    case MxMailbox
+    case MxLabel
+    case MxMessage
+}
+
 protocol MxDataObjectType: Loggable {
-    var UID: String { get set }
+    var UID: MxUID { get set }
     var hashValue: Int { get }
 }
 
 extension MxDataObjectType {
-    
-    init( dataObject: MxDataObjectType? = nil){
-        if dataObject != nil {
-            UID = dataObject!.UID
+
+    init(){
+        self.init()
+    }
+    init( UID: MxUID?){
+        self.init()
+        if UID != nil {
+            self.UID = UID!
         } else {
-            UID = NSUUID().UUIDString
+            self.UID = MxUID()
         }
     }
     
     var hashValue: Int {
-        return UID.hashValue
+        return UID.value.hashValue
     }
 }
 
@@ -146,6 +177,14 @@ public extension CustomDebugStringConvertible {
         
         return s
     }
+}
+
+
+// MARK: - Label Owner Type
+
+enum MxLabelOwnerType: String {
+    case SYSTEM = "SYSTEM"
+    case USER = "USER"
 }
 
 

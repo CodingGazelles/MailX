@@ -12,9 +12,18 @@ import ReSwift
 
 
 
-// Markers
+// MARK: - State objects
 
 protocol MxStateObjectType: MxDataObjectType {}
+
+protocol MxInitWithModel {
+    associatedtype Model: MxModelType
+    init(model: Model)
+}
+
+
+// MARK: - State
+
 protocol MxStateType : ReSwift.StateType, Loggable {}
 
 struct MxAppState: MxStateType {

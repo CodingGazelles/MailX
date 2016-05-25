@@ -30,6 +30,16 @@ let loadAllLabels = { (state: MxAppState, store: MxStateStore) -> MxAction in
     switch state.mailboxesState.mailboxSelection{
     case .All, .None:
         
+        let systemLabels = MxAppProperties.defaultProperties().systemLabels()
+        let defaultLabels = MxAppProperties.defaultProperties().defaultLabels()
+            |> map{ MxLabelSO(
+                UID: nil
+                , id: nil
+                , code: $0
+                , name: systemLabels[$0]!
+                , ownerType: MxLabelOwnerType.SYSTEM.rawValue )!}
+
+        return MxSetLabelsAction( labels: defaultLabels)
         
     case .One(let selectedMailbox):
         
@@ -50,7 +60,7 @@ let loadAllLabels = { (state: MxAppState, store: MxStateStore) -> MxAction in
             }
             
         case let .Failure(error):
-            MxLog.error("Error while initializinf Persistence Manager", error: error)
+            MxLog.error("Error while initializing Persistence Manager", error: error)
             return MxAddErrorsAction( errors: [MxErrorSO( error: error)])
         }
     }

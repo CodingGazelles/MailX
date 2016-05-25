@@ -8,7 +8,6 @@
 
 import Foundation
 
-
 import GoogleAPIClient
 import GTMOAuth2
 
@@ -16,18 +15,14 @@ import GTMOAuth2
 
 class MxGMailProxy : NSObject , MxMailboxProxy {
     
-    
-    private var mailboxId: MxMailboxId
-    private var providerId: MxProviderId
+    private var mailboxId: MxMailboxModelId
+    private var providerId: MxProviderModelId
     private var service: GTLServiceGmail
     
     private var connectCompletionHandler: MxConnectCompletionHandler?
     private var fetchLabelsCompletionHandler: MxFetchLabelsCompletionHandler?
     private var fetchMessagesInLabelCompletionHandler: MxFetchMessagesInLabelCompletionHandler?
     
-    // Logs
-//    static const DDLogLevel ddLogLevel = DDLogLevelVerbose
-
     
     // For Google APIs, the scope strings are available
     // in the service constant header files.
@@ -194,10 +189,12 @@ class MxGMailProxy : NSObject , MxMailboxProxy {
             for response in labelsResponse.labels as! [GTLGmailLabel] {
                 
                 let label = MxLabelModel(
-                    id: MxLabelModel.Id(value: response.identifier),
-                    name: response.name,
-                    type: MxLabelModel.MxLabelOwnerType.SYSTEM,
-                    mailboxId: mailboxId)
+                    UID: nil
+                    , id: MxLabelModel.Id(value: response.identifier)
+                    , code: response.name
+                    , name: ""
+                    , ownerType: MxLabelOwnerType.SYSTEM
+                    , mailboxId: mailboxId)
                     
                 labels.append(label)
                 
@@ -258,9 +255,10 @@ class MxGMailProxy : NSObject , MxMailboxProxy {
                     MxLog.debug("Message:\(response)")
                     
                     let message = MxMessageModel(
-                        id: MxMessageModel.Id( value: response.identifier),
-                        value: "",
-                        labelId: nil
+                        UID: nil
+                        , id: MxMessageModelId( value: response.identifier)
+                        , value: ""
+                        , labelId: nil
                     )
                     messages.append( message)
                 }
