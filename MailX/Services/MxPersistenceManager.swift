@@ -37,7 +37,7 @@ enum MxDBError: MxException {
 }
 
 
-// MARK: - 
+// MARK: -
 
 class MxPersistenceManager {
     
@@ -67,10 +67,44 @@ private func databasePath(name: String) -> String {
 }
 
 
+// MARK: - Fetch
+// MARK: Provider
+
+
+// MARK: Mailbox
+
+func fetchMailbox( mailboxId mailboxId: MxMailboxModelId)
+    -> Result<MxMailboxModelResult, MxDBError> {
+        
+        return fetchMailboxDBO( mailboxId: mailboxId.value)
+            |> { toModel(mailbox: $0) }
+        
+}
+
+func fetchMailboxes()
+    -> Result<[MxMailboxModelResult], MxDBError> {
+        
+        return fetchMailboxDBOs()
+            |> map(){toModel(mailbox: $0)}
+}
+
+
+// MARK: Label
+
+func fetchLabels( mailboxId mailboxId: MxMailboxModelId)
+    -> Result<[Result<MxLabelModel, MxModelError>], MxDBError> {
+        
+        return fetchMailboxDBO( mailboxId: mailboxId.value)
+            |> { $0.labels}
+            |> map(){toModel(label: $0)}
+        
+}
+
+
 // MARK: - Providers
 
 func insertProvider(db: RealmDefaultStorage, provider: MxProviderModel) -> Result<Bool, MxDBError> {
-    MxLog.verbose("... Processing. Args: provider=\(provider)")
+    MxLog.verbose("... Processing insertProvider. Args: provider=\(provider)")
     
     do {
         
@@ -97,60 +131,39 @@ func insertProvider(db: RealmDefaultStorage, provider: MxProviderModel) -> Resul
 
 // MARK: - Mailboxes
 
-func fetchMailbox( db db: RealmDefaultStorage, mailboxId: MxMailboxModelId)
-    -> Result<MxMailboxModel, MxDBError> {
-        
-        MxLog.verbose("... Processing. Args: mailboxId\(mailboxId)")
-        
-        switch fetchMailboxDBO( db: db, mailboxId: mailboxId.value) {
-        case let .Success(mailboxDBO):
-            return mailboxDBO
-                |> {$0.toModel()}
-            
-        case let .Failure(error):
-            return .Failure(MxDBError.UnableToExecuteOperation(
-                operationType: MxDBOperation.MxFetchOperation
-                , DBOType: MxDataObject.MxMailbox
-                , message: "Error while calling fetchMailboxDBO with args: mailboxId: \(mailboxId)"
-                , rootError: error))
-        }
-}
-
-//func fetchMailboxes( db db: RealmDefaultStorage)
-//    -> Result<[Result<MxMailboxModel,MxDBError>], MxDBError> {
-//        
-//        return fetchMailboxDBOs(db: db)
-//            |> map({$0.toModel()})
-//}
-
-func insertMailbox( db db: RealmDefaultStorage, mailbox: MxMailboxModel) -> Result<Bool, MxDBError> {
-    MxLog.verbose("... Processing. Args: mailbox=\(mailbox)")
+func insertMailbox( mailbox: MxMailboxModel) -> Result<Bool, MxDBError> {
+    
+    MxLog.verbose("... Processing insertMailbox. Args: mailbox=\(mailbox)")
     
     let providerId = mailbox.providerId.value
+    let appProperties = MxAppProperties.defaultProperties()
+    let db = MxPersistenceManager.defaultManager().db
     
-    switch fetchProviderDBO( db: db, providerId: providerId) {
+    switch fetchProviderDBO( providerId: providerId) {
     case let .Success(provider):
         
         do {
             try db.operation{ (context, save) throws -> Void in
                 
                 let newMailboxDbo: MxMailboxDBO = try context.create()
+                
                 newMailboxDbo.id = mailbox.id.value
                 newMailboxDbo.provider = provider
                 
                 // insert system labels
-                let appProperties = HXAppProperties.defaultProperties()
-                let providerLabels = appProperties.systemLabels( mailbox.providerId.value).values
                 
-                let _ = try providerLabels.map({labelId throws -> Void in
+                let providerLabels = appProperties.providerLabels( providerId: mailbox.providerId.value).values
+                
+                let _ = try providerLabels.map({labelCode throws -> Void in
                     
-                    let labelProperty = appProperties.labelWithLabelId( labelId)
+                    let labelName = appProperties.systemLabels().labelName( labelCode: labelCode)
                     
                     let newLabelDbo: MxLabelDBO = try context.create()
                     
-                    newLabelDbo.id = labelId
-                    newLabelDbo.name = labelProperty[ k_Label_Name]!
-                    newLabelDbo.ownerType = MxLabelModel.MxLabelOwnerType.SYSTEM.rawValue
+                    newLabelDbo.id = ""
+                    newLabelDbo.code = labelCode
+                    newLabelDbo.name = labelName
+                    newLabelDbo.ownerType = MxLabelOwnerType.SYSTEM.rawValue
                     newLabelDbo.mailbox = newMailboxDbo
                     
                 })
@@ -184,30 +197,14 @@ func insertMailbox( db db: RealmDefaultStorage, mailbox: MxMailboxModel) -> Resu
 
 // MARK: - Labels
 
-func fetchLabels( db db: RealmDefaultStorage, mailboxId: MxMailboxModelId)
-    -> Result<[Result<MxLabelModel, MxDBError>], MxDBError> {
-        
-        MxLog.verbose("... Processing. Args: mailboxId=\(mailboxId)")
-        
-        switch fetchMailboxDBO( db: db, mailboxId: mailboxId.value) {
-        case let .Success(value):
-            
-            let result = value.labels
-                |> map({$0.toModel()})
-            
-            return .Success( result)
-            
-        case let .Failure(error):
-            return .Failure(error)
-        }
-}
-
-func deleteLabels( db db: RealmDefaultStorage, mailboxId: MxMailboxModelId)
+func deleteLabels( mailboxId mailboxId: MxMailboxModelId)
     -> Result< Bool, MxDBError> {
         
-        MxLog.verbose("... Processing. Args: mailboxId=\(mailboxId)")
+        MxLog.verbose("... Processing deleteLabels. Args: mailboxId=\(mailboxId)")
         
-        switch fetchMailboxDBO( db: db, mailboxId: mailboxId.value) {
+        let db = MxPersistenceManager.defaultManager().db
+        
+        switch fetchMailboxDBO( mailboxId: mailboxId.value) {
         case let .Success(mailbox):
             
             // one can delete only USER labels
@@ -226,7 +223,6 @@ func deleteLabels( db db: RealmDefaultStorage, mailboxId: MxMailboxModelId)
                     save()
                 }
                 
-                // return array of ids of deleted labels
                 return .Success( true)
                 
             } catch {
@@ -247,42 +243,46 @@ func deleteLabels( db db: RealmDefaultStorage, mailboxId: MxMailboxModelId)
 
 // MARK: - Messages
 
-func deleteMessages( db db: RealmDefaultStorage, mailboxId: MxMailboxModelId, labelId: MxLabelModelId)
+func deleteMessages( mailboxId mailboxId: MxMailboxModelId, labelId: MxLabelModelId)
     -> Result< Bool,MxDBError> {
         
-    MxLog.verbose("... Processing. Args: mailboxId=\(mailboxId), labelId=\(labelId)")
-    
-    switch fetchMessageDBOs(db: db, mailboxId: mailboxId.value, labelId: labelId.value) {
-    case let .Success(messages):
-        do {
-            
-            try db.operation { (context, save) throws -> Void in
-                try context.remove(messages)
-                save()
-            }
-            return .Success( true)
-            
-        } catch {
-            
-            return .Failure(
-                MxDBError.UnableToExecuteOperation(
-                    operationType: MxDBOperation.MxDeleteOperation
-                    , DBOType: MxDataObject.MxMessage
-                    , message: "Error while calling context.remove() with args: messages\(messages)"
-                    , rootError: error))
-        }
+        MxLog.verbose("... Processing deleteMessages. Args: mailboxId=\(mailboxId), labelId=\(labelId)")
         
-    case let .Failure(error):
-        return .Failure(error)
-    }
+        let db = MxPersistenceManager.defaultManager().db
+        
+        switch fetchMessageDBOs( mailboxId: mailboxId.value, labelId: labelId.value) {
+        case let .Success(messages):
+            do {
+                
+                try db.operation { (context, save) throws -> Void in
+                    try context.remove(messages)
+                    save()
+                }
+                return .Success( true)
+                
+            } catch {
+                
+                return .Failure(
+                    MxDBError.UnableToExecuteOperation(
+                        operationType: MxDBOperation.MxDeleteOperation
+                        , DBOType: MxDataObject.MxMessage
+                        , message: "Error while calling context.remove() with args: messages\(messages)"
+                        , rootError: error))
+            }
+            
+        case let .Failure(error):
+            return .Failure(error)
+        }
 }
 
 
-// MARK: - Fetch db objects
+// MARK: - Fetch DBOs
 
-func fetchProviderDBO( db db: RealmDefaultStorage, providerId: String) -> Result<MxProviderDBO, MxDBError> {
+func fetchProviderDBO( providerId providerId: String) -> Result<MxProviderDBO, MxDBError> {
     
-    MxLog.verbose("... Processing. Args: providerId=\(providerId)")
+    MxLog.verbose("... Processing fetchProviderDBO. Args: providerId=\(providerId)")
+    
+    let db = MxPersistenceManager.defaultManager().db
     
     let predicate: NSPredicate = NSPredicate( format: "id == %@", providerId)
     do {
@@ -301,9 +301,11 @@ func fetchProviderDBO( db db: RealmDefaultStorage, providerId: String) -> Result
     }
 }
 
-func fetchMailboxDBO( db db: RealmDefaultStorage, mailboxId: String) -> Result<MxMailboxDBO, MxDBError> {
+func fetchMailboxDBO( mailboxId mailboxId: String) -> Result<MxMailboxDBO, MxDBError> {
     
-    MxLog.verbose("... Processing. Args: mailboxId=\(mailboxId)")
+    MxLog.verbose("... Processing fetchMailboxDBO. Args: mailboxId=\(mailboxId)")
+    
+    let db = MxPersistenceManager.defaultManager().db
     
     let predicate: NSPredicate = NSPredicate( format: "id == %@", mailboxId)
     do {
@@ -322,9 +324,11 @@ func fetchMailboxDBO( db db: RealmDefaultStorage, mailboxId: String) -> Result<M
     }
 }
 
-func fetchMailboxDBOs( db db: RealmDefaultStorage) -> Result<[MxMailboxDBO], MxDBError> {
+func fetchMailboxDBOs() -> Result<[MxMailboxDBO], MxDBError> {
     
-    MxLog.verbose("... Processing")
+    MxLog.verbose("... Processing fetchMailboxDBOs")
+    
+    let db = MxPersistenceManager.defaultManager().db
     
     do {
         
@@ -342,30 +346,30 @@ func fetchMailboxDBOs( db db: RealmDefaultStorage) -> Result<[MxMailboxDBO], MxD
     }
 }
 
-func fetchMessageDBOs( db db: RealmDefaultStorage, mailboxId: String, labelId: String)
+func fetchMessageDBOs( mailboxId mailboxId: String, labelId: String)
     -> Result<MxMessageDBOs, MxDBError> {
         
-    MxLog.verbose("... Processing. Args: mailboxId=\(mailboxId), labelId=\(labelId)")
-    
-    switch fetchMailboxDBO( db: db, mailboxId: mailboxId) {
-    case let .Success(value):
+        MxLog.verbose("... Processing fetchMessageDBOs. Args: mailboxId=\(mailboxId), labelId=\(labelId)")
         
-        let result = value
-            .labels
-            .filter { (label: MxLabelDBO) -> Bool in
-                return label.id == labelId }
-            .first!
-            .messages
-        return Result.Success( result)
-        
-    case let .Failure(error):
-        
-        return Result.Failure(
-            MxDBError.UnableToExecuteOperation(
-                operationType: MxDBOperation.MxFetchOperation
-                , DBOType: MxDataObject.MxMailbox
-                , message: "Error while fetching mailbox \(mailboxId)"
-                , rootError: error))
-    }
+        switch fetchMailboxDBO( mailboxId: mailboxId) {
+        case let .Success(value):
+            
+            let result = value
+                .labels
+                .filter { (label: MxLabelDBO) -> Bool in
+                    return label.id == labelId }
+                .first!
+                .messages
+            return Result.Success( result)
+            
+        case let .Failure(error):
+            
+            return Result.Failure(
+                MxDBError.UnableToExecuteOperation(
+                    operationType: MxDBOperation.MxFetchOperation
+                    , DBOType: MxDataObject.MxMailbox
+                    , message: "Error while fetching mailbox \(mailboxId)"
+                    , rootError: error))
+        }
 }
 

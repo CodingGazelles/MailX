@@ -22,16 +22,8 @@ class MxSyncManager {
     
     // MARK: - Private properties
     
-    private let localStore = { () -> MxPersistenceManager? in
-        switch MxPersistenceManager.defaultManager() {
-        case let .Success(manager):
-            return manager
-            
-        case let .Failure(error):
-            MxLog.error("Unable to get an instance of the persistence manager"
-                , error: MxSyncError.PersistenceManagerIsNil(rootError: error))
-            return nil
-        }
+    private let dbManager = { () -> MxPersistenceManager in
+        return MxPersistenceManager.defaultManager()
     }()
     
     private var remoteStores = Dictionary<MxMailboxModelId, MxMailboxHelper>()
@@ -40,13 +32,10 @@ class MxSyncManager {
     // MARK: - Shared instance
     
     private static let sharedInstance = { () -> Result<MxSyncManager, MxSyncError> in
-        let manager = MxSyncManager()
         
-        guard (manager.localStore != nil) else {
-            return .Failure( MxSyncError.SyncManagerIsNil(rootError: nil))
-        }
+        let syncManager = MxSyncManager()
         
-        switch manager.localStore!.fetchMailboxes() {
+        switch fetchMailboxes() {
         case let .Success(mailboxes):
             
             for mailbox in mailboxes {
@@ -54,7 +43,7 @@ class MxSyncManager {
                     case let .Success(mailboxModel):
                     
                         let remoteStore = MxMailboxHelper( mailbox: mailboxModel)
-                        manager.remoteStores[mailboxModel.id] = remoteStore
+                        syncManager.remoteStores[mailboxModel.id] = remoteStore
                     
                     case let .Failure(error):
                     
@@ -62,7 +51,7 @@ class MxSyncManager {
                 }
                 
             }
-            return .Success(manager)
+            return .Success(syncManager)
             
         case let .Failure(error):
             MxLog.error("Unable to fetch mailboxes", error: error)
@@ -143,12 +132,7 @@ class MxSyncManager {
     func emptyAllDataOfMailbox( mailboxId mailboxId: MxMailboxModelId) -> Result<Bool, MxSyncError>{
         MxLog.verbose("... Processing. Args: mailboxId: \(mailboxId)")
         
-        guard localStore != nil else {
-            return .Failure(
-                MxSyncError.PersistenceManagerIsNil(rootError: nil))
-        }
-        
-        switch localStore!.fetchLabels( mailboxId: mailboxId) {
+        switch fetchLabels( mailboxId: mailboxId) {
         case let .Success( labels):
             MxLog.debug("Deleting messages in labels. Args: mailboxId: \(mailboxId)")
             
@@ -156,7 +140,7 @@ class MxSyncManager {
                 
                 switch label {
                 case let .Success(labelModel):
-                    localStore!.deleteMessages( mailboxId: mailboxId, labelId: labelModel.id)
+                    deleteMessages( mailboxId: mailboxId, labelId: labelModel.id)
                     
                 case let .Failure(error):
                     MxLog.error("Unable to fetch one label", error: error)
@@ -171,7 +155,7 @@ class MxSyncManager {
         
         MxLog.debug("Deleting mailbox's labels. Args: mailboxId: \(mailboxId)")
         
-        localStore!.deleteLabels( mailboxId: mailboxId)
+        deleteLabels( mailboxId: mailboxId)
         
         // todo: delete threads
         

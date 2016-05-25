@@ -63,17 +63,17 @@ extension MxLabelModel: MxInitWithDBO {
     }
 }
 
-func toModel( dbo dbo: MxLabelDBO) -> MxLabelModelResult {
+func toModel( label label: MxLabelDBO) -> MxLabelModelResult {
     
-    guard MxLabelOwnerType( rawValue: dbo.ownerType) != nil else {
+    guard MxLabelOwnerType( rawValue: label.ownerType) != nil else {
         
         let error =  MxModelError.UnableToConvertDBOToModel(
-            dbo: dbo
-            , message: "Unable to instanciate MxLabelOwnerType with args: \(dbo.ownerType)"
+            dbo: label
+            , message: "Unable to instanciate MxLabelOwnerType with MxLabelDBO with args: \(label)"
             , rootError: nil)
         
         return Result.Failure( error)
     }
     
-    return Result.Success( MxLabelModel(dbo: dbo)!)
+    return Result.Success( MxLabelModel(dbo: label)!)
 }

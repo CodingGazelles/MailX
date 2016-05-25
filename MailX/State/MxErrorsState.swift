@@ -10,7 +10,7 @@ import Foundation
 
 
 
-struct MxErrorSO: MxStateObjectType {
+struct MxErrorSO: MxStateObjectType, ErrorType {
     
     var UID: MxUID
     var message: String
@@ -26,13 +26,13 @@ struct MxErrorSO: MxStateObjectType {
 }
 
 extension MxErrorSO {
-    init( error: MxDBError){
+    init( error: MxModelError){
         self.init(UID: nil, message: error.description)
     }
 }
 
-func errorSO( errorDBO errorDBO: MxDBError) -> MxErrorSO {
-    return MxErrorSO(error: errorDBO)
+func errorSO( error error: MxModelError) -> MxErrorSO {
+    return MxErrorSO(error: error)
 }
 
 

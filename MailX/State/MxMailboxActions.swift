@@ -20,10 +20,8 @@ struct MxSetMailboxesAction: MxAction {
 
 let loadMailboxes = { (state: MxAppState, store: MxStateStore) -> MxAction in
     
-    let results = MxPersistenceManager.defaultManager().db
-        |> fetchMailboxDBOs
-        |> map({toModel(dbo: $0)})
-        |> map({toSO(model: $0)})
+    let results = fetchMailboxes()
+        |> map({toSO(mailbox: $0)})
 
     switch results {
     case let .Success(soResultArray):
@@ -31,13 +29,13 @@ let loadMailboxes = { (state: MxAppState, store: MxStateStore) -> MxAction in
         let mailboxes = results
             |> filter(){ $0.value != nil}
             |> map(){ $0.value! }
-            |> { $0.value! }
+//            |> { $0.value! }
         
         let errors = results
             |> filter(){ $0.error != nil}
             |> map(){ $0.error!}
-            |> map(){errorSO(errorDBO: $0)}
-            |> { $0.value! }
+            |> map(){ errorSO(errorDBO: $0)}
+//            |> { $0.value! }
         
         return MxSetMailboxesAction(mailboxes: mailboxes, errors: errors)
         

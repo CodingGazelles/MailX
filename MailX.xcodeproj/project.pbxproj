@@ -45,19 +45,14 @@
 		DFB84EE71CEAB2A40088090D /* SugarRecordRealm.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DFB84EE51CEAB2A40088090D /* SugarRecordRealm.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DFB84EE91CEAB5E50088090D /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = DFB84EE81CEAB5E50088090D /* .gitignore */; };
 		DFB84EEF1CEAB62B0088090D /* CleanroomASL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFB84EEA1CEAB62B0088090D /* CleanroomASL.framework */; };
-		DFB84EF01CEAB62B0088090D /* CleanroomLogger.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFB84EEB1CEAB62B0088090D /* CleanroomLogger.framework */; };
 		DFB84EF11CEAB62B0088090D /* GTL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFB84EEC1CEAB62B0088090D /* GTL.framework */; };
 		DFB84EF21CEAB62B0088090D /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFB84EED1CEAB62B0088090D /* Realm.framework */; };
 		DFB84EF31CEAB62B0088090D /* RealmSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFB84EEE1CEAB62B0088090D /* RealmSwift.framework */; };
-		DFB84EF41CEAB6520088090D /* CleanroomASL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFB84EEA1CEAB62B0088090D /* CleanroomASL.framework */; };
 		DFB84EF51CEAB6520088090D /* CleanroomASL.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DFB84EEA1CEAB62B0088090D /* CleanroomASL.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DFB84EF61CEAB6520088090D /* CleanroomLogger.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFB84EEB1CEAB62B0088090D /* CleanroomLogger.framework */; };
 		DFB84EF71CEAB6520088090D /* CleanroomLogger.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DFB84EEB1CEAB62B0088090D /* CleanroomLogger.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		DFB84EF81CEAB6520088090D /* GTL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFB84EEC1CEAB62B0088090D /* GTL.framework */; };
 		DFB84EF91CEAB6520088090D /* GTL.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DFB84EEC1CEAB62B0088090D /* GTL.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		DFB84EFA1CEAB6520088090D /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFB84EED1CEAB62B0088090D /* Realm.framework */; };
 		DFB84EFB1CEAB6520088090D /* Realm.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DFB84EED1CEAB62B0088090D /* Realm.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		DFB84EFC1CEAB6520088090D /* RealmSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFB84EEE1CEAB62B0088090D /* RealmSwift.framework */; };
 		DFB84EFD1CEAB6520088090D /* RealmSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DFB84EEE1CEAB62B0088090D /* RealmSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DFB84F241CEB515F0088090D /* GTMOAuth2Window.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFB84F211CEB515F0088090D /* GTMOAuth2Window.xib */; };
 		DFB84F251CEB515F0088090D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DFB84F221CEB515F0088090D /* Main.storyboard */; };
@@ -66,7 +61,6 @@
 		DFB84F2B1CEB51980088090D /* MxMailboxesState.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB84F281CEB51980088090D /* MxMailboxesState.swift */; };
 		DFB84F2C1CEB51980088090D /* MxProvidersState.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB84F291CEB51980088090D /* MxProvidersState.swift */; };
 		DFE26F021CEBF7BA00FB401A /* ReSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFE26F011CEBF7BA00FB401A /* ReSwift.framework */; };
-		DFE26F031CEBF7EC00FB401A /* ReSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFE26F011CEBF7BA00FB401A /* ReSwift.framework */; };
 		DFE26F041CEBF7EC00FB401A /* ReSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DFE26F011CEBF7BA00FB401A /* ReSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DFE26F081CEC097000FB401A /* MxMessageState.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE26F071CEC097000FB401A /* MxMessageState.swift */; };
 		DFE26F0A1CEC09A900FB401A /* MxLabelsState.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE26F091CEC09A900FB401A /* MxLabelsState.swift */; };
@@ -213,16 +207,10 @@
 				DFB84EE01CEAB2900088090D /* Pipes.framework in Frameworks */,
 				DFB84EF31CEAB62B0088090D /* RealmSwift.framework in Frameworks */,
 				DFB84EE31CEAB2970088090D /* Result.framework in Frameworks */,
-				DFB84EF81CEAB6520088090D /* GTL.framework in Frameworks */,
 				DFE26F021CEBF7BA00FB401A /* ReSwift.framework in Frameworks */,
-				DFB84EFA1CEAB6520088090D /* Realm.framework in Frameworks */,
 				DFB84EF61CEAB6520088090D /* CleanroomLogger.framework in Frameworks */,
-				DFB84EF01CEAB62B0088090D /* CleanroomLogger.framework in Frameworks */,
 				DFB84EE61CEAB2A40088090D /* SugarRecordRealm.framework in Frameworks */,
-				DFB84EF41CEAB6520088090D /* CleanroomASL.framework in Frameworks */,
-				DFB84EFC1CEAB6520088090D /* RealmSwift.framework in Frameworks */,
 				DFB84ECF1CEAB2310088090D /* Cocoa.framework in Frameworks */,
-				DFE26F031CEBF7EC00FB401A /* ReSwift.framework in Frameworks */,
 				78156F2C38FF98059753DA3D /* Pods_MailX.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -8,7 +8,13 @@
 
 import Foundation
 
+import Result
 
+
+
+// MARK: - State Object
+
+typealias MxLabelSOResult = Result<MxLabelSO, MxErrorSO>
 
 struct MxLabelSO: MxStateObjectType {
     
@@ -45,16 +51,28 @@ struct MxLabelSO: MxStateObjectType {
     }
 }
 
-extension MxLabelSO {
-    init( labelModel: MxLabelModel){
+extension MxLabelSO: MxInitWithModel {
+    init( model: MxLabelModel){
         self.init(
-            UID: labelModel.UID
-            , id: labelModel.id.value
-            , code: labelModel.code
-            , name: labelModel.name
-            , ownerType: labelModel.ownerType.rawValue)!
+            UID: model.UID
+            , id: model.id.value
+            , code: model.code
+            , name: model.name
+            , ownerType: model.ownerType.rawValue)!
     }
 }
+
+func toSO( label label: MxLabelModelResult) -> MxLabelSOResult {
+    switch label {
+    case let .Success(model):
+        return Result.Success( MxLabelSO(model: model))
+    case let .Failure( error):
+        return Result.Failure( errorSO(error: error))
+    }
+}
+
+
+// MARK: - State
 
 struct MxLabelsState: MxStateType {
     

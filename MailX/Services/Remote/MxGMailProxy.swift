@@ -181,7 +181,7 @@ class MxGMailProxy : NSObject , MxMailboxProxy {
             return
         }
         
-        var labels = MxLabelModelArray()
+        var labels = [MxLabelModel]()
             
         if !labelsResponse.labels.isEmpty {
             MxLog.debug("Parsing labels...")

@@ -6,7 +6,7 @@
 	<array>
 		<dict>
 			<key>ProxyClassName</key>
-			<string>HXGmailProxy</string>
+			<string>MxGmailProxy</string>
 			<key>Name</key>
 			<string>Gmail</string>
 			<key>Id</key>

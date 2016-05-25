@@ -65,7 +65,7 @@ class MxMailboxHelper {
         MxLog.verbose("... Done")
     }
     
-    func proxyDidFetchLabels(labels labels: MxLabelModelArray?, error: NSError?) {
+    func proxyDidFetchLabels(labels labels: [MxLabelModel]?, error: NSError?) {
         MxLog.verbose("... Processing. Args: labels=\(labels), error=\(error)")
         
         

@@ -20,6 +20,15 @@ class MxAppProperties {
     static let kPFE_DefaultLabels = "DefaultLabels"
     static let kPFE_SystemLabels = "SystemLabels"
     
+    static let kPFE_Providers = "MailboxProviders"
+    static let k_Provider_Name = "Name"
+    static let k_Provider_Id = "Id"
+    static let k_Provider_ProxyClassName = "ProxyClassName"
+    static let k_Provider_Labels = "Labels"
+    
+    static let k_Label_Name = "Name"
+    static let k_Label_Code = "Code"
+    
     // Dictionary of properties
     private var _rootDictionary = [String:AnyObject]()
     
@@ -51,11 +60,51 @@ class MxAppProperties {
         return result as! [String]
     }
     
-    func systemLabels() -> [String:String] {
+    func systemLabels() -> MxSystemLabels {
         guard let result = _rootDictionary[MxAppProperties.kPFE_SystemLabels] else {
-            return [String:String]()
+            return MxSystemLabels( labels: [[String:String]]())
         }
-        return result as! [String:String]
+        return MxSystemLabels( labels: result as! [[String : String]])
+    }
+    
+    func providers() -> [[String:AnyObject]] {
+        guard let result = _rootDictionary[MxAppProperties.kPFE_Providers] else {
+            return [[String:AnyObject]()]
+        }
+        return result as! [[String : AnyObject]]
+    }
+    
+    func provider( providerId providerId: String) -> [String:AnyObject] {
+        
+        let format = "(\(MxAppProperties.k_Provider_Id) == %@)"
+        let predicate = NSPredicate( format: format, providerId)
+        let result = providers().filter{ predicate.evaluateWithObject($0) }
+        
+        return result[0]
+    }
+    
+    func providerLabels( providerId providerId: String) -> [String:String] {
+        return provider( providerId: providerId)[MxAppProperties.k_Provider_Labels] as! [String:String]
     }
     
 }
+
+class MxSystemLabels {
+    
+    private var rootArray = [[String:String]]()
+    
+    private init( labels: [[String:String]]){
+        rootArray = labels
+    }
+    
+    func labelName( labelCode labelCode: String) -> String{
+        
+        let format = "(\(MxAppProperties.k_Label_Code) == %@)"
+        let predicate = NSPredicate( format: format, labelCode)
+        let result = rootArray.filter { predicate.evaluateWithObject($0) }
+        
+        return result[0]["Name"]!
+    }
+}
+
+

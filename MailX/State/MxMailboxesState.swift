@@ -12,6 +12,10 @@ import Result
 
 
 
+// MARK: - State Object
+
+typealias MxMailboxSOResult = Result<MxMailboxSO, MxErrorSO>
+
 struct MxMailboxSO: MxStateObjectType {
     
     var UID: MxUID
@@ -45,16 +49,17 @@ extension MxMailboxSO: MxInitWithModel {
     }
 }
 
-typealias MxMailboxSOResult = Result<MxMailboxSO, MxDBError>
-
-func toSO( model model: MxMailboxModelResult) -> MxMailboxSOResult {
-    switch model {
+func toSO( mailbox mailbox: MxMailboxModelResult) -> MxMailboxSOResult {
+    switch mailbox {
     case let .Success(model):
         return Result.Success( MxMailboxSO(model: model))
     case let .Failure( error):
-        return Result.Failure(error)
+        return Result.Failure( errorSO(error: error))
     }
 }
+
+
+// MARK: - State
 
 struct MxMailboxesState: MxStateType {
     

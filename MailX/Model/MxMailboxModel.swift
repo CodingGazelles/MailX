@@ -51,17 +51,17 @@ extension MxMailboxModel: MxInitWithDBO {
     }
 }
 
-func toModel( dbo dbo: MxMailboxDBO) -> MxMailboxModelResult {
+func toModel( mailbox mailbox: MxMailboxDBO) -> MxMailboxModelResult {
     
-    guard dbo.provider != nil else {
+    guard mailbox.provider != nil else {
         
         let error =  MxModelError.UnableToConvertDBOToModel(
-            dbo: dbo
+            dbo: mailbox
             , message: "Mailbox without a provider"
             , rootError: nil)
         return Result.Failure( error)
     }
     
-    return Result.Success( MxMailboxModel(dbo: dbo)!)
+    return Result.Success( MxMailboxModel(dbo: mailbox)!)
 }
 
