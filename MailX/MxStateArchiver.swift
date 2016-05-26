@@ -14,7 +14,7 @@ class MxStateArchiver {
     
     static func loadSavedState() -> MxAppState {
         
-        fatalError("Func not implemented")
+//        fatalError("Func not implemented")
         return MxAppState()
         
     }

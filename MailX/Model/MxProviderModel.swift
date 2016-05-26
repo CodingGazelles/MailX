@@ -19,9 +19,11 @@ struct MxProviderModel: MxModelType {
     var UID: MxUID
     var id: MxProviderModelId
     
-    init(id: MxProviderModelId){
-        self.init()
+    init(UID: MxUID?, id: MxProviderModelId){
+        
+        self.init(UID: UID)
         self.id = id
+        
     }
 }
 
@@ -29,3 +31,11 @@ struct MxProviderModelId: MxModelIdType {
     var value: String
 }
 
+extension MxProviderModel: MxInitWithDBO {
+    init( dbo: MxProviderDBO){
+        
+        self.init(
+            UID: dbo.UID
+            , id: MxProviderModelId( value: dbo.id))
+    }
+}

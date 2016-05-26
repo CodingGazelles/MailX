@@ -55,9 +55,9 @@ class MxStateStore: Store<MxAppState> {
             
             dispatch( MxSetPropertiesAction(properties: MxPropertiesState.readDefaultProperties()))
             
-            dispatch( loadAllMailboxes)
+            dispatch( loadMailboxes)
             
-            dispatch( loadAllLabels)
+            dispatch( loadLabels)
             
 //            dispatch( loadAllMessages)
             

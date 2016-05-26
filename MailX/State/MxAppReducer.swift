@@ -29,7 +29,7 @@ struct MxAppReducer: Reducer {
         // MARK: Mailbox Actions
             
         case _ as MxSetMailboxesAction:
-            state.mailboxesState.allMailboxes = (action as! MxSetMailboxesAction).allMailboxes
+            state.mailboxesState.allMailboxes = (action as! MxSetMailboxesAction).mailboxes
             
         // MARK: LabelsActions
             

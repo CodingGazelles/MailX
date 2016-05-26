@@ -244,7 +244,7 @@ class MxGMailProxy : NSObject , MxMailboxProxy {
                 return
             }
             
-            var messages = MxMessageModelArray()
+            var messages = [MxMessageModel]()
             
             if ( !messagesResponse.messages.isEmpty){
                 
@@ -258,7 +258,7 @@ class MxGMailProxy : NSObject , MxMailboxProxy {
                         UID: nil
                         , id: MxMessageModelId( value: response.identifier)
                         , value: ""
-                        , labelId: nil
+                        , labelIds: [MxLabelModelId]()
                     )
                     messages.append( message)
                 }

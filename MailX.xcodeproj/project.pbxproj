@@ -326,8 +326,7 @@
 				DFB84ECE1CEAB2310088090D /* Cocoa.framework */,
 				666015A3551CB8A57FA51D6C /* Pods_MailX.framework */,
 			);
-			name = Frameworks;
-			path = MailX;
+			path = Frameworks;
 			sourceTree = "<group>";
 		};
 		DFB84E811CEAA8BD0088090D /* Deps */ = {

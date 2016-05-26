@@ -20,22 +20,21 @@ struct MxSetMailboxesAction: MxAction {
 
 let loadMailboxes = { (state: MxAppState, store: MxStateStore) -> MxAction in
     
-    let results = fetchMailboxes()
+    let result = fetchMailboxes()
         |> map({toSO(mailbox: $0)})
 
-    switch results {
-    case let .Success(soResultArray):
+    switch result {
+    case let .Success(value):
+        
+        let results: [MxMailboxSOResult] = value
         
         let mailboxes = results
             |> filter(){ $0.value != nil}
             |> map(){ $0.value! }
-//            |> { $0.value! }
         
         let errors = results
             |> filter(){ $0.error != nil}
             |> map(){ $0.error!}
-            |> map(){ errorSO(errorDBO: $0)}
-//            |> { $0.value! }
         
         return MxSetMailboxesAction(mailboxes: mailboxes, errors: errors)
         

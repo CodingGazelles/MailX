@@ -8,26 +8,40 @@
 
 import Foundation
 
+import Pipes
 
 
-typealias MxMessageModelArray = [MxMessageModel]
-typealias MxMessageModelOptArray = [MxMessageModel?]
 
 struct MxMessageModel: MxModelType {
     
     var UID: MxUID
     var id: MxMessageModelId
     var value: String
-    var labelId: MxLabelModelId?
+    var labelIds: [MxLabelModelId]
     
-    init(UID: MxUID?, id: MxMessageModelId, value: String, labelId: MxLabelModelId?){
+    init(UID: MxUID?, id: MxMessageModelId, value: String, labelIds: [MxLabelModelId]){
         self.init(UID: UID)
         self.id = id
         self.value = value
-        self.labelId = labelId
+        self.labelIds = labelIds
     }
 }
 
 struct MxMessageModelId: MxModelIdType {
     var value: String
+}
+
+extension MxMessageModel: MxInitWithDBO {
+    init( dbo: MxMessageDBO){
+        
+        let id = MxMessageModelId( value: dbo.id)
+        let labelIds = dbo.labels
+            |> map(){ MxLabelModelId( value: $0.id) }
+        
+        self.init(
+            UID: dbo.UID
+            , id: id
+            , value: "TO DO"
+            , labelIds: labelIds)
+    }
 }
