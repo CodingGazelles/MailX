@@ -8,6 +8,8 @@
 
 import Cocoa
 
+import ReSwift
+
 
 
 class MxLabelsViewController : NSViewController {
@@ -15,15 +17,37 @@ class MxLabelsViewController : NSViewController {
     
     // IBOutlets
     @IBOutlet weak var tableView: NSTableView!
-    // todo button to open and close the labels list
     
+    @IBAction func displayCloseLabelsButtonTapped( sender: AnyObject){
+        
+    }
+    
+    // todo button to open and close the labels list
+    var store = MxStateManager.defaultManager().store
 
     
     override func viewDidLoad() {
         super.viewDidLoad()
+    }
+}
+
+extension MxLabelsViewController: StoreSubscriber {
+    
+    override func viewWillAppear() {
+        super.viewWillAppear()
         
+        store.subscribe(self)
     }
     
-
+    override func viewWillDisappear() {
+        super.viewWillDisappear()
+        
+        store.unsubscribe(self)
+    }
+    
+    func newState(state: MxAppState) {
+        MxLog.debug("New State receiver by MxLabelsViewController")
+    }
     
 }
+

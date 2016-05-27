@@ -1,2 +1,4 @@
-github "ReSwift/ReSwift" "1.0.0"
-github "ReSwift/ReSwift-Recorder" "0.2.5"
+github "antitypical/Result" "2.0.0"
+github "ReactiveX/RxSwift" "2.5.0"
+github "realm/realm-cocoa" "v0.102.1"
+github "ReactiveCocoa/ReactiveCocoa" "v4.1.0"

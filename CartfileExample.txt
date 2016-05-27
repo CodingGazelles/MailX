@@ -7,6 +7,7 @@ github "pepibumur/sugarrecord"
 github "antitypical/Result"
 github "emaloney/CleanroomLogger"
 github "ReSwift/ReSwift"
+github "ReSwift/ReSwift-Recorder"
 github "jarsen/pipes"
 
 

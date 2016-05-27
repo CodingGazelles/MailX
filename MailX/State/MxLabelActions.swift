@@ -26,7 +26,7 @@ struct MxSetLabelsAction: MxAction {
     var errors: [MxErrorSO]
 }
 
-let loadLabels = { (state: MxAppState, store: MxStateStore) -> MxAction in
+let loadLabels = { (state: MxAppState) -> MxAction in
     
     switch state.mailboxesState.mailboxSelection{
     case .All, .None:

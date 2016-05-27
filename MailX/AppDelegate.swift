@@ -28,7 +28,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
     }()
     
-    lazy var store = MxStateStore()
+    lazy var stateManager = MxStateManager.defaultManager()
     
     
     func applicationDidFinishLaunching(aNotification: NSNotification) {
@@ -45,7 +45,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         
         // Init AppState
-        store.initState()
+        stateManager.initState()
         
         
         // Init local db and connections to providers
@@ -71,7 +71,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         
         // save state
-        store.saveState()
+        stateManager.saveState()
     }
     
     func applicationShouldTerminateAfterLastWindowClosed(sender: NSApplication) -> Bool {

@@ -11,6 +11,10 @@
 		DF44793C1CEB680700E3A685 /* MxProviderModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF44793B1CEB680700E3A685 /* MxProviderModel.swift */; };
 		DF44793E1CEB684D00E3A685 /* MxMailboxModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF44793D1CEB684D00E3A685 /* MxMailboxModel.swift */; };
 		DF4479401CEB689000E3A685 /* MxLabelModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF44793F1CEB689000E3A685 /* MxLabelModel.swift */; };
+		DF818A951CF766A7009357B8 /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF818A931CF766A1009357B8 /* RxSwift.framework */; };
+		DF818A961CF766A7009357B8 /* RxSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DF818A931CF766A1009357B8 /* RxSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		DF818A981CF766DB009357B8 /* ReactiveCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF818A971CF766DB009357B8 /* ReactiveCocoa.framework */; };
+		DF818A9A1CF766E3009357B8 /* ReactiveCocoa.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DF818A971CF766DB009357B8 /* ReactiveCocoa.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DFA313031CF0C02600500607 /* MxErrorActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFA313021CF0C02600500607 /* MxErrorActions.swift */; };
 		DFA313051CF0C0D200500607 /* MxErrorsState.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFA313041CF0C0D200500607 /* MxErrorsState.swift */; };
 		DFA313081CF1290A00500607 /* MxDataObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFA313071CF1290900500607 /* MxDataObjects.swift */; };
@@ -71,7 +75,7 @@
 		DFE26F291CEF56F100FB401A /* MxAppStateActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE26F261CEF56F100FB401A /* MxAppStateActions.swift */; };
 		DFE26F2C1CEF570100FB401A /* MxAppReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE26F2A1CEF570100FB401A /* MxAppReducer.swift */; };
 		DFE26F2D1CEF570100FB401A /* MxLabelReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE26F2B1CEF570100FB401A /* MxLabelReducer.swift */; };
-		DFE26F2F1CEF7B2700FB401A /* MxStateStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE26F2E1CEF7B2700FB401A /* MxStateStore.swift */; };
+		DFE26F2F1CEF7B2700FB401A /* MxStateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE26F2E1CEF7B2700FB401A /* MxStateManager.swift */; };
 		DFE26F311CEF7CB400FB401A /* MxStateArchiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE26F301CEF7CB400FB401A /* MxStateArchiver.swift */; };
 		DFE26F331CEF91B800FB401A /* MxPropertiesState.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE26F321CEF91B800FB401A /* MxPropertiesState.swift */; };
 		DFE26F351CEF9B6B00FB401A /* MxAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE26F341CEF9B6B00FB401A /* MxAction.swift */; };
@@ -102,8 +106,10 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				DF818A961CF766A7009357B8 /* RxSwift.framework in Embed Frameworks */,
 				DFE26F041CEBF7EC00FB401A /* ReSwift.framework in Embed Frameworks */,
 				DFB84EE71CEAB2A40088090D /* SugarRecordRealm.framework in Embed Frameworks */,
+				DF818A9A1CF766E3009357B8 /* ReactiveCocoa.framework in Embed Frameworks */,
 				DFB84EE41CEAB2970088090D /* Result.framework in Embed Frameworks */,
 				DFB84EF71CEAB6520088090D /* CleanroomLogger.framework in Embed Frameworks */,
 				DFB84EF51CEAB6520088090D /* CleanroomASL.framework in Embed Frameworks */,
@@ -123,6 +129,8 @@
 		DF44793B1CEB680700E3A685 /* MxProviderModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxProviderModel.swift; path = Model/MxProviderModel.swift; sourceTree = "<group>"; };
 		DF44793D1CEB684D00E3A685 /* MxMailboxModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxMailboxModel.swift; path = Model/MxMailboxModel.swift; sourceTree = "<group>"; };
 		DF44793F1CEB689000E3A685 /* MxLabelModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxLabelModel.swift; path = Model/MxLabelModel.swift; sourceTree = "<group>"; };
+		DF818A931CF766A1009357B8 /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RxSwift.framework; sourceTree = "<group>"; };
+		DF818A971CF766DB009357B8 /* ReactiveCocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ReactiveCocoa.framework; sourceTree = "<group>"; };
 		DFA313021CF0C02600500607 /* MxErrorActions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxErrorActions.swift; path = State/MxErrorActions.swift; sourceTree = "<group>"; };
 		DFA313041CF0C0D200500607 /* MxErrorsState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxErrorsState.swift; path = State/MxErrorsState.swift; sourceTree = "<group>"; };
 		DFA313071CF1290900500607 /* MxDataObjects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MxDataObjects.swift; sourceTree = "<group>"; };
@@ -186,7 +194,7 @@
 		DFE26F261CEF56F100FB401A /* MxAppStateActions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxAppStateActions.swift; path = State/MxAppStateActions.swift; sourceTree = "<group>"; };
 		DFE26F2A1CEF570100FB401A /* MxAppReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxAppReducer.swift; path = State/MxAppReducer.swift; sourceTree = "<group>"; };
 		DFE26F2B1CEF570100FB401A /* MxLabelReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxLabelReducer.swift; path = State/MxLabelReducer.swift; sourceTree = "<group>"; };
-		DFE26F2E1CEF7B2700FB401A /* MxStateStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxStateStore.swift; path = State/MxStateStore.swift; sourceTree = "<group>"; };
+		DFE26F2E1CEF7B2700FB401A /* MxStateManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxStateManager.swift; path = State/MxStateManager.swift; sourceTree = "<group>"; };
 		DFE26F301CEF7CB400FB401A /* MxStateArchiver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MxStateArchiver.swift; sourceTree = "<group>"; };
 		DFE26F321CEF91B800FB401A /* MxPropertiesState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxPropertiesState.swift; path = State/MxPropertiesState.swift; sourceTree = "<group>"; };
 		DFE26F341CEF9B6B00FB401A /* MxAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxAction.swift; path = State/MxAction.swift; sourceTree = "<group>"; };
@@ -203,6 +211,8 @@
 				DFB84EF11CEAB62B0088090D /* GTL.framework in Frameworks */,
 				DFB84ED31CEAB24D0088090D /* SystemConfiguration.framework in Frameworks */,
 				DFB84ED11CEAB23C0088090D /* Security.framework in Frameworks */,
+				DF818A981CF766DB009357B8 /* ReactiveCocoa.framework in Frameworks */,
+				DF818A951CF766A7009357B8 /* RxSwift.framework in Frameworks */,
 				DFB84EF21CEAB62B0088090D /* Realm.framework in Frameworks */,
 				DFB84EE01CEAB2900088090D /* Pipes.framework in Frameworks */,
 				DFB84EF31CEAB62B0088090D /* RealmSwift.framework in Frameworks */,
@@ -279,7 +289,7 @@
 			children = (
 				DFA313071CF1290900500607 /* MxDataObjects.swift */,
 				DFB84E8C1CEAAA450088090D /* Views */,
-				DFE26F171CEE99E200FB401A /* StateFlow */,
+				DFE26F171CEE99E200FB401A /* State */,
 				DFB84EFF1CEABAE10088090D /* Services */,
 				DFB84E811CEAA8BD0088090D /* Deps */,
 				DFB84EA41CEAAB4A0088090D /* Helpers */,
@@ -312,6 +322,8 @@
 		DFB84E801CEAA88A0088090D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				DF818A971CF766DB009357B8 /* ReactiveCocoa.framework */,
+				DF818A931CF766A1009357B8 /* RxSwift.framework */,
 				DFE26F011CEBF7BA00FB401A /* ReSwift.framework */,
 				DFB84EEA1CEAB62B0088090D /* CleanroomASL.framework */,
 				DFB84EEB1CEAB62B0088090D /* CleanroomLogger.framework */,
@@ -468,16 +480,16 @@
 			name = Reducers;
 			sourceTree = "<group>";
 		};
-		DFE26F171CEE99E200FB401A /* StateFlow */ = {
+		DFE26F171CEE99E200FB401A /* State */ = {
 			isa = PBXGroup;
 			children = (
 				DFB84EFE1CEABA2F0088090D /* State */,
 				DFB84EB41CEAB0020088090D /* Actions */,
 				DFB84F2D1CEB51D70088090D /* Reducers */,
-				DFE26F2E1CEF7B2700FB401A /* MxStateStore.swift */,
+				DFE26F2E1CEF7B2700FB401A /* MxStateManager.swift */,
 				DFE26F301CEF7CB400FB401A /* MxStateArchiver.swift */,
 			);
-			name = StateFlow;
+			name = State;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -702,7 +714,7 @@
 				DFE26F311CEF7CB400FB401A /* MxStateArchiver.swift in Sources */,
 				DFB84E7D1CEAA8580088090D /* MxLogs.swift in Sources */,
 				DFB84EAD1CEAABFF0088090D /* MxDBObjects.swift in Sources */,
-				DFE26F2F1CEF7B2700FB401A /* MxStateStore.swift in Sources */,
+				DFE26F2F1CEF7B2700FB401A /* MxStateManager.swift in Sources */,
 				DFE26F2D1CEF570100FB401A /* MxLabelReducer.swift in Sources */,
 				DFB84EC71CEAB0DD0088090D /* MxFetchMessagesInLabelTicket.swift in Sources */,
 			);
@@ -831,7 +843,6 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/MailX/Frameworks",
 					"$(PROJECT_DIR)/Frameworks",
 				);
 				INFOPLIST_FILE = MailX/Info.plist;
@@ -852,7 +863,6 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/MailX/Frameworks",
 					"$(PROJECT_DIR)/Frameworks",
 				);
 				INFOPLIST_FILE = MailX/Info.plist;

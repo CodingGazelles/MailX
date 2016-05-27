@@ -12,36 +12,36 @@ import ReSwift
 
 
 
-class MxStateStore: Store<MxAppState> {
+class MxStateManager {
     
-    
-    typealias MxActionCreator = (mxState: MxAppState, mxStore: MxStateStore) -> MxAction?
-    typealias ReActionCreator = (state: State, store: Store<MxAppState>) -> Action?
-    
-    
-    init(){
-        super.init(reducer: MxAppReducer(), state: nil, middleware: [])
+    private static let appStore = MxStateManager()
+    static func defaultManager() -> MxStateManager {
+        return appStore
     }
     
-    override func dispatch(action: Action) -> Any {
+    typealias MxActionCreator = (mxState: MxAppState) -> MxAction?
+    typealias ReActionCreator = (state: MxAppState, store: Store<MxAppState>) -> Action?
+    
+    let store = Store<MxAppState>(reducer: MxAppReducer(), state: nil, middleware: [])
+    
+    func dispatch(action: Action) -> Any {
         MxLog.info("Dispatching action: \(action)")
-        return super.dispatch(action)
+        return store.dispatch(action)
     }
     
-    func dispatch(mxActionCreator: (state: MxAppState, store: MxStateStore) -> MxAction?) -> Any {
+    func dispatch(mxActionCreator: (state: MxAppState) -> MxAction?) -> Any {
         MxLog.info("Dispatching action creator: \(mxActionCreator)")
         
         let reActionCreator = {
-            (state: State, store: Store<MxAppState>) -> Action? in
+            (state: MxAppState, store: Store<MxAppState>) -> Action? in
             
             let _state = state
-            let _store = store as! MxStateStore
-            let _action = mxActionCreator(state: _state, store: _store)
+            let _action = mxActionCreator(state: _state)
             
             return _action as? Action
         }
         
-        return super.dispatch(reActionCreator)
+        return store.dispatch(reActionCreator)
     }
     
     func initState() {
@@ -62,10 +62,6 @@ class MxStateStore: Store<MxAppState> {
 //            dispatch( loadAllMessages)
             
         }
-        
-        
-        
-        
     }
     
     func loadLastSavedState() -> MxAppState {
