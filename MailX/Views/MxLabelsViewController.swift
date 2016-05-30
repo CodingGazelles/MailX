@@ -12,22 +12,32 @@ import ReSwift
 
 
 
-class MxLabelsViewController : NSViewController {
+class MxLabelsViewController: NSViewController {
     
+    let kLabelViewIdentifier = "LabelView"
+    
+    let storeManager = MxStateManager.defaultManager()
     
     // IBOutlets
     @IBOutlet weak var tableView: NSTableView!
+    @IBOutlet weak var showAllLabelsButton: NSButton!
     
-    @IBAction func displayCloseLabelsButtonTapped( sender: AnyObject){
-        
+    var labels = [MxLabelSO]()
+    var showAllLabels = false
+    
+    @IBAction func showAllLabelsButtonTapped( sender: AnyObject){
+        switch showAllLabels {
+        case true:
+            storeManager.dispatch(MxShowDefaultsLabelsAction())
+        case false:
+            storeManager.dispatch(MxShowAllLabelsAction())
+        }
     }
-    
-    // todo button to open and close the labels list
-    var store = MxStateManager.defaultManager().store
-
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        MxLog.debug("MxLabelsViewController did load")
     }
 }
 
@@ -36,18 +46,45 @@ extension MxLabelsViewController: StoreSubscriber {
     override func viewWillAppear() {
         super.viewWillAppear()
         
-        store.subscribe(self)
+        storeManager.store.subscribe(self)
     }
     
     override func viewWillDisappear() {
         super.viewWillDisappear()
         
-        store.unsubscribe(self)
+        storeManager.store.unsubscribe(self)
     }
     
     func newState(state: MxAppState) {
-        MxLog.debug("New State receiver by MxLabelsViewController")
+        MxLog.debug("New State received by MxLabelsViewController: \(state)")
+        
+        labels = state.labelsState.visibleLabels()
+        showAllLabels = state.labelsState.showAllLabels()
+        showAllLabelsButton.state = showAllLabels ? NSOnState : NSOffState
+        
+        tableView.reloadData()
     }
     
+}
+
+extension MxLabelsViewController: NSTableViewDataSource {
+    
+    func numberOfRowsInTableView(tableView: NSTableView) -> Int {
+        MxLog.verbose("processing \(#function): \(tableView)")
+        return labels.count
+    }
+    
+}
+
+extension MxLabelsViewController: NSTableViewDelegate {
+    
+    func tableView(tableView: NSTableView, viewForTableColumn tableColumn: NSTableColumn?, row: Int) -> NSView? {
+        
+        MxLog.verbose("processing \(#function): \(tableView), \(tableColumn), \(row)")
+        let view = tableView.makeViewWithIdentifier( kLabelViewIdentifier, owner: self) as! NSTableCellView?
+        view!.textField!.stringValue = self.labels[row].code
+        
+        return view
+    }
 }
 

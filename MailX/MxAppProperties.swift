@@ -42,15 +42,15 @@ class MxAppProperties {
         _rootDictionary = readProperties(fileName: fileName, fileType: fileType)
     }
     
-    func readProperties(fileName fileName: String, fileType: String) -> [String:String] {
+    func readProperties(fileName fileName: String, fileType: String) -> [String:AnyObject] {
         guard let path = NSBundle.mainBundle().pathForResource(fileName, ofType: fileType) else {
-            return [String:String]()
+            return [String:AnyObject]()
         }
         guard let dict = NSDictionary(contentsOfFile: path) else {
-            return [String:String]()
+            return [String:AnyObject]()
         }
         
-        return dict as! [String : String]
+        return dict as! [String:AnyObject]
     }
     
     func defaultLabels() -> [String]{
@@ -62,9 +62,9 @@ class MxAppProperties {
     
     func systemLabels() -> MxSystemLabels {
         guard let result = _rootDictionary[MxAppProperties.kPFE_SystemLabels] else {
-            return MxSystemLabels( labels: [[String:String]]())
+            return MxSystemLabels( labels: [String:[String:String]]())
         }
-        return MxSystemLabels( labels: result as! [[String : String]])
+        return MxSystemLabels( labels: result as! [String:[String:String]])
     }
     
     func providers() -> [[String:AnyObject]] {
@@ -91,19 +91,16 @@ class MxAppProperties {
 
 class MxSystemLabels {
     
-    private var rootArray = [[String:String]]()
+    private var rootDictionary = [String:[String:String]]()
     
-    private init( labels: [[String:String]]){
-        rootArray = labels
+    private init( labels: [String:[String:String]]){
+        rootDictionary = labels
     }
     
-    func labelName( labelCode labelCode: String) -> String{
+    func labelName( labelCode labelCode: String) -> String {
         
-        let format = "(\(MxAppProperties.k_Label_Code) == %@)"
-        let predicate = NSPredicate( format: format, labelCode)
-        let result = rootArray.filter { predicate.evaluateWithObject($0) }
-        
-        return result[0]["Name"]!
+        let result = rootDictionary[labelCode]![MxAppProperties.k_Label_Name]
+        return result!
     }
 }
 

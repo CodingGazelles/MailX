@@ -13,9 +13,11 @@ import Pipes
 
 
 
+// MARK: - Actions
+
 struct MxShowAllLabelsAction: MxAction {}
 
-struct MxShowSelectedLabelsAction: MxAction {}
+struct MxShowDefaultsLabelsAction: MxAction {}
 
 struct MxSelectLabelAction: MxAction {
     var selectedLabelCode: String
@@ -26,7 +28,12 @@ struct MxSetLabelsAction: MxAction {
     var errors: [MxErrorSO]
 }
 
-let loadLabels = { (state: MxAppState) -> MxAction in
+
+// MARK: - Actions creators
+
+let setLabelsActionCreator = { (state: MxAppState) -> MxAction in
+    
+    MxLog.debug("Processing func action creator loadLabels")
     
     switch state.mailboxesState.mailboxSelection{
     case .All, .None:
@@ -40,7 +47,10 @@ let loadLabels = { (state: MxAppState) -> MxAction in
                 , name: systemLabels.labelName( labelCode: $0)
                 , ownerType: MxLabelOwnerType.SYSTEM.rawValue )!}
         
-        return MxSetLabelsAction( labels: defaultLabels, errors: [MxErrorSO]())
+        let action = MxSetLabelsAction( labels: defaultLabels, errors: [MxErrorSO]())
+        MxLog.debug("Returning action: \(action)")
+        
+        return action
         
     case .One(let selectedMailbox):
         
@@ -62,10 +72,15 @@ let loadLabels = { (state: MxAppState) -> MxAction in
                 |> filter(){ $0.value != nil}
                 |> map(){ $0.value! }
             
-            return MxSetLabelsAction( labels: labelsSO, errors: errosSO)
+            let action = MxSetLabelsAction( labels: labelsSO, errors: errosSO)
+            MxLog.debug("Returning action: \(action)")
+            return action
             
         case let .Failure( error):
-            return MxAddErrorsAction(errors: [MxErrorSO(error: error)])
+            
+            let action = MxAddErrorsAction(errors: [MxErrorSO(error: error)])
+            MxLog.debug("Returning action: \(action)")
+            return action
         }
         
     }

@@ -17,7 +17,7 @@ struct MxProviderSO: MxStateObjectType {
     var name: String
     
     init(UID: MxUID?, id: String, name: String){
-        self.init(UID: UID)
+        self.UID = UID ?? MxUID()
         self.id = id
         self.name = name
     }

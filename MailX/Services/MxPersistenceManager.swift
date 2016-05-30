@@ -104,7 +104,7 @@ func fetchLabels( mailboxId mailboxId: MxMailboxModelId)
 // MARK: - Providers
 
 func insertProvider(db: RealmDefaultStorage, provider: MxProviderModel) -> Result<Bool, MxDBError> {
-    MxLog.verbose("... Processing insertProvider. Args: provider=\(provider)")
+    MxLog.verbose("Processing: \(#function). Args: provider=\(provider) ")
     
     do {
         
@@ -133,7 +133,7 @@ func insertProvider(db: RealmDefaultStorage, provider: MxProviderModel) -> Resul
 
 func insertMailbox( mailbox: MxMailboxModel) -> Result<Bool, MxDBError> {
     
-    MxLog.verbose("... Processing insertMailbox. Args: mailbox=\(mailbox)")
+    MxLog.verbose("Processing: \(#function). Args: mailbox=\(mailbox)")
     
     let providerId = mailbox.providerId.value
     let appProperties = MxAppProperties.defaultProperties()
@@ -200,7 +200,7 @@ func insertMailbox( mailbox: MxMailboxModel) -> Result<Bool, MxDBError> {
 func deleteLabels( mailboxId mailboxId: MxMailboxModelId)
     -> Result< Bool, MxDBError> {
         
-        MxLog.verbose("... Processing deleteLabels. Args: mailboxId=\(mailboxId)")
+        MxLog.verbose("Processing: \(#function). Args: mailboxId=\(mailboxId)")
         
         let db = MxPersistenceManager.defaultManager().db
         
@@ -246,7 +246,7 @@ func deleteLabels( mailboxId mailboxId: MxMailboxModelId)
 func deleteMessages( mailboxId mailboxId: MxMailboxModelId, labelId: MxLabelModelId)
     -> Result< Bool,MxDBError> {
         
-        MxLog.verbose("... Processing deleteMessages. Args: mailboxId=\(mailboxId), labelId=\(labelId)")
+        MxLog.verbose("Processing: \(#function). Args: mailboxId=\(mailboxId), labelId=\(labelId)")
         
         let db = MxPersistenceManager.defaultManager().db
         
@@ -280,7 +280,7 @@ func deleteMessages( mailboxId mailboxId: MxMailboxModelId, labelId: MxLabelMode
 
 func fetchProviderDBO( providerId providerId: String) -> Result<MxProviderDBO, MxDBError> {
     
-    MxLog.verbose("... Processing fetchProviderDBO. Args: providerId=\(providerId)")
+    MxLog.verbose("Processing: \(#function). Args: providerId=\(providerId)")
     
     let db = MxPersistenceManager.defaultManager().db
     
@@ -303,7 +303,7 @@ func fetchProviderDBO( providerId providerId: String) -> Result<MxProviderDBO, M
 
 func fetchMailboxDBO( mailboxId mailboxId: String) -> Result<MxMailboxDBO, MxDBError> {
     
-    MxLog.verbose("... Processing fetchMailboxDBO. Args: mailboxId=\(mailboxId)")
+    MxLog.verbose("Processing: \(#function). Args: mailboxId=\(mailboxId)")
     
     let db = MxPersistenceManager.defaultManager().db
     
@@ -326,7 +326,7 @@ func fetchMailboxDBO( mailboxId mailboxId: String) -> Result<MxMailboxDBO, MxDBE
 
 func fetchMailboxDBOs() -> Result<[MxMailboxDBO], MxDBError> {
     
-    MxLog.verbose("... Processing fetchMailboxDBOs")
+    MxLog.verbose("Processing: \(#function)")
     
     let db = MxPersistenceManager.defaultManager().db
     
@@ -349,7 +349,7 @@ func fetchMailboxDBOs() -> Result<[MxMailboxDBO], MxDBError> {
 func fetchMessageDBOs( mailboxId mailboxId: String, labelId: String)
     -> Result<MxMessageDBOs, MxDBError> {
         
-        MxLog.verbose("... Processing fetchMessageDBOs. Args: mailboxId=\(mailboxId), labelId=\(labelId)")
+        MxLog.verbose("Processing: \(#function). Args: mailboxId=\(mailboxId), labelId=\(labelId)")
         
         switch fetchMailboxDBO( mailboxId: mailboxId) {
         case let .Success(value):

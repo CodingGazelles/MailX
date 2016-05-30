@@ -24,7 +24,7 @@ struct MxMailboxSO: MxStateObjectType {
     var connected: Bool
     
     init(UID: MxUID?, id: String, name: String, connected: Bool){
-        self.init(UID: UID)
+        self.UID = UID ?? MxUID()
         self.id = id
         self.name = name
         self.connected = connected

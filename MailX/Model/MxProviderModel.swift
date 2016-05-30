@@ -21,7 +21,7 @@ struct MxProviderModel: MxModelType {
     
     init(UID: MxUID?, id: MxProviderModelId){
         
-        self.init(UID: UID)
+        self.UID = UID ?? MxUID()
         self.id = id
         
     }

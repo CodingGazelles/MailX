@@ -30,7 +30,7 @@ struct MxLabelModel: MxModelType {
         , ownerType: MxLabelOwnerType
         , mailboxId: MxMailboxModelId){
         
-        self.init(UID: UID)
+        self.UID = UID ?? MxUID()
         self.id = id
         self.code = code
         self.name = name

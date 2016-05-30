@@ -20,7 +20,7 @@ struct MxMessageModel: MxModelType {
     var labelIds: [MxLabelModelId]
     
     init(UID: MxUID?, id: MxMessageModelId, value: String, labelIds: [MxLabelModelId]){
-        self.init(UID: UID)
+        self.UID = UID ?? MxUID()
         self.id = id
         self.value = value
         self.labelIds = labelIds

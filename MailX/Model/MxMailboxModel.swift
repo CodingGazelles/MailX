@@ -23,7 +23,7 @@ struct MxMailboxModel: MxModelType {
     var providerId: MxProviderModelId
     
     init(UID: MxUID, id: MxMailboxModelId, name: String, connected: Bool, providerId: MxProviderModelId){
-        self.init(UID: UID)
+        self.UID = UID ?? MxUID()
         self.id = id
         self.name = name
         self.connected = connected

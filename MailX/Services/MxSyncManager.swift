@@ -71,22 +71,18 @@ class MxSyncManager {
     //MARK: - Synchronize local mailboxes with remote store
     
     func startSynchronization(){
-        MxLog.verbose("... Processing.")
         
-        MxLog.debug("Init connections to providers")
+        MxLog.debug("Initiating connections to providers")
         for (_, remoteStore) in remoteStores {
             remoteStore.connect()
         }
         
-        
-        MxLog.debug("Update local information")
+        MxLog.debug("Updating local information")
         self.updateMailboxes()
         
-        
-        MxLog.debug("Start synchronization (initiating push data from providers)")
+        MxLog.debug("Starting synchronization (initiating pulling data from providers)")
         //todo
         
-        MxLog.verbose("... Done");
     }
     
     func syncMailboxes() {
@@ -97,7 +93,7 @@ class MxSyncManager {
     //MARK: - Update local store with remote data
     
     func updateMailboxes(){
-        MxLog.verbose("... Processing.")
+        MxLog.verbose("Processing: \(#function)")
         
         for (mailboxId, _) in remoteStores {
             // pullHistory
@@ -106,12 +102,8 @@ class MxSyncManager {
 //            MxLog.debug("Partial update of mailbox: \(mailboxId)")
             //        updatePartial(mailboxId: mailboxId)
             
-            
-            MxLog.debug("Full update of mailbox: \(mailboxId)")
             updateFull(mailboxId: mailboxId)
         }
-        
-        MxLog.verbose("... Done");
     }
     
     // incremental update
@@ -122,7 +114,8 @@ class MxSyncManager {
     }
     
     func updateFull(mailboxId mailboxId: MxMailboxModelId){
-        MxLog.debug("Doing full update of mailbox: \(mailboxId)")
+        
+        MxLog.debug("Processing full update: \(#function) of mailbox: \(mailboxId)")
         
         emptyAllDataOfMailbox(mailboxId: mailboxId)
         fetchAllDataOfMailbox(mailboxId: mailboxId)

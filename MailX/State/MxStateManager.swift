@@ -49,15 +49,18 @@ class MxStateManager {
         
         if let state = MxAppState.readSavedState() {
             
+            MxLog.debug("Reading state from last saved state")
             dispatch( MxSetStateAction(state: state))
             
         } else {
             
             dispatch( MxSetPropertiesAction(properties: MxPropertiesState.readDefaultProperties()))
             
+            MxLog.debug("Dispatching loadMailboxes")
             dispatch( loadMailboxes)
             
-            dispatch( loadLabels)
+            MxLog.debug("Dispatching setLabelsActionCreator")
+            dispatch( setLabelsActionCreator)
             
 //            dispatch( loadAllMessages)
             

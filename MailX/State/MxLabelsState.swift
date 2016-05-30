@@ -9,6 +9,7 @@
 import Foundation
 
 import Result
+import Pipes
 
 
 
@@ -24,17 +25,13 @@ struct MxLabelSO: MxStateObjectType {
     var name: String
     var ownerType: String
     
-    init(){
-        self.init()
-    }
-    
     init?(UID: MxUID?, id: String?, code: String, name: String, ownerType: String){
         
         guard MxLabelOwnerType(rawValue: ownerType) != nil else {
             return nil
         }
         
-        self.init(UID: UID)
+        self.UID = UID ?? MxUID()
         self.id = id
         self.code = code
         self.name = name
@@ -77,23 +74,38 @@ func toSO( label label: MxLabelModelResult) -> MxLabelSOResult {
 struct MxLabelsState: MxStateType {
     
     var allLabels = [MxLabelSO]()
-    var labelDisplay = MxLabelDisplay.All
+    var labelDisplay = MxLabelDisplay.Defaults
+    var defaultLabels = [String]()
     
     enum MxLabelDisplay {
         case All
-        case Selection
+        case Defaults
+    }
+    
+    func visibleLabels() -> [MxLabelSO] {
+        switch labelDisplay {
+        case .All:
+            return allLabels
+        default:
+            return allLabels
+                |> filter(){ self.defaultLabels.contains($0.code)}
+        }
+    }
+    
+    func showAllLabels() -> Bool {
+        return labelDisplay == .All
     }
     
 }
 
 //MARK: Extensions
 
-extension MxLabelSO: MxLabelRow {}
-
-protocol MxLabelRow: MxStateObjectType {
-    var code: String { get set }
-    var name: String { get set }
-}
+//extension MxLabelSO: MxLabelRow {}
+//
+//protocol MxLabelRow: MxStateObjectType {
+//    var code: String { get set }
+//    var name: String { get set }
+//}
 
 
 

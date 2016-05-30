@@ -12,10 +12,10 @@ import Foundation
 
 class MxStateArchiver {
     
-    static func loadSavedState() -> MxAppState {
+    static func loadSavedState() -> MxAppState? {
         
 //        fatalError("Func not implemented")
-        return MxAppState()
+        return nil
         
     }
     

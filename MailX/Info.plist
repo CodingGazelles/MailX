@@ -27,7 +27,7 @@
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2016 rxdesign. All rights reserved.</string>
 	<key>NSMainStoryboardFile</key>
-	<string>Main</string>
+	<string>MailXStoryboard</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
 </dict>

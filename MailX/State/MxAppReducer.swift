@@ -36,11 +36,12 @@ struct MxAppReducer: Reducer {
         case _ as MxShowAllLabelsAction:
             state.labelsState.labelDisplay = MxLabelsState.MxLabelDisplay.All
             
-        case _ as MxShowSelectedLabelsAction:
-            state.labelsState.labelDisplay = MxLabelsState.MxLabelDisplay.Selection
+        case _ as MxShowDefaultsLabelsAction:
+            state.labelsState.labelDisplay = MxLabelsState.MxLabelDisplay.Defaults
             
         case _ as MxSetLabelsAction:
             state.labelsState.allLabels = (action as! MxSetLabelsAction).labels
+            state.labelsState.defaultLabels = state.propertiesState.labelShortListCodes
             
             
         // MARK: PropertiesActions

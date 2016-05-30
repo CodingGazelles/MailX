@@ -20,6 +20,8 @@ struct MxSetMailboxesAction: MxAction {
 
 let loadMailboxes = { (state: MxAppState) -> MxAction in
     
+    MxLog.debug("Processing func action creator loadMailboxes")
+    
     let result = fetchMailboxes()
         |> map({toSO(mailbox: $0)})
 
@@ -36,10 +38,17 @@ let loadMailboxes = { (state: MxAppState) -> MxAction in
             |> filter(){ $0.error != nil}
             |> map(){ $0.error!}
         
-        return MxSetMailboxesAction(mailboxes: mailboxes, errors: errors)
+        let action = MxSetMailboxesAction(mailboxes: mailboxes, errors: errors)
+        MxLog.debug("Returning action: \(action)")
+        
+        return action
         
     case let .Failure(error):
-        return MxAddErrorsAction(errors: [MxErrorSO(error: error)])
+        
+        let action = MxAddErrorsAction(errors: [MxErrorSO(error: error)])
+        MxLog.debug("Returning action: \(action)")
+        
+        return action
     }
 
 }

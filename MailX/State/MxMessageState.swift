@@ -16,7 +16,7 @@ struct MxMessageSO: MxStateObjectType {
     var id: String
     
     init(UID: MxUID?, id: String){
-        self.init(UID: UID)
+        self.UID = UID ?? MxUID()
         self.id = id
     }
     

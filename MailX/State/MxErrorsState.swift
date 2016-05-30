@@ -16,7 +16,7 @@ struct MxErrorSO: MxStateObjectType, ErrorType {
     var message: String
     
     init(UID: MxUID?, message: String){
-        self.init(UID: UID)
+        self.UID = UID ?? MxUID()
         self.message = message
     }
     
