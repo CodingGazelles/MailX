@@ -21,16 +21,13 @@ protocol MxMailboxProxy {
 //    func didFetchThreadsHandler( selector: Selector, error: NSError)
     
     func getMailboxId() -> MxMailboxModelId
-    func getProviderId() -> MxProviderModelId
+    func getProviderCode() -> String
     
 }
 
 class MxProxyFactory {
-    static func gmailProxy(
-        providerId providerId: MxProviderModel.Id,
-        mailboxId: MxMailboxModel.Id) -> MxMailboxProxy
-    {
-        return MxGMailProxy( providerId: providerId, mailboxId: mailboxId)
+    static func gmailProxy( providerCode providerCode: String, mailboxId: MxMailboxModel.Id) -> MxMailboxProxy{
+        return MxGMailProxy( providerCode: providerCode, mailboxId: mailboxId)
     }
 }
 

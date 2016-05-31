@@ -13,7 +13,6 @@ import Foundation
 class MxUserPreferences {
     
     
-    
     // MARK: - Shared instance
     
     private static let sharedInstance = MxUserPreferences()
@@ -21,8 +20,7 @@ class MxUserPreferences {
         return sharedInstance
     }
     
-    private let activeMailboxIdValueKey = "activeMailboxIdValueKey"
-    private let showAllLabelsKey = "showAllLabelsKey"
+    private let kFirstExecution = "firstExecution"
     
     
     // MARK: - Factory defaults
@@ -30,7 +28,7 @@ class MxUserPreferences {
     private let userDefaults = NSUserDefaults.standardUserDefaults()
     private var factoryDefaults: [String:AnyObject] {
         get {
-            return [ showAllLabelsKey : false]
+            return [ kFirstExecution : true]
         }
     }
     
@@ -45,23 +43,12 @@ class MxUserPreferences {
     
     // MARK: - User prefs
     
-    var activeMailboxIdValue: String? {
+    var firstExecution: Bool {
         get {
-            return userDefaults.stringForKey(activeMailboxIdValueKey)
-        }
-        set( mailboxIdValue) {
-            userDefaults.setObject(mailboxIdValue, forKey: activeMailboxIdValueKey)
-        }
-    }
-
-    
-    var showAllLabels: Bool {
-        get {
-            return userDefaults.boolForKey( showAllLabelsKey)
+            return userDefaults.boolForKey( kFirstExecution)
         }
         set( show) {
-            userDefaults.setBool(show, forKey: showAllLabelsKey)
+            userDefaults.setBool(show, forKey: kFirstExecution)
         }
     }
-    
 }

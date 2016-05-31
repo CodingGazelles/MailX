@@ -20,9 +20,9 @@ class MxAppProperties {
     static let kPFE_DefaultLabels = "DefaultLabels"
     static let kPFE_SystemLabels = "SystemLabels"
     
-    static let kPFE_Providers = "MailboxProviders"
+    static let kPFE_Providers = "MailProviders"
     static let k_Provider_Name = "Name"
-    static let k_Provider_Id = "Id"
+    static let k_Provider_Code = "Code"
     static let k_Provider_ProxyClassName = "ProxyClassName"
     static let k_Provider_Labels = "Labels"
     
@@ -67,25 +67,20 @@ class MxAppProperties {
         return MxSystemLabels( labels: result as! [String:[String:String]])
     }
     
-    func providers() -> [[String:AnyObject]] {
+    func providers() -> [String:[String:AnyObject]] {
         guard let result = _rootDictionary[MxAppProperties.kPFE_Providers] else {
-            return [[String:AnyObject]()]
+            return [String:[String:AnyObject]]()
         }
-        return result as! [[String : AnyObject]]
+        return result as! [String:[String:AnyObject]]
     }
     
-    func provider( providerId providerId: String) -> [String:AnyObject] {
-        
-        let format = "(\(MxAppProperties.k_Provider_Id) == %@)"
-        let predicate = NSPredicate( format: format, providerId)
-        let result = providers().filter{ predicate.evaluateWithObject($0) }
-        
-        return result[0]
-    }
-    
-    func providerLabels( providerId providerId: String) -> [String:String] {
-        return provider( providerId: providerId)[MxAppProperties.k_Provider_Labels] as! [String:String]
-    }
+//    func provider( providerCode providerCode: String) -> [String:AnyObject] {
+//        return providers()[providerCode]!
+//    }
+//    
+//    func providerLabels( providerCode providerCode: String) -> [String:String] {
+//        return provider( providerCode: providerCode)[MxAppProperties.k_Provider_Labels] as! [String:String]
+//    }
     
 }
 

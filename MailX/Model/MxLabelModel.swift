@@ -14,52 +14,53 @@ import Result
 
 typealias MxLabelModelResult = Result<MxLabelModel, MxModelError>
 
-struct MxLabelModel: MxModelType {
+final class MxLabelModel: MxModelType, MxLocalPersistable, MxRemotePersistable {
     
     var UID: MxUID
-    var id: MxLabelModelId
+    var remoteId: MxLabelModelId
     var code: String
     var name: String
     var ownerType: MxLabelOwnerType
     var mailboxId: MxMailboxModelId
     
     init(UID: MxUID?
-        , id: MxLabelModelId
+        , remoteId: MxLabelModelId
         , code: String
         , name: String
         , ownerType: MxLabelOwnerType
         , mailboxId: MxMailboxModelId){
         
         self.UID = UID ?? MxUID()
-        self.id = id
+        self.remoteId = remoteId
         self.code = code
         self.name = name
         self.ownerType = ownerType
         self.mailboxId = mailboxId
     }
-}
-
-struct MxLabelModelId: MxModelIdType{
-    var value: String
-}
-
-extension MxLabelModel: MxInitWithDBO {
-    init?( dbo: MxLabelDBO){
+    
+    convenience init?( dbo: MxLabelDBO){
         
         guard let ownerType = MxLabelOwnerType( rawValue: dbo.ownerType) else {
             return nil
         }
         
-        let id = MxLabelModelId( value: dbo.id)
-        let mailboxId = MxMailboxModelId( value: dbo.mailbox!.id)
+        let remoteId = MxLabelModelId( value: dbo.remoteId)
+        let mailboxId = MxMailboxModelId( value: dbo.mailbox!.remoteId)
         
         self.init(
             UID: dbo.UID
-            , id: id
+            , remoteId: remoteId
             , code: dbo.code
             , name: dbo.name
             , ownerType: ownerType
             , mailboxId: mailboxId)
+    }
+}
+
+final class MxLabelModelId: MxRemoteId {
+    var value: String
+    init( value: String){
+        self.value = value
     }
 }
 
@@ -76,4 +77,12 @@ func toModel( label label: MxLabelDBO) -> MxLabelModelResult {
     }
     
     return Result.Success( MxLabelModel(dbo: label)!)
+}
+
+
+// MARK: - Label Owner Type
+
+enum MxLabelOwnerType: String {
+    case SYSTEM = "SYSTEM"
+    case USER = "USER"
 }

@@ -12,36 +12,38 @@ import Pipes
 
 
 
-struct MxMessageModel: MxModelType {
+final class MxMessageModel: MxModelType, MxRemotePersistable, MxLocalPersistable {
     
     var UID: MxUID
-    var id: MxMessageModelId
+    var remoteId: MxMessageModelId
     var value: String
     var labelIds: [MxLabelModelId]
     
-    init(UID: MxUID?, id: MxMessageModelId, value: String, labelIds: [MxLabelModelId]){
+    init(UID: MxUID?, remoteId: MxMessageModelId, value: String, labelIds: [MxLabelModelId]){
         self.UID = UID ?? MxUID()
-        self.id = id
+        self.remoteId = remoteId
         self.value = value
         self.labelIds = labelIds
     }
-}
-
-struct MxMessageModelId: MxModelIdType {
-    var value: String
-}
-
-extension MxMessageModel: MxInitWithDBO {
-    init( dbo: MxMessageDBO){
+    
+    convenience init( dbo: MxMessageDBO){
         
-        let id = MxMessageModelId( value: dbo.id)
+        let remoteId = MxMessageModelId( value: dbo.remoteId)
         let labelIds = dbo.labels
-            |> map(){ MxLabelModelId( value: $0.id) }
+            |> map(){ MxLabelModelId( value: $0.remoteId) }
         
         self.init(
             UID: dbo.UID
-            , id: id
+            , remoteId: remoteId
             , value: "TO DO"
             , labelIds: labelIds)
     }
 }
+
+final class MxMessageModelId: MxRemoteId {
+    var value: String
+    init( value: String){
+        self.value = value
+    }
+}
+

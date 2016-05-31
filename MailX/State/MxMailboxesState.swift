@@ -19,13 +19,13 @@ typealias MxMailboxSOResult = Result<MxMailboxSO, MxErrorSO>
 struct MxMailboxSO: MxStateObjectType {
     
     var UID: MxUID
-    var id: String
+    var remoteId: String
     var name: String
     var connected: Bool
     
-    init(UID: MxUID?, id: String, name: String, connected: Bool){
+    init(UID: MxUID?, remoteId: String, name: String, connected: Bool){
         self.UID = UID ?? MxUID()
-        self.id = id
+        self.remoteId = remoteId
         self.name = name
         self.connected = connected
     }
@@ -33,7 +33,7 @@ struct MxMailboxSO: MxStateObjectType {
     init(mailboxSO: MxMailboxSO){
         self.init(
             UID: mailboxSO.UID
-            , id: mailboxSO.id
+            , remoteId: mailboxSO.remoteId
             , name: mailboxSO.name
             , connected: mailboxSO.connected)
     }
@@ -43,7 +43,7 @@ extension MxMailboxSO: MxInitWithModel {
     init( model: MxMailboxModel){
         self.init(
             UID: model.UID
-            , id: model.id.value
+            , remoteId: model.remoteId.value
             , name: model.name
             , connected: model.connected)
     }

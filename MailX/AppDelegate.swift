@@ -32,9 +32,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     
     func applicationDidFinishLaunching(aNotification: NSNotification) {
-        MxLog.verbose("...")
-        // Insert code here to initialize your application
-
+        
         
         // init logs
         MxLog.enable()
@@ -42,6 +40,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         //
         MxLog.info("*** App launching ***")
+        
+        
+        // Init DB
+        if MxUserPreferences.sharedPreferences().firstExecution {
+            MxDBInitializer.insertDefaultProviders()
+            MxUserPreferences.sharedPreferences().firstExecution = false
+        } else {
+            MxLog.info("DB already initialized")
+        }
         
         
         // Init AppState
@@ -60,8 +67,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             MxLog.error("Unable to start syncronization because sync manager is nil", error: nil)
         }
         
-        
-        MxLog.verbose("... Done")
     }
     
     func applicationWillTerminate(aNotification: NSNotification){

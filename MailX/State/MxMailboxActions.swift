@@ -18,9 +18,9 @@ struct MxSetMailboxesAction: MxAction {
     var errors: [MxErrorSO]
 }
 
-let loadMailboxes = { (state: MxAppState) -> MxAction in
+let setMailboxesActionCreator = { (state: MxAppState) -> MxAction in
     
-    MxLog.debug("Processing func action creator loadMailboxes")
+    MxLog.debug("Processing func action creator setMailboxesActionCreator")
     
     let result = fetchMailboxes()
         |> map({toSO(mailbox: $0)})

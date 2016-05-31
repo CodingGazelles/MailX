@@ -14,40 +14,41 @@ import Result
 
 typealias MxMailboxModelResult = Result<MxMailboxModel, MxModelError>
 
-struct MxMailboxModel: MxModelType {
+final class MxMailboxModel: MxModelType, MxLocalPersistable, MxRemotePersistable {
     
     var UID: MxUID
-    var id: MxMailboxModelId
+    var remoteId: MxMailboxModelId
     var name: String
     var connected: Bool
-    var providerId: MxProviderModelId
+    var providerCode: String
     
-    init(UID: MxUID, id: MxMailboxModelId, name: String, connected: Bool, providerId: MxProviderModelId){
+    init(UID: MxUID?, remoteId: MxMailboxModelId, name: String, connected: Bool, providerCode: String){
         self.UID = UID ?? MxUID()
-        self.id = id
+        self.remoteId = remoteId
         self.name = name
         self.connected = connected
-        self.providerId = providerId
+        self.providerCode = providerCode
     }
-}
-
-struct MxMailboxModelId: MxModelIdType{
-    var value: String
-}
-
-extension MxMailboxModel: MxInitWithDBO {
-    init?( dbo: MxMailboxDBO){
+    
+    convenience init?( dbo: MxMailboxDBO){
         
         guard dbo.provider != nil else {
             return nil
         }
         
-        self.init(   
+        self.init(
             UID: dbo.UID
-            , id: MxMailboxModelId( value: dbo.id)
+            , remoteId: MxMailboxModelId( value: dbo.remoteId)
             , name: dbo.name
             , connected: false
-            , providerId: MxProviderModelId( value: dbo.provider!.id))
+            , providerCode: dbo.provider!.code)
+    }
+}
+
+final class MxMailboxModelId: MxRemoteId{
+    var value: String
+    init( value: String){
+        self.value = value
     }
 }
 

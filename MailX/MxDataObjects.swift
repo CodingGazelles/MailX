@@ -33,10 +33,10 @@ func ==(lhs: MxUID, rhs: MxUID) -> Bool{
 // Mark: - Data object
 
 enum MxDataObject {
-    case MxProvider
-    case MxMailbox
-    case MxLabel
-    case MxMessage
+    case Provider
+    case Mailbox
+    case Label
+    case Message
 }
 
 protocol MxDataObjectType: Loggable {
@@ -45,7 +45,6 @@ protocol MxDataObjectType: Loggable {
 }
 
 extension MxDataObjectType {
-    
     var hashValue: Int {
         return UID.value.hashValue
     }
@@ -78,13 +77,5 @@ enum MxError: MxException {
     case UnexpectedParameter( operationName: String, message: String, rootError: ErrorType?)
 }
 
-
-
-// MARK: - Label Owner Type
-
-enum MxLabelOwnerType: String {
-    case SYSTEM = "SYSTEM"
-    case USER = "USER"
-}
 
 

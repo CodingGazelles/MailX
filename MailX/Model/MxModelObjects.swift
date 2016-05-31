@@ -12,28 +12,31 @@ import Foundation
 
 // MARK: - Root model object
 
-protocol MxModelType: MxDataObjectType, MxInitWithDBO {
-    associatedtype Id: MxModelIdType
-    var id: Id { get set }
+protocol MxModelType: MxDataObjectType {
 }
 
-protocol MxModelIdType: Hashable, Equatable {
+protocol MxLocalPersistable {
+    associatedtype DBO: MxDBOType
+    init?(dbo: DBO)
+}
+
+protocol MxRemotePersistable {
+    associatedtype Id: MxRemoteId
+    var remoteId: Id { get set }
+}
+
+protocol MxRemoteId: Hashable, Equatable {
     var value: String { get set }
 }
 
-extension MxModelIdType {
+extension MxRemoteId {
     var hashValue: Int {
         return value.hashValue
     }
 }
 
-func ==<Id: MxModelIdType>(lhs: Id, rhs: Id) -> Bool{
+func ==<Id: MxRemoteId>(lhs: Id, rhs: Id) -> Bool{
     return lhs.hashValue == rhs.hashValue
-}
-
-protocol MxInitWithDBO {
-    associatedtype DBO: MxDBOType
-    init?(dbo: DBO)
 }
 
 

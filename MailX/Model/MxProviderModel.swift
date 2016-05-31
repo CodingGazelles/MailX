@@ -14,28 +14,27 @@ import Result
 
 typealias MxProviderModelResult = Result<MxProviderModel, MxDBError>
 
-struct MxProviderModel: MxModelType {
+final class MxProviderModel: MxModelType, MxLocalPersistable {
     
     var UID: MxUID
-    var id: MxProviderModelId
+    var code: String
     
-    init(UID: MxUID?, id: MxProviderModelId){
-        
+    init(UID: MxUID?, code: String){
         self.UID = UID ?? MxUID()
-        self.id = id
-        
+        self.code = code
     }
-}
-
-struct MxProviderModelId: MxModelIdType {
-    var value: String
-}
-
-extension MxProviderModel: MxInitWithDBO {
-    init( dbo: MxProviderDBO){
-        
+    
+    convenience init( dbo: MxProviderDBO){
         self.init(
             UID: dbo.UID
-            , id: MxProviderModelId( value: dbo.id))
+            , code: dbo.code)
     }
 }
+
+final class MxProviderModelId: MxRemoteId {
+    var value: String
+    init( value: String){
+        self.value = value
+    }
+}
+

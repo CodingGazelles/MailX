@@ -20,19 +20,19 @@ typealias MxLabelSOResult = Result<MxLabelSO, MxErrorSO>
 struct MxLabelSO: MxStateObjectType {
     
     var UID: MxUID
-    var id: String?
+    var remoteId: String?
     var code: String
     var name: String
     var ownerType: String
     
-    init?(UID: MxUID?, id: String?, code: String, name: String, ownerType: String){
+    init?(UID: MxUID?, remoteId: String?, code: String, name: String, ownerType: String){
         
         guard MxLabelOwnerType(rawValue: ownerType) != nil else {
             return nil
         }
         
         self.UID = UID ?? MxUID()
-        self.id = id
+        self.remoteId = remoteId ?? ""
         self.code = code
         self.name = name
         self.ownerType = ownerType
@@ -41,7 +41,7 @@ struct MxLabelSO: MxStateObjectType {
     init(labelSO: MxLabelSO){
         self.init(
             UID: labelSO.UID
-            , id: labelSO.id
+            , remoteId: labelSO.remoteId
             , code: labelSO.code
             , name: labelSO.name
             , ownerType: labelSO.ownerType)!
@@ -52,7 +52,7 @@ extension MxLabelSO: MxInitWithModel {
     init( model: MxLabelModel){
         self.init(
             UID: model.UID
-            , id: model.id.value
+            , remoteId: model.remoteId.value
             , code: model.code
             , name: model.name
             , ownerType: model.ownerType.rawValue)!

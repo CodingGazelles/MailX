@@ -33,7 +33,7 @@ struct MxSetLabelsAction: MxAction {
 
 let setLabelsActionCreator = { (state: MxAppState) -> MxAction in
     
-    MxLog.debug("Processing func action creator loadLabels")
+    MxLog.debug("Processing func action creator setLabelsActionCreator")
     
     switch state.mailboxesState.mailboxSelection{
     case .All, .None:

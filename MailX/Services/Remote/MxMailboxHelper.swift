@@ -19,29 +19,25 @@ class MxMailboxHelper {
     
     
     init( mailbox: MxMailboxModel){
-        MxLog.verbose("... Processing. Args: mailbox=\(mailbox)")
+        MxLog.debug("Processing \(#function). Args: mailbox=\(mailbox)")
         
-        let proxy = MxProxyFactory.gmailProxy( providerId: mailbox.providerId, mailboxId: mailbox.id)
+        let proxy = MxProxyFactory.gmailProxy( providerCode: mailbox.providerCode, mailboxId: mailbox.remoteId)
         self.proxy = proxy
         
         operationsQueue = NSOperationQueue()
-        operationsQueue.name = mailbox.id.value
+        operationsQueue.name = mailbox.remoteId.value
         operationsQueue.maxConcurrentOperationCount = 1
-        
-        MxLog.verbose("... Done")
     }
     
     
     // MARK: - Connect proxy
     
     func connect() {
-        MxLog.verbose("... Processing.");
+        MxLog.debug("Processing \(#function).");
         
-        MxLog.debug("Creating connection ticket to proxy: \(proxy.getProviderId().value+"/"+proxy.getMailboxId().value)")
+        MxLog.verbose("Creating connection ticket to proxy: \(proxy.getProviderId().value+"/"+proxy.getMailboxId().value)")
         let ticket = MxConnectionTicket( proxy: proxy, completionHandler: proxyDidConnect)
         operationsQueue.addOperation( ticket)
-        
-        MxLog.verbose("... Done")
     }
     
     func proxyDidConnect(error error: NSError?){
@@ -56,13 +52,11 @@ class MxMailboxHelper {
     // MARK: - Fetch labels
     
     func fetchLabels() {
-        MxLog.verbose("... Processing.")
+        MxLog.debug("Processing \(#function).")
         
-        MxLog.debug("Creating fetch labels ticket to proxy: \(proxy.getProviderId().value+"/"+proxy.getMailboxId().value)")
+        MxLog.verbose("Creating fetch labels ticket to proxy: \(proxy.getProviderId().value+"/"+proxy.getMailboxId().value)")
         let ticket = MxFetchLabelsTicket( proxy: proxy, completionHandler: proxyDidFetchLabels)
         operationsQueue.addOperation(ticket)
-        
-        MxLog.verbose("... Done")
     }
     
     func proxyDidFetchLabels(labels labels: [MxLabelModel]?, error: NSError?) {
@@ -76,13 +70,11 @@ class MxMailboxHelper {
     // MARK: - Fetch messages
     
     func fetchMessagesInLabel( labelId labelId: MxLabelModel.Id) {
-        MxLog.verbose("... Processing.")
+        MxLog.debug("Processing \(#function). Args: labelId: \(labelId)")
         
-        MxLog.debug("Creating fetch messages ticket to proxy: \(proxy.getProviderId().value+"/"+proxy.getMailboxId().value)")
+        MxLog.verbose("Creating fetch messages ticket to proxy: \(proxy.getProviderId().value+"/"+proxy.getMailboxId().value)")
         let ticket = MxFetchMessagesInLabelTicket( labelId: labelId, proxy: proxy, completionHandler: proxyDidFetchMessagesInLabel)
         operationsQueue.addOperation(ticket)
-        
-        MxLog.verbose("... Done")
     }
     
     func proxyDidFetchMessagesInLabel( messages messages: [MxMessageModel]?, error: NSError?) {

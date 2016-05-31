@@ -2,15 +2,14 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>MailboxProviders</key>
-	<array>
+	<key>MailProviders</key>
+	<dict>
+		<key>GMAIL</key>
 		<dict>
 			<key>ProxyClassName</key>
 			<string>MxGmailProxy</string>
 			<key>Name</key>
 			<string>Gmail</string>
-			<key>Id</key>
-			<string>GMAIL</string>
 			<key>Labels</key>
 			<dict>
 				<key>INBOX</key>
@@ -29,15 +28,14 @@
 				<string>DRAFT</string>
 			</dict>
 		</dict>
+		<key>YAHOO</key>
 		<dict>
 			<key>ProxyClassName</key>
 			<string>HXYahooController</string>
 			<key>Name</key>
 			<string>Yahoo</string>
-			<key>Id</key>
-			<string>YAHOO</string>
 		</dict>
-	</array>
+	</dict>
 	<key>SystemLabels</key>
 	<dict>
 		<key>INBOX</key>

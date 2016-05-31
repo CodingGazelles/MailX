@@ -43,7 +43,7 @@ class MxSyncManager {
                     case let .Success(mailboxModel):
                     
                         let remoteStore = MxMailboxHelper( mailbox: mailboxModel)
-                        syncManager.remoteStores[mailboxModel.id] = remoteStore
+                        syncManager.remoteStores[mailboxModel.remoteId] = remoteStore
                     
                     case let .Failure(error):
                     
@@ -71,16 +71,17 @@ class MxSyncManager {
     //MARK: - Synchronize local mailboxes with remote store
     
     func startSynchronization(){
+        MxLog.debug("Processing \(#function)")
         
-        MxLog.debug("Initiating connections to providers")
+        MxLog.verbose("Initiating connections to providers")
         for (_, remoteStore) in remoteStores {
             remoteStore.connect()
         }
         
-        MxLog.debug("Updating local information")
+        MxLog.verbose("Updating local information")
         self.updateMailboxes()
         
-        MxLog.debug("Starting synchronization (initiating pulling data from providers)")
+        MxLog.verbose("Starting synchronization (initiating pulling data from providers)")
         //todo
         
     }
@@ -93,7 +94,7 @@ class MxSyncManager {
     //MARK: - Update local store with remote data
     
     func updateMailboxes(){
-        MxLog.verbose("Processing: \(#function)")
+        MxLog.debug("Processing: \(#function)")
         
         for (mailboxId, _) in remoteStores {
             // pullHistory
@@ -123,17 +124,17 @@ class MxSyncManager {
     
     // full update
     func emptyAllDataOfMailbox( mailboxId mailboxId: MxMailboxModelId) -> Result<Bool, MxSyncError>{
-        MxLog.verbose("... Processing. Args: mailboxId: \(mailboxId)")
+        MxLog.debug("Processing \(#function). Args: mailboxId: \(mailboxId)")
         
         switch fetchLabels( mailboxId: mailboxId) {
         case let .Success( labels):
-            MxLog.debug("Deleting messages in labels. Args: mailboxId: \(mailboxId)")
+            MxLog.verbose("Deleting messages in labels. Args: mailboxId: \(mailboxId)")
             
             for label in labels {
                 
                 switch label {
                 case let .Success(labelModel):
-                    deleteMessages( mailboxId: mailboxId, labelId: labelModel.id)
+                    deleteMessages( mailboxId: mailboxId, labelCode: labelModel.code)
                     
                 case let .Failure(error):
                     MxLog.error("Unable to fetch one label", error: error)

@@ -13,10 +13,10 @@ import GTMOAuth2
 
 
 
-class MxGMailProxy : NSObject , MxMailboxProxy {
+class MxGMailProxy : NSObject, MxMailboxProxy {
     
     private var mailboxId: MxMailboxModelId
-    private var providerId: MxProviderModelId
+    private var providerCode: String
     private var service: GTLServiceGmail
     
     private var connectCompletionHandler: MxConnectCompletionHandler?
@@ -40,10 +40,10 @@ class MxGMailProxy : NSObject , MxMailboxProxy {
     var kKeychainItemName = "Hexmail.Gmail Access Token.."
     
     
-    init( providerId: MxProviderModel.Id, mailboxId: MxMailboxModel.Id){
-        MxLog.verbose("... Processing");
+    init( providerCode: String, mailboxId: MxMailboxModel.Id){
+        MxLog.debug("Processing \(#function)")
         
-        self.providerId = providerId;
+        self.providerCode = providerCode;
         self.mailboxId = mailboxId;
         
         self.kKeychainItemName = self.kKeychainItemName + mailboxId.value
@@ -51,8 +51,6 @@ class MxGMailProxy : NSObject , MxMailboxProxy {
         // Initialize the Gmail API service & load existing credentials from the keychain if available.
         let service = GTLServiceGmail()
         self.service = service
-        
-        MxLog.verbose("... Done")
     }
     
     
@@ -60,7 +58,7 @@ class MxGMailProxy : NSObject , MxMailboxProxy {
     
     // Ensures that the Gmail API service is authorized
     func connect( completionHandler completionHandler: MxConnectCompletionHandler){
-        MxLog.verbose("... Processing")
+        MxLog.debug("Processing \(#function)")
         
         self.connectCompletionHandler = completionHandler
         
@@ -91,13 +89,11 @@ class MxGMailProxy : NSObject , MxMailboxProxy {
                 }
     
         } else {
-            MxLog.info("Already authenticated with Gmail... Proxy: \(getProviderId().value+"/"+getMailboxId().value)");
+            MxLog.info("Already authenticated with Gmail... Proxy: \(getProviderCode()+"/"+getMailboxId().value)");
     
             // re emit the notification (just in case)
             connectCompletionHandler!(error: nil)
         }
-        
-        MxLog.verbose("... Done")
     }
     
     // Handle completion of the authorization process, and update the Gmail API
@@ -106,7 +102,8 @@ class MxGMailProxy : NSObject , MxMailboxProxy {
         windowController: GTMOAuth2WindowController
         , finishedWithAuth authResult: GTMOAuth2Authentication
         , error: NSError?) {
-            MxLog.verbose("... Processing")
+        
+        MxLog.debug("Processing \(#function)")
     
             if (error != nil) {
                 // Authentication failed (perhaps the user denied access, or closed the
@@ -125,7 +122,7 @@ class MxGMailProxy : NSObject , MxMailboxProxy {
                     }
                 }
     
-                MxLog.error("Authenticating with Gmail failed... Proxy: \(getProviderId().value+"/"+getMailboxId().value)");
+                MxLog.error("Authenticating with Gmail failed... Proxy: \(getProviderCode()+"/"+getMailboxId().value)");
                 MxLog.error(errorStr);
     
                 service.authorizer = nil
@@ -136,7 +133,7 @@ class MxGMailProxy : NSObject , MxMailboxProxy {
             } else {
                 // Authentication succeeded
     
-                MxLog.info("Authenticating with Gmail succeeded... Proxy: \(getProviderId().value+"/"+getMailboxId().value)")
+                MxLog.info("Authenticating with Gmail succeeded... Proxy: \(getProviderCode()+"/"+getMailboxId().value)")
 //                MxLog.debug("Access Token : \(authResult.accessToken)")
     
                 // save the authentication object
@@ -145,31 +142,27 @@ class MxGMailProxy : NSObject , MxMailboxProxy {
                 // emit notification
                 connectCompletionHandler!(error: nil)
             }
-            
-        MxLog.verbose("... Done")
     }
     
     
     //MARK: - Fetch Labels
     
     func sendFetchLabelsRequest( completionHandler completionHandler: MxFetchLabelsCompletionHandler) {
-        MxLog.verbose("... Processing")
+        MxLog.debug("Processing \(#function)")
         
         self.fetchLabelsCompletionHandler = completionHandler
     
         let query = GTLQueryGmail.queryForUsersLabelsList()
         
         service.executeQuery( query, delegate:self, didFinishSelector: #selector(MxGMailProxy.parseLabelsWithTicket(_:finishedWithObject:error:)))
-        
-        MxLog.verbose("... Done")
     }
     
     func parseLabelsWithTicket(
         ticket: GTLServiceTicket
         , finishedWithObject labelsResponse: GTLGmailListLabelsResponse
-        , error: NSError?)
-    {
-        MxLog.verbose("... Processing")
+        , error: NSError?){
+        
+        MxLog.debug("Processing \(#function)")
         
         if let error = error {
             
@@ -190,7 +183,7 @@ class MxGMailProxy : NSObject , MxMailboxProxy {
                 
                 let label = MxLabelModel(
                     UID: nil
-                    , id: MxLabelModel.Id(value: response.identifier)
+                    , remoteId: MxLabelModel.Id(value: response.identifier)
                     , code: response.name
                     , name: ""
                     , ownerType: MxLabelOwnerType.SYSTEM
@@ -205,15 +198,14 @@ class MxGMailProxy : NSObject , MxMailboxProxy {
         }
             
         fetchLabelsCompletionHandler!( labels: labels, error: nil)
-        
-        MxLog.verbose("... Done")
     }
     
     
     //MARK: - Fetch remote messages
     
     func sendFetchMessagesInLabelRequest(labelId labelId: MxLabelModel.Id, completionHandler: MxFetchMessagesInLabelCompletionHandler) {
-        MxLog.verbose("...")
+        
+        MxLog.debug("Processing \(#function)")
         
         self.fetchMessagesInLabelCompletionHandler = completionHandler
         
@@ -226,13 +218,13 @@ class MxGMailProxy : NSObject , MxMailboxProxy {
             , delegate:self
             , didFinishSelector:#selector(MxGMailProxy.parseMessagesListWithTicket(_:finishedWithObject:error:)))
         
-        MxLog.verbose("... Done")
     }
     
     func parseMessagesListWithTicket( ticket: GTLServiceTicket
         , finishedWithObject messagesResponse: GTLGmailListMessagesResponse
         , error: NSError?) {
-            MxLog.verbose("...")
+        
+        MxLog.debug("Processing \(#function)")
             
             if let error = error {
                 
@@ -256,7 +248,7 @@ class MxGMailProxy : NSObject , MxMailboxProxy {
                     
                     let message = MxMessageModel(
                         UID: nil
-                        , id: MxMessageModelId( value: response.identifier)
+                        , remoteId: MxMessageModelId( value: response.identifier)
                         , value: ""
                         , labelIds: [MxLabelModelId]()
                     )
@@ -267,8 +259,6 @@ class MxGMailProxy : NSObject , MxMailboxProxy {
             }
             
             fetchMessagesInLabelCompletionHandler!( messages: messages, error: nil)
-            
-            MxLog.verbose("... Done")
     }
     
     
@@ -289,8 +279,8 @@ class MxGMailProxy : NSObject , MxMailboxProxy {
         return mailboxId
     }
     
-    func getProviderId() -> MxProviderModel.Id {
-        return providerId
+    func getProviderCode() -> String {
+        return providerCode
     }
 }
 
