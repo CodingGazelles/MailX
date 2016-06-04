@@ -1,5 +1,2 @@
-github "antitypical/Result" "2.0.0"
-github "ReactiveX/RxSwift" "2.5.0"
-github "realm/realm-cocoa" "v0.102.1"
-github "ReactiveCocoa/ReactiveCocoa" "v4.1.0"
-github "pepibumur/sugarrecord" "2.2.8"
+github "emaloney/CleanroomASL" "1.4.0"
+github "emaloney/CleanroomLogger" "2.1.0"

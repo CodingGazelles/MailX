@@ -10,6 +10,7 @@ import Foundation
 
 import ReSwift
 import Pipes
+import Result
 
 
 
@@ -42,7 +43,7 @@ let setLabelsActionCreator = { (state: MxAppState) -> MxAction in
         let defaultLabels = MxAppProperties.defaultProperties().defaultLabels()
             |> map{ MxLabelSO(
                 UID: nil
-                , id: nil
+                , remoteId: nil
                 , code: $0
                 , name: systemLabels.labelName( labelCode: $0)
                 , ownerType: MxLabelOwnerType.SYSTEM.rawValue )!}
@@ -54,23 +55,21 @@ let setLabelsActionCreator = { (state: MxAppState) -> MxAction in
         
     case .One(let selectedMailbox):
         
-        let result = fetchMailboxDBO( mailboxId: selectedMailbox.id)
-            |> { $0.labels}
-            |> map(){toModel(label: $0)}
-            |> map(){toSO(label: $0)}
+        let result = fetchMailboxDBO( mailboxUID: selectedMailbox.UID)
         
         switch result {
-        case let .Success( value):
+        case let .Success( mailboxDBO):
             
-            let results: [MxLabelSOResult] = value
+            let results = mailboxDBO.labels
+                |> map(){ $0.toModel()}
             
             let errosSO = results
                 |> filter(){ $0.error != nil }
-                |> map(){ $0.error!}
-            
+                |> map(){ MxErrorSO( error: $0.error! )}
+
             let labelsSO = results
                 |> filter(){ $0.value != nil}
-                |> map(){ $0.value! }
+                |> map(){ $0.value!.toSO() }
             
             let action = MxSetLabelsAction( labels: labelsSO, errors: errosSO)
             MxLog.debug("Returning action: \(action)")

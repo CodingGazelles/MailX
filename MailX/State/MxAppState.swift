@@ -14,7 +14,7 @@ import ReSwift
 
 // MARK: - State objects
 
-protocol MxStateObjectType: MxDataObjectType {}
+protocol MxStateObjectType: MxBusinessObjectType {}
 
 protocol MxInitWithModel {
     associatedtype Model: MxModelType

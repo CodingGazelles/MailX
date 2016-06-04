@@ -15,17 +15,8 @@ import ReSwift
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
     
-    lazy var syncManager = { () -> MxSyncManager? in
-        
-        switch MxSyncManager.defaultManager() {
-        case let .Success(manager):
-            return manager
-            
-        case let .Failure(error):
-            MxLog.error("Unable to get an instance of the sync manager", error: error)
-            return nil
-        }
-        
+    lazy var syncManager = { () -> MxSyncManager in
+        return MxSyncManager.defaultManager()
     }()
     
     lazy var stateManager = MxStateManager.defaultManager()
@@ -44,10 +35,22 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         // Init DB
         if MxUserPreferences.sharedPreferences().firstExecution {
+            
+            MxLog.info("Initializing DB")
+            
             MxDBInitializer.insertDefaultProviders()
+            
+//            #if DEBUG
+            
+            MxDBInitializer.insertTestMailbox()
+            
+//            #endif
+            
+            
             MxUserPreferences.sharedPreferences().firstExecution = false
+            
         } else {
-            MxLog.info("DB already initialized")
+            MxLog.debug("DB already initialized")
         }
         
         
@@ -56,16 +59,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         
         // Init local db and connections to providers
-        if syncManager != nil {
+        let queue: dispatch_queue_t = dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)
+        dispatch_async( queue, {
             
-            let queue: dispatch_queue_t = dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)
-            dispatch_async( queue, {
-                self.syncManager!.startSynchronization()
-            })
-            
-        } else {
-            MxLog.error("Unable to start syncronization because sync manager is nil", error: nil)
-        }
+            MxLog.info("Starting syncronization")
+            self.syncManager.startSynchronization()
+        })
         
     }
     

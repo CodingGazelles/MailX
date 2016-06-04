@@ -21,6 +21,8 @@ class MxUserPreferences {
     }
     
     private let kFirstExecution = "firstExecution"
+    private let kDefaultProvidersInserted = "defaultProvidersInserted"
+    private let kTestMailboxInserted = "testMailboxInserted"
     
     
     // MARK: - Factory defaults
@@ -28,12 +30,17 @@ class MxUserPreferences {
     private let userDefaults = NSUserDefaults.standardUserDefaults()
     private var factoryDefaults: [String:AnyObject] {
         get {
-            return [ kFirstExecution : true]
+            return [ kFirstExecution : true, kDefaultProvidersInserted: false, kTestMailboxInserted: false]
         }
     }
     
     private init() {
         registerFactoryDefaults()
+        
+//        let path = NSSearchPathForDirectoriesInDomains( NSSearchPathDirectory.LibraryDirectory, NSSearchPathDomainMask.UserDomainMask, true)
+//        MxLog.debug("Search path is: \(path)")
+        
+//        MxLog.debug("User defaults: \( userDefaults.dictionaryRepresentation())")
     }
     
     func registerFactoryDefaults() {
@@ -49,6 +56,24 @@ class MxUserPreferences {
         }
         set( show) {
             userDefaults.setBool(show, forKey: kFirstExecution)
+        }
+    }
+    
+    var defaultProvidersInserted: Bool {
+        get {
+            return userDefaults.boolForKey( kDefaultProvidersInserted)
+        }
+        set {
+            userDefaults.setBool( newValue, forKey: kDefaultProvidersInserted)
+        }
+    }
+    
+    var testMailboxInserted: Bool {
+        get {
+            return userDefaults.boolForKey( kTestMailboxInserted)
+        }
+        set {
+            userDefaults.setBool( newValue, forKey: kTestMailboxInserted)
         }
     }
 }

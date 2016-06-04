@@ -15,28 +15,6 @@ import SugarRecordRealm
 
 
 
-// MARK: - DB Error
-
-enum MxDBOperation {
-    case MxInsertOperation
-    case MxDeleteOperation
-    case MxUodateOperation
-    case MxFetchOperation
-    case MxCreateOperation
-}
-
-enum MxDBError: MxException {
-    case UnableToExecuteOperation(
-        operationType: MxDBOperation
-        , DBOType: MxDataObject
-        , message: String
-        , rootError: ErrorType?)
-    case DataInconsistent(
-        object: MxDataObjectType
-        , message: String)
-}
-
-
 // MARK: -
 
 class MxPersistenceManager {
@@ -55,7 +33,7 @@ class MxPersistenceManager {
     
     lazy var db: RealmDefaultStorage = {
         var configuration = Realm.Configuration()
-        configuration.path = databasePath("mailx.realm")
+        configuration.path = databasePath("mailx-dog3.realm")
         let _storage = RealmDefaultStorage(configuration: configuration)
         return _storage
     }()
@@ -67,228 +45,20 @@ private func databasePath(name: String) -> String {
 }
 
 
-// MARK: - Fetch
-// MARK: Provider
-
-
-// MARK: Mailbox
-
-func fetchMailbox( mailboxId mailboxId: MxMailboxModelId)
-    -> Result<MxMailboxModelResult, MxDBError> {
-        
-        return fetchMailboxDBO( mailboxId: mailboxId.value)
-            |> { toModel(mailbox: $0) }
-        
-}
-
-func fetchMailboxes()
-    -> Result<[MxMailboxModelResult], MxDBError> {
-        
-        return fetchMailboxDBOs()
-            |> map(){toModel(mailbox: $0)}
-}
-
-
-// MARK: Label
-
-func fetchLabels( mailboxId mailboxId: MxMailboxModelId)
-    -> Result<[Result<MxLabelModel, MxModelError>], MxDBError> {
-        
-        return fetchMailboxDBO( mailboxId: mailboxId.value)
-            |> { $0.labels}
-            |> map(){toModel(label: $0)}
-        
-}
-
-
-// MARK: - Insert
-// MARK: Providers
-
-func insertProvider( provider provider: MxProviderModel) -> Result<Bool, MxDBError> {
-    MxLog.verbose("Processing: \(#function). Args: provider=\(provider) ")
-    
-    let db = MxPersistenceManager.defaultManager().db
-    
-    do {
-        
-        try db.operation{ (context, save) throws -> Void in
-            
-            let newProviderDbo: MxProviderDBO = try context.create()
-            newProviderDbo.code = provider.code
-            save()
-            
-        }
-        return .Success(true)
-        
-    } catch {
-        
-        return Result.Failure(
-            MxDBError.UnableToExecuteOperation(
-                operationType: MxDBOperation.MxCreateOperation
-                , DBOType: MxDataObject.Provider
-                , message: "Error while calling context.create on MxProviderDBO. Args: provider=\(provider)"
-                , rootError: error))
-    }
-}
-
-
-// MARK: Mailboxes
-
-func insertMailbox( mailbox mailbox: MxMailboxModel) -> Result<Bool, MxDBError> {
-    
-    MxLog.verbose("Processing: \(#function). Args: mailbox=\(mailbox)")
-    
-    let providerCode = mailbox.providerCode
-    let appProperties = MxAppProperties.defaultProperties()
-    let db = MxPersistenceManager.defaultManager().db
-    
-    switch fetchProviderDBO( providerCode: providerCode) {
-    case let .Success(provider):
-        
-        do {
-            try db.operation{ (context, save) throws -> Void in
-                
-                let newMailboxDbo: MxMailboxDBO = try context.create()
-                
-                newMailboxDbo.remoteId = mailbox.remoteId.value
-                newMailboxDbo.provider = provider
-                
-                // insert system labels
-                
-                let providerLabels = appProperties.providers()[providerCode]![MxAppProperties.k_Provider_Labels]
-                
-                let _ = try providerLabels.map({labelCode throws -> Void in
-                    
-                    let labelName = appProperties.systemLabels().labelName( labelCode: labelCode as! String)
-                    
-                    let newLabelDbo: MxLabelDBO = try context.create()
-                    
-                    newLabelDbo.remoteId = ""
-                    newLabelDbo.code = labelCode as! String
-                    newLabelDbo.name = labelName
-                    newLabelDbo.ownerType = MxLabelOwnerType.SYSTEM.rawValue
-                    newLabelDbo.mailbox = newMailboxDbo
-                    
-                })
-                
-                save()
-            }
-            
-            return .Success(true)
-            
-        } catch {
-            
-            return Result.Failure(
-                MxDBError.UnableToExecuteOperation(
-                    operationType: MxDBOperation.MxCreateOperation
-                    , DBOType: MxDataObject.Mailbox
-                    , message: "Error while calling context.create on MxMailboxDBO. Args: mailbox=\(mailbox)"
-                    , rootError: error))
-        }
-        
-    case let .Failure(error):
-        
-        return Result.Failure(
-            MxDBError.UnableToExecuteOperation(
-                operationType: MxDBOperation.MxFetchOperation
-                , DBOType: MxDataObject.Provider
-                , message: "Error while calling fetchProviderDBO() with args: providerCode=\(providerCode)"
-                , rootError: error))
-    }
-}
-
-
-// MARK: - Delete
-// MARK: Labels
-
-func deleteLabels( mailboxId mailboxId: MxMailboxModelId)
-    -> Result< Bool, MxDBError> {
-        
-        MxLog.verbose("Processing: \(#function). Args: mailboxId=\(mailboxId)")
-        
-        let db = MxPersistenceManager.defaultManager().db
-        
-        switch fetchMailboxDBO( mailboxId: mailboxId.value) {
-        case let .Success(mailbox):
-            
-            // one can delete only USER labels
-            let labels = mailbox.labels.filter({ $0.ownerType == MxLabelOwnerType.USER.rawValue})
-            
-            // delete only labels whose ids are passed in as argument
-            //            if (labelIds != nil) {
-            //                let labelIdsValues: [String] = labelIds!.map({$0.value})
-            //                labels = labels.filter({ labelIdsValues.contains( $0.id)})
-            //            }
-            
-            do {
-                
-                try db.operation { (context, save) throws -> Void in
-                    try context.remove(labels)
-                    save()
-                }
-                
-                return .Success( true)
-                
-            } catch {
-                
-                return .Failure(
-                    MxDBError.UnableToExecuteOperation(
-                        operationType: MxDBOperation.MxDeleteOperation
-                        , DBOType: MxDataObject.Label
-                        , message: "Error while calling context.remove() with args: labels\(labels)"
-                        , rootError: error))
-                
-            }
-        case let .Failure(error):
-            return Result.Failure(error)
-        }
-}
-
-
 // MARK: Messages
 
-func deleteMessages( mailboxId mailboxId: MxMailboxModelId, labelCode: String)
-    -> Result< Bool,MxDBError> {
-        
-        MxLog.verbose("Processing: \(#function). Args: mailboxId=\(mailboxId), labelId=\(labelCode)")
-        
-        let db = MxPersistenceManager.defaultManager().db
-        
-        switch fetchMessageDBOs( mailboxId: mailboxId.value, labelCode: labelCode) {
-        case let .Success(messages):
-            do {
-                
-                try db.operation { (context, save) throws -> Void in
-                    try context.remove(messages)
-                    save()
-                }
-                return .Success( true)
-                
-            } catch {
-                
-                return .Failure(
-                    MxDBError.UnableToExecuteOperation(
-                        operationType: MxDBOperation.MxDeleteOperation
-                        , DBOType: MxDataObject.Message
-                        , message: "Error while calling context.remove() with args: messages\(messages)"
-                        , rootError: error))
-            }
-            
-        case let .Failure(error):
-            return .Failure(error)
-        }
-}
+
 
 
 // MARK: - Fetch DBOs
 
 func fetchProviderDBO( providerCode providerCode: String) -> Result<MxProviderDBO, MxDBError> {
     
-    MxLog.verbose("Processing: \(#function). Args: providerId=\(providerCode)")
+    MxLog.verbose("Processing: \(#function). Args: providerCode=\(providerCode)")
     
     let db = MxPersistenceManager.defaultManager().db
     
-    let predicate: NSPredicate = NSPredicate( format: "id == %@", providerCode)
+    let predicate: NSPredicate = NSPredicate( format: "code == %@", providerCode)
     do {
         
         let result = try db.fetch(Request<MxProviderDBO>().filteredWith( predicate: predicate)).first
@@ -299,19 +69,19 @@ func fetchProviderDBO( providerCode providerCode: String) -> Result<MxProviderDB
         return Result.Failure(
             MxDBError.UnableToExecuteOperation(
                 operationType: MxDBOperation.MxFetchOperation
-                , DBOType: MxDataObject.Provider
-                , message: "Error while fetching provider. Args: providerId=\(providerCode)"
+                , DBOType: Mirror( reflecting: MxProviderDBO()).subjectType
+                , message: "Error while fetching provider. Args: providerCode=\(providerCode)"
                 , rootError: error))
     }
 }
 
-func fetchMailboxDBO( mailboxId mailboxId: String) -> Result<MxMailboxDBO, MxDBError> {
+func fetchMailboxDBO( mailboxUID mailboxUID: MxUID) -> Result<MxMailboxDBO, MxDBError> {
     
-    MxLog.verbose("Processing: \(#function). Args: mailboxId=\(mailboxId)")
+    MxLog.verbose("Processing: \(#function). Args: mailboxUID=\(mailboxUID)")
     
     let db = MxPersistenceManager.defaultManager().db
     
-    let predicate: NSPredicate = NSPredicate( format: "id == %@", mailboxId)
+    let predicate: NSPredicate = NSPredicate( format: "_UID == %@", mailboxUID.value)
     do {
         
         let result = try db.fetch(Request<MxMailboxDBO>().filteredWith( predicate: predicate)).first
@@ -322,8 +92,8 @@ func fetchMailboxDBO( mailboxId mailboxId: String) -> Result<MxMailboxDBO, MxDBE
         return Result.Failure(
             MxDBError.UnableToExecuteOperation(
                 operationType: MxDBOperation.MxFetchOperation
-                , DBOType: MxDataObject.Mailbox
-                , message: "Error while fetching mailbox. Args: mailboxId=\(mailboxId)"
+                , DBOType: Mirror( reflecting: MxMailboxDBO()).subjectType
+                , message: "Error while fetching mailbox. Args: mailboxId=\(mailboxUID)"
                 , rootError: error))
     }
 }
@@ -344,18 +114,18 @@ func fetchMailboxDBOs() -> Result<[MxMailboxDBO], MxDBError> {
         return Result.Failure(
             MxDBError.UnableToExecuteOperation(
                 operationType: MxDBOperation.MxFetchOperation
-                , DBOType: MxDataObject.Mailbox
+                , DBOType: Mirror( reflecting: MxMailboxDBO()).subjectType
                 , message: "Error while fetching mailboxes."
                 , rootError: error))
     }
 }
 
-func fetchMessageDBOs( mailboxId mailboxId: String, labelCode: String)
+func fetchMessageDBOs( mailboxUID mailboxUID: MxUID, labelCode: String)
     -> Result<[MxMessageDBO], MxDBError> {
         
-        MxLog.verbose("Processing: \(#function). Args: mailboxId=\(mailboxId), labelId=\(labelCode)")
+        MxLog.verbose("Processing: \(#function). Args: mailboxUID=\(mailboxUID), labelCode=\(labelCode)")
         
-        switch fetchMailboxDBO( mailboxId: mailboxId) {
+        switch fetchMailboxDBO( mailboxUID: mailboxUID) {
         case let .Success(value):
             
             let result = value
@@ -371,9 +141,37 @@ func fetchMessageDBOs( mailboxId mailboxId: String, labelCode: String)
             return Result.Failure(
                 MxDBError.UnableToExecuteOperation(
                     operationType: MxDBOperation.MxFetchOperation
-                    , DBOType: MxDataObject.Mailbox
-                    , message: "Error while fetching mailbox \(mailboxId)"
+                    , DBOType: Mirror( reflecting: MxMailboxDBO()).subjectType
+                    , message: "Error while fetching mailbox \(mailboxUID)"
                     , rootError: error))
         }
+}
+
+func fetchMessageDBOs( uids uids: [MxUID]) -> Result<[MxMessageDBO], MxDBError> {
+        
+    MxLog.verbose("Processing: \(#function). Args: uids=\(uids)")
+    
+    fatalError("Func not implemented")
+        
+//        switch fetchMailboxDBO( mailboxUID: mailboxUID) {
+//        case let .Success(value):
+//            
+//            let result = value
+//                .labels
+//                .filter { (label: MxLabelDBO) -> Bool in
+//                    return label.code == labelCode }
+//                .first!
+//                .messages
+//            return Result.Success( result)
+//            
+//        case let .Failure(error):
+//            
+//            return Result.Failure(
+//                MxDBError.UnableToExecuteOperation(
+//                    operationType: MxDBOperation.MxFetchOperation
+//                    , DBOType: MxBusinessObjectEnum.Mailbox
+//                    , message: "Error while fetching mailbox \(mailboxUID)"
+//                    , rootError: error))
+//        }
 }
 

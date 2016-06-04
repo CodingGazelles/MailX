@@ -12,33 +12,74 @@ import Foundation
 
 class MxDBInitializer {
     
-    static func initializeDB(){
-        MxLog.info("Initializing DB.")
-        
-        insertDefaultProviders()
-        insertDefaultMailboxes()
-    }
-    
     static func insertDefaultProviders(){
-        MxLog.debug("Processing \(#function)")
         
-        let providers = MxAppProperties.defaultProperties().providers()
+        guard MxUserPreferences.sharedPreferences().defaultProvidersInserted == false else {
+            MxLog.debug("Processing \(#function) defaults providers already inserted")
+            return
+        }
+        
+        MxLog.debug("Processing \(#function) inserting defaults providers")
+        
+        let appProperties = MxAppProperties.defaultProperties()
+        let providers = appProperties.providers()
         
         for providerCode in providers.keys {
-            insertProvider( provider: MxProviderModel(UID: nil, code: providerCode))
+            
+            let provider = MxProviderModel(UID: MxUID(), code: providerCode)
+            provider.insert()
+            
         }
+        
+        MxUserPreferences.sharedPreferences().defaultProvidersInserted = true
     }
     
-    static func insertDefaultMailboxes(){
+    static func insertTestMailbox(){
+        
+        guard MxUserPreferences.sharedPreferences().testMailboxInserted == false else {
+            MxLog.debug("Processing \(#function) test mailbox already inserted")
+            return
+        }
+        
         MxLog.debug("\(#function) inserting default mailboxes")
         
-        let mailbox = MxMailboxModel(
-            UID: nil
-            , remoteId: MxMailboxModelId(value: "")
-            , name: "GMail"
-            , connected: false
-            , providerCode: "GMAIL")
+        let email = "mailxtest10@gmail.com"
+        let name = "TestMailbox"
+        let providerCode = "GMAIL"
         
-        insertMailbox( mailbox: mailbox)
+        let appProperties = MxAppProperties.defaultProperties()
+        let providers = appProperties.providers()
+        
+        let mailbox = MxMailboxModel(
+            UID: MxUID()
+            , remoteId: nil
+            , email: email
+            , name: name
+            , connected: false
+            , providerCode: providerCode)
+        
+        MxLog.debug("Inserting mailbox: \(mailbox)")
+        mailbox.insert()
+        
+        let labels = (providers[providerCode]![MxAppProperties.k_Provider_Labels] as! [String:String]).keys
+        
+        for labelCode in labels {
+            
+            let labelName = appProperties.systemLabels().labelName( labelCode: labelCode)
+            
+            let label = MxLabelModel(
+                UID: MxUID()
+                , remoteId: nil
+                , code: labelCode
+                , name: labelName
+                , ownerType: MxLabelOwnerType.SYSTEM
+                , mailboxUID: mailbox.UID)
+            
+            MxLog.debug("Inserting label: \(label)")
+            label.insert()
+            
+        }
+        
+        MxUserPreferences.sharedPreferences().testMailboxInserted = true
     }
 }

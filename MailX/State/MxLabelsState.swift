@@ -15,8 +15,6 @@ import Pipes
 
 // MARK: - State Object
 
-typealias MxLabelSOResult = Result<MxLabelSO, MxErrorSO>
-
 struct MxLabelSO: MxStateObjectType {
     
     var UID: MxUID
@@ -52,21 +50,21 @@ extension MxLabelSO: MxInitWithModel {
     init( model: MxLabelModel){
         self.init(
             UID: model.UID
-            , remoteId: model.remoteId.value
+            , remoteId: model.remoteId?.value
             , code: model.code
             , name: model.name
             , ownerType: model.ownerType.rawValue)!
     }
 }
 
-func toSO( label label: MxLabelModelResult) -> MxLabelSOResult {
-    switch label {
-    case let .Success(model):
-        return Result.Success( MxLabelSO(model: model))
-    case let .Failure( error):
-        return Result.Failure( errorSO(error: error))
-    }
-}
+//func toSO( label label: Result<MxLabelModel,MxModelError>) -> Result<MxLabelSO, MxErrorSO> {
+//    switch label {
+//    case let .Success(model):
+//        return Result.Success( MxLabelSO(model: model))
+//    case let .Failure( error):
+//        return Result.Failure( errorSO(error: error))
+//    }
+//}
 
 
 // MARK: - State

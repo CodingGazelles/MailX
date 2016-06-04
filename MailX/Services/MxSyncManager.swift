@@ -16,53 +16,75 @@ enum MxSyncError: MxException {
     case PersistenceManagerIsNil(rootError: MxException? )
     case SyncManagerIsNil(rootError: MxException?)
     case UnableToRealizeDBOperation(rootError: MxException?)
+    case UnableToRealizeModelOperation(rootError: MxException?)
 }
 
 class MxSyncManager {
     
+    
     // MARK: - Private properties
+    
+    private let stateManager = MxStateManager.defaultManager()
     
     private let dbManager = { () -> MxPersistenceManager in
         return MxPersistenceManager.defaultManager()
     }()
     
-    private var remoteStores = Dictionary<MxMailboxModelId, MxMailboxHelper>()
-    
     
     // MARK: - Shared instance
     
-    private static let sharedInstance = { () -> Result<MxSyncManager, MxSyncError> in
+    private static let sharedInstance = { () -> MxSyncManager in
         
         let syncManager = MxSyncManager()
         
-        switch fetchMailboxes() {
-        case let .Success(mailboxes):
+        for mailbox in MxSyncManager.allMailboxes() {
             
-            for mailbox in mailboxes {
-                switch mailbox {
-                    case let .Success(mailboxModel):
+            let proxy = MxMailboxProxy( mailbox: mailbox)
+            mailbox.proxy = proxy
+            
+        }
+        
+        return syncManager
+    }()
+    
+    static func defaultManager() -> MxSyncManager {
+        return sharedInstance
+    }
+    
+    private static func allMailboxes() -> [MxMailboxModel] {
+    
+        var mailboxes = [MxMailboxModel]()
+        
+        switch MxMailboxModel.fetch() {
+        case let .Success(results):
+            
+            for result in results {
+                switch result {
+                case let .Success(mailbox):
                     
-                        let remoteStore = MxMailboxHelper( mailbox: mailboxModel)
-                        syncManager.remoteStores[mailboxModel.remoteId] = remoteStore
+                    mailboxes.append(mailbox)
                     
-                    case let .Failure(error):
+                case let .Failure(error):
                     
-                        MxLog.error("Unable to fetch one mailbox", error: error)
+                    MxLog.error("Unable to fetch one mailbox", error: error)
+                    
+                    let error = MxSyncError.UnableToRealizeModelOperation(rootError: error)
+                    MxStateManager.defaultManager().dispatch( MxAddErrorsAction( errors: [MxErrorSO( error: error )]))
                 }
                 
             }
-            return .Success(syncManager)
             
         case let .Failure(error):
+            
             MxLog.error("Unable to fetch mailboxes", error: error)
-            return .Failure(MxSyncError.UnableToRealizeDBOperation(rootError: error))
+            
+            let error = MxSyncError.UnableToRealizeModelOperation(rootError: error)
+            MxStateManager.defaultManager().dispatch( MxAddErrorsAction( errors: [MxErrorSO( error: error )]))
+            
         }
         
-    }()
+        return mailboxes
         
-    
-    static func defaultManager() -> Result<MxSyncManager, MxSyncError> {
-        return sharedInstance
     }
     
     private init(){}
@@ -71,112 +93,159 @@ class MxSyncManager {
     //MARK: - Synchronize local mailboxes with remote store
     
     func startSynchronization(){
-        MxLog.debug("Processing \(#function)")
         
-        MxLog.verbose("Initiating connections to providers")
-        for (_, remoteStore) in remoteStores {
-            remoteStore.connect()
+        MxLog.debug("\(#function): initiating sync of local db with remote mailbox")
+        
+        for mailbox in MxSyncManager.allMailboxes() {
+            
+            MxLog.debug("Connecting to remote mailbox \(mailbox.email)")
+            mailbox.proxy.connect()
+            
         }
         
-        MxLog.verbose("Updating local information")
-        self.updateMailboxes()
+        MxLog.debug("Updating local information")
         
-        MxLog.verbose("Starting synchronization (initiating pulling data from providers)")
-        //todo
+        updateMailboxes()
+        
+        MxLog.debug("Starting synchronization (initiating pulling data from providers)")
+        
+        syncMailboxes()
         
     }
     
     func syncMailboxes() {
-        
+        //todo
     }
     
     
     //MARK: - Update local store with remote data
     
     func updateMailboxes(){
-        MxLog.debug("Processing: \(#function)")
         
-        for (mailboxId, _) in remoteStores {
+        MxLog.debug("\(#function): updating all mailboxes ")
+        
+        for mailbox in MxSyncManager.allMailboxes() {
             // pullHistory
             // todo
             //
 //            MxLog.debug("Partial update of mailbox: \(mailboxId)")
             //        updatePartial(mailboxId: mailboxId)
             
-            updateFull(mailboxId: mailboxId)
+            runFullUpdate(mailbox: mailbox)
         }
     }
     
     // incremental update
-    func updateIncremental( mailboxId mailboxId: MxMailboxModelId){
+    func runIncrementalUpdate( mailboxId mailboxId: MxMailboxModelId){
+        
         MxLog.debug("Doing incremental update of mailbox: \(mailboxId)")
         
         fatalError("Func not implemented")
     }
     
-    func updateFull(mailboxId mailboxId: MxMailboxModelId){
+    func runFullUpdate(mailbox mailbox: MxMailboxModel){
         
-        MxLog.debug("Processing full update: \(#function) of mailbox: \(mailboxId)")
+        MxLog.debug("\(#function): processing full update of mailbox: \(mailbox.email)")
         
-        emptyAllDataOfMailbox(mailboxId: mailboxId)
-        fetchAllDataOfMailbox(mailboxId: mailboxId)
+        emptyLocalData(mailbox: mailbox)
+        fetchRemoteData(mailbox: mailbox)
+        
     }
     
     // full update
-    func emptyAllDataOfMailbox( mailboxId mailboxId: MxMailboxModelId) -> Result<Bool, MxSyncError>{
-        MxLog.debug("Processing \(#function). Args: mailboxId: \(mailboxId)")
+    func emptyLocalData( mailbox mailbox: MxMailboxModel) {
         
-        switch fetchLabels( mailboxId: mailboxId) {
-        case let .Success( labels):
-            MxLog.verbose("Deleting messages in labels. Args: mailboxId: \(mailboxId)")
+        MxLog.debug("\(#function): processing full delete of local data of mailbox: \(mailbox.email)")
+        
+        let mailboxDbo = mailbox.dbo
+        let labels = mailboxDbo!.labels
+        
+        MxLog.debug("Deleting messages of mailbox: \(mailbox.email)")
+        
+        for label in labels {
             
-            for label in labels {
+            for message in label.messages {
                 
-                switch label {
-                case let .Success(labelModel):
-                    deleteMessages( mailboxId: mailboxId, labelCode: labelModel.code)
+                switch message.delete() {
+                case .Success:
+                    
+                    MxLog.debug("Message deleted: \(label)")
                     
                 case let .Failure(error):
-                    MxLog.error("Unable to fetch one label", error: error)
+                    
+                    let error = MxSyncError.UnableToRealizeDBOperation(rootError: error)
+                    MxStateManager.defaultManager().dispatch( MxAddErrorsAction( errors: [MxErrorSO( error: error )]))
+                    
                 }
-                
             }
-            
-        case let .Failure( error):
-            MxLog.error("Unable to fetch labels of mailbox mailboxId: \(mailboxId)", error: error)
-            return .Failure(MxSyncError.UnableToRealizeDBOperation(rootError: error))
         }
         
-        MxLog.debug("Deleting mailbox's labels. Args: mailboxId: \(mailboxId)")
+        MxLog.debug("Deleting labels of mailbox: \(mailbox.email)")
         
-        deleteLabels( mailboxId: mailboxId)
+        for label in labels {
+            
+            switch label.delete() {
+            case .Success:
+                
+                MxLog.debug("Label deleted: \(label)")
+                
+            case let .Failure(error):
+                
+                let error = MxSyncError.UnableToRealizeDBOperation(rootError: error)
+                MxStateManager.defaultManager().dispatch( MxAddErrorsAction( errors: [MxErrorSO( error: error )]))
+                
+            }
+        }
         
-        // todo: delete threads
-        
-        MxLog.verbose("... Done");
-        return .Success(true)
     }
     
-    func fetchAllDataOfMailbox( mailboxId mailboxId: MxMailboxModelId){
-        MxLog.verbose("... mailboxId: \(mailboxId)")
+    func fetchRemoteData( mailbox mailbox: MxMailboxModel){
+        
+        MxLog.debug("\(#function): processing full fetch of remote data of mailbox: \(mailbox.email)")
+        
+        MxLog.debug("Fetching labels of mailbox \(mailbox.email)")
+        
+        for mailbox in MxSyncManager.allMailboxes() {
+            mailbox.proxy.fetchLabels()
+        }
+        
         
         // fetch messages in INBOX
-        MxLog.debug("Deleting messages in INBOX for mailbox: \(mailboxId)")
-        remoteStores[mailboxId]!.fetchMessagesInLabel(labelId: MxLabelModel.Id(value: "INBOX"))
+//        MxLog.debug("Fetching messages in INBOX for mailbox: \(mailbox.email)")
+//        
+//        proxies[mailboxUID]!.fetchMessagesInLabel(labelId: MxLabelModel.Id(value: "INBOX"))
         
-        //        // fetch labels
-        //        remoteStores[mailboxId]!.fetchLabels()
+    
         //
         //        // sync messages of system labels
         //        let labels = localStore.fetchLabels(mailboxId: mailboxId)
         //
         //        for label in labels {
         //            if( label.type == MxLabelModel.OwnerType.SYSTEM){
-        //                remoteStores[mailboxId]!.fetchMessagesInLabel(labelId: label.id)
+        //                proxies[mailboxId]!.fetchMessagesInLabel(labelId: label.id)
         //            }
         //        }
         
-        MxLog.verbose("... Done");
+    }
+    
+    func remoteDataHasArrived( mailbox mailbox: MxMailboxModel, payload: [MxModelType], error: MxProxyError?){
+        
+        MxLog.info("\(#function): receiving remote data from mailbox \(mailbox.email)")
+        
+        switch payload.dynamicType {
+        case is [MxLabelModel]:
+            
+            MxLog.debug(payload.debugDescription)
+            
+        case is [MxMessageModel]:
+            
+            MxLog.debug(payload.debugDescription)
+            
+        default:
+            
+            MxLog.error("Unidentified payload: \(payload.debugDescription)")
+            
+        }
     }
     
     

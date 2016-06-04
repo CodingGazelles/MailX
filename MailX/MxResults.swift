@@ -37,7 +37,7 @@ extension Result where Error: MxException {
 }
 
 
-//func isSuccess(result: Result<MxDataObjectType, MxDBError>) -> Bool {
+//func isSuccess(result: Result<MxBusinessObjectType, MxDBError>) -> Bool {
 //    switch result{
 //    case .Success:
 //        return true

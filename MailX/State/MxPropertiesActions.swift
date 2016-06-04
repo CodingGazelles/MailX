@@ -19,8 +19,8 @@ struct MxSetPropertiesAction: MxAction {
 extension MxPropertiesState {
     
     static func readDefaultProperties() -> MxPropertiesState {
-//        let defaultLabels = MxAppProperties.defaultProperties().defaultLabels()
-        let defaultLabels = ["INBOX", "UNREAD"]
+        let defaultLabels = MxAppProperties.defaultProperties().defaultLabels()
+//        let defaultLabels = ["INBOX", "UNREAD"]
         return MxPropertiesState(labelShortListCodes: defaultLabels)
     }
 }

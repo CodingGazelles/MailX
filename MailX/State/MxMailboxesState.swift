@@ -19,11 +19,11 @@ typealias MxMailboxSOResult = Result<MxMailboxSO, MxErrorSO>
 struct MxMailboxSO: MxStateObjectType {
     
     var UID: MxUID
-    var remoteId: String
+    var remoteId: String?
     var name: String
     var connected: Bool
     
-    init(UID: MxUID?, remoteId: String, name: String, connected: Bool){
+    init(UID: MxUID?, remoteId: String?, name: String, connected: Bool){
         self.UID = UID ?? MxUID()
         self.remoteId = remoteId
         self.name = name
@@ -43,13 +43,13 @@ extension MxMailboxSO: MxInitWithModel {
     init( model: MxMailboxModel){
         self.init(
             UID: model.UID
-            , remoteId: model.remoteId.value
+            , remoteId: model.remoteId?.value
             , name: model.name
             , connected: model.connected)
     }
 }
 
-func toSO( mailbox mailbox: MxMailboxModelResult) -> MxMailboxSOResult {
+func toSO( mailbox mailbox: Result<MxMailboxModel, MxModelError> ) -> MxMailboxSOResult {
     switch mailbox {
     case let .Success(model):
         return Result.Success( MxMailboxSO(model: model))

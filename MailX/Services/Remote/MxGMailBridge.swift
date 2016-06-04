@@ -13,10 +13,14 @@ import GTMOAuth2
 
 
 
-class MxGMailProxy : NSObject, MxMailboxProxy {
+enum MxBridgeError: MxException {
+    case ProviderReturnedConnectionError( rootError: ErrorType)
+    case ProviderReturnedFetchError( rootError: ErrorType)
+}
+
+class MxGMailBridge : NSObject, MxMailboxBridge {
     
-    private var mailboxId: MxMailboxModelId
-    private var providerCode: String
+    var mailbox: MxMailboxModel
     private var service: GTLServiceGmail
     
     private var connectCompletionHandler: MxConnectCompletionHandler?
@@ -40,13 +44,12 @@ class MxGMailProxy : NSObject, MxMailboxProxy {
     var kKeychainItemName = "Hexmail.Gmail Access Token.."
     
     
-    init( providerCode: String, mailboxId: MxMailboxModel.Id){
-        MxLog.debug("Processing \(#function)")
+    init( mailbox: MxMailboxModel){
+        MxLog.debug("Processing \(#function) with: \(mailbox)")
         
-        self.providerCode = providerCode;
-        self.mailboxId = mailboxId;
+        self.mailbox = mailbox;
         
-        self.kKeychainItemName = self.kKeychainItemName + mailboxId.value
+        self.kKeychainItemName = self.kKeychainItemName + mailbox.name
         
         // Initialize the Gmail API service & load existing credentials from the keychain if available.
         let service = GTLServiceGmail()
@@ -58,26 +61,27 @@ class MxGMailProxy : NSObject, MxMailboxProxy {
     
     // Ensures that the Gmail API service is authorized
     func connect( completionHandler completionHandler: MxConnectCompletionHandler){
-        MxLog.debug("Processing \(#function)")
+        
+        MxLog.debug("\(#function): sending connection request to mailbox \(mailbox.email)")
         
         self.connectCompletionHandler = completionHandler
         
         service.authorizer =
             GTMOAuth2WindowController.authForGoogleFromKeychainForName(
                 kKeychainItemName
-                , clientID:MxGMailProxy.kClientID
-                , clientSecret:MxGMailProxy.kClientSecret)
+                , clientID:MxGMailBridge.kClientID
+                , clientSecret:MxGMailBridge.kClientSecret)
     
         if (service.authorizer != nil || !service.authorizer.canAuthorize!){
     
             // Sign in
-            MxLog.debug("Authenticating with Gmail...")
+            MxLog.debug("Authenticating in progress")
     
             // Display the authentication sheet
             let authController = GTMOAuth2WindowController.controllerWithScope(
-                MxGMailProxy.scopes.joinWithSeparator(" ")
-                , clientID:MxGMailProxy.kClientID
-                , clientSecret:MxGMailProxy.kClientSecret
+                MxGMailBridge.scopes.joinWithSeparator(" ")
+                , clientID:MxGMailBridge.kClientID
+                , clientSecret:MxGMailBridge.kClientSecret
                 , keychainItemName:kKeychainItemName
                 , resourceBundle:nil)
     
@@ -85,14 +89,15 @@ class MxGMailProxy : NSObject, MxMailboxProxy {
                 authController.signInSheetModalForWindow(
                     nil
                     , delegate:self
-                    , finishedSelector: #selector(MxGMailProxy.authenticationController(_:finishedWithAuth:error:)))
+                    , finishedSelector: #selector(MxGMailBridge.authenticationController(_:finishedWithAuth:error:)))
                 }
     
         } else {
-            MxLog.info("Already authenticated with Gmail... Proxy: \(getProviderCode()+"/"+getMailboxId().value)");
+            
+            MxLog.info("Already authenticated with to mailbox \(mailbox.email)");
     
             // re emit the notification (just in case)
-            connectCompletionHandler!(error: nil)
+            connectCompletionHandler!( error: nil)
         }
     }
     
@@ -103,7 +108,7 @@ class MxGMailProxy : NSObject, MxMailboxProxy {
         , finishedWithAuth authResult: GTMOAuth2Authentication
         , error: NSError?) {
         
-        MxLog.debug("Processing \(#function)")
+        MxLog.debug("\(#function): receiving connection request from mailbox \(mailbox.email)")
     
             if (error != nil) {
                 // Authentication failed (perhaps the user denied access, or closed the
@@ -122,18 +127,18 @@ class MxGMailProxy : NSObject, MxMailboxProxy {
                     }
                 }
     
-                MxLog.error("Authenticating with Gmail failed... Proxy: \(getProviderCode()+"/"+getMailboxId().value)");
+                MxLog.error("Authentication to mailbox failed \(mailbox.email)");
                 MxLog.error(errorStr);
     
                 service.authorizer = nil
     
                 // emit notification
-                connectCompletionHandler!(error: error)
+                connectCompletionHandler!( error: MxBridgeError.ProviderReturnedConnectionError(rootError: error!))
     
             } else {
                 // Authentication succeeded
     
-                MxLog.info("Authenticating with Gmail succeeded... Proxy: \(getProviderCode()+"/"+getMailboxId().value)")
+                MxLog.info("Authenticating with mailbox succeeded \(mailbox.email)")
 //                MxLog.debug("Access Token : \(authResult.accessToken)")
     
                 // save the authentication object
@@ -154,7 +159,7 @@ class MxGMailProxy : NSObject, MxMailboxProxy {
     
         let query = GTLQueryGmail.queryForUsersLabelsList()
         
-        service.executeQuery( query, delegate:self, didFinishSelector: #selector(MxGMailProxy.parseLabelsWithTicket(_:finishedWithObject:error:)))
+        service.executeQuery( query, delegate:self, didFinishSelector: #selector(MxGMailBridge.parseLabelsWithTicket(_:finishedWithObject:error:)))
     }
     
     func parseLabelsWithTicket(
@@ -169,7 +174,7 @@ class MxGMailProxy : NSObject, MxMailboxProxy {
             MxLog.error("Fetching labels failed...")
             MxLog.error(error.localizedDescription)
             
-            fetchLabelsCompletionHandler!( labels: nil, error: error)
+            fetchLabelsCompletionHandler!( labels: nil, error: MxBridgeError.ProviderReturnedFetchError(rootError: error))
             
             return
         }
@@ -187,7 +192,7 @@ class MxGMailProxy : NSObject, MxMailboxProxy {
                     , code: response.name
                     , name: ""
                     , ownerType: MxLabelOwnerType.SYSTEM
-                    , mailboxId: mailboxId)
+                    , mailboxUID: mailbox.UID)
                     
                 labels.append(label)
                 
@@ -216,7 +221,7 @@ class MxGMailProxy : NSObject, MxMailboxProxy {
         
         service.executeQuery( query
             , delegate:self
-            , didFinishSelector:#selector(MxGMailProxy.parseMessagesListWithTicket(_:finishedWithObject:error:)))
+            , didFinishSelector:#selector(MxGMailBridge.parseMessagesListWithTicket(_:finishedWithObject:error:)))
         
     }
     
@@ -231,7 +236,7 @@ class MxGMailProxy : NSObject, MxMailboxProxy {
                 MxLog.error("Fetching messages in label failed...")
                 MxLog.error(error.localizedDescription)
                 
-                fetchMessagesInLabelCompletionHandler!( messages: nil, error: error)
+                fetchMessagesInLabelCompletionHandler!( messages: nil, error: MxBridgeError.ProviderReturnedConnectionError(rootError: error))
                 
                 return
             }
@@ -273,14 +278,6 @@ class MxGMailProxy : NSObject, MxMailboxProxy {
     }
 
     
-    //MARK: - Getters
-    
-    func getMailboxId() -> MxMailboxModel.Id {
-        return mailboxId
-    }
-    
-    func getProviderCode() -> String {
-        return providerCode
-    }
+
 }
 

@@ -9,9 +9,14 @@
 import Foundation
 
 
-class MxProxyTicket : NSOperation {
+
+enum MxRemoteOperationError: MxException {
     
-    var proxy: MxMailboxProxy
+}
+
+class MxSyncOperation : NSOperation {
+    
+    var bridge: MxMailboxBridge
     
     enum State {
         case Ready, Executing, Finished, Cancelled
@@ -60,8 +65,8 @@ class MxProxyTicket : NSOperation {
         return true
     }
     
-    init( proxy: MxMailboxProxy) {
-        self.proxy = proxy
+    init( bridge: MxMailboxBridge) {
+        self.bridge = bridge
     }
     
     override func start() {

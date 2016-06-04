@@ -25,12 +25,12 @@ class MxStateManager {
     let store = Store<MxAppState>(reducer: MxAppReducer(), state: nil, middleware: [])
     
     func dispatch(action: Action) -> Any {
-        MxLog.info("Dispatching action: \(action)")
+        MxLog.debug("Dispatching action: \(action)")
         return store.dispatch(action)
     }
     
     func dispatch(mxActionCreator: (state: MxAppState) -> MxAction?) -> Any {
-        MxLog.info("Dispatching action creator: \(mxActionCreator)")
+        MxLog.debug("Dispatching action creator: \(mxActionCreator)")
         
         let reActionCreator = {
             (state: MxAppState, store: Store<MxAppState>) -> Action? in

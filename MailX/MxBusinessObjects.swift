@@ -20,6 +20,9 @@ struct MxUID: Hashable, Equatable {
     init(value: String){
         self.value = value
     }
+    init(uid: MxUID){
+        self.value = uid.value
+    }
     var hashValue: Int {
         return value.hashValue
     }
@@ -30,27 +33,27 @@ func ==(lhs: MxUID, rhs: MxUID) -> Bool{
 }
 
 
-// Mark: - Data object
+// Mark: - Business object
 
-enum MxDataObject {
+enum MxBusinessObjectEnum {
     case Provider
     case Mailbox
     case Label
     case Message
 }
 
-protocol MxDataObjectType: Loggable {
+protocol MxBusinessObjectType: Loggable {
     var UID: MxUID { get set }
     var hashValue: Int { get }
 }
 
-extension MxDataObjectType {
+extension MxBusinessObjectType {
     var hashValue: Int {
         return UID.value.hashValue
     }
 }
 
-func ==<DataObject: MxDataObjectType>(lhs: DataObject, rhs: DataObject) -> Bool{
+func ==<BO: MxBusinessObjectType>(lhs: BO, rhs: BO) -> Bool{
     return lhs.UID == rhs.UID
 }
 
@@ -62,7 +65,7 @@ protocol MxException: ErrorType, Loggable {}
 enum MxError: MxException {
     
     // when data are incoherent or missing
-    case DataInconsistent( object: MxDataObjectType?, message: String, rootError: ErrorType?)
+    case DataInconsistent( object: MxBusinessObjectType?, message: String, rootError: ErrorType?)
     
     // when can continue processing
     case InternalStateIncoherent( operationName: String, message: String, rootError: ErrorType?)

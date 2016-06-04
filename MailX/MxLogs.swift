@@ -17,23 +17,23 @@ class MxLog {
         let config = XcodeLogConfiguration(minimumSeverity: LogSeverity.Verbose)
         Log.enable(configuration: config)
     }
-    static func verbose( message: String){
-        Log.verbose?.message( message)
+    static func verbose( message: String, function: String = #function, filePath: String = #file, fileLine: Int = #line){
+        Log.verbose?.message( message, function: function, filePath: filePath, fileLine: fileLine)
     }
-    static func debug( message: String){
-        Log.debug?.message(message)
+    static func debug( message: String, function: String = #function, filePath: String = #file, fileLine: Int = #line){
+        Log.debug?.message(message, function: function, filePath: filePath, fileLine: fileLine)
     }
-    static func info( message: String){
-        Log.info?.message(message)
+    static func info( message: String, function: String = #function, filePath: String = #file, fileLine: Int = #line){
+        Log.info?.message(message, function: function, filePath: filePath, fileLine: fileLine)
     }
-    static func warn( message: String, error: Loggable? = nil){
-        Log.warning?.message(message)
+    static func warn( message: String, error: Loggable? = nil, function: String = #function, filePath: String = #file, fileLine: Int = #line){
+        Log.warning?.message(message, function: function, filePath: filePath, fileLine: fileLine)
         if error != nil {
             Log.warning?.message("\(error)")
         }
     }
-    static func error( message: String, error: Loggable? = nil){
-        Log.error?.message(message)
+    static func error( message: String, error: Loggable? = nil, function: String = #function, filePath: String = #file, fileLine: Int = #line){
+        Log.error?.message(message, function: function, filePath: filePath, fileLine: fileLine)
         if error != nil {
             Log.error?.message("\(error)")
         }

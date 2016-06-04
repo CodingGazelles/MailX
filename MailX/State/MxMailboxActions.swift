@@ -22,7 +22,7 @@ let setMailboxesActionCreator = { (state: MxAppState) -> MxAction in
     
     MxLog.debug("Processing func action creator setMailboxesActionCreator")
     
-    let result = fetchMailboxes()
+    let result = MxMailboxModel.fetch()
         |> map({toSO(mailbox: $0)})
 
     switch result {
