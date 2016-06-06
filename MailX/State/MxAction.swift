@@ -14,3 +14,6 @@ import ReSwift
 
 protocol MxAction: ReSwift.Action, Loggable {}
 typealias MxActionCreator = (state: MxAppState) -> MxAction
+
+struct MxStartLoadingAction: MxAction {}
+struct MxStopLoadingAction: MxAction {}

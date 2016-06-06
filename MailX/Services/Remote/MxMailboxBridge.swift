@@ -13,7 +13,7 @@ protocol MxMailboxBridge {
     
     func connect( completionHandler completionHandler: MxConnectCompletionHandler)
     func sendFetchLabelsRequest( completionHandler completionHandler: MxFetchLabelsCompletionHandler)
-    func sendFetchMessagesInLabelRequest(labelId labelId: MxLabelModelId, completionHandler: MxFetchMessagesInLabelCompletionHandler)
+    func sendFetchMessagesInLabelRequest(labelId labelId: MxObjectId, completionHandler: MxFetchMessagesInLabelCompletionHandler)
     
 //    func didFetchMessagesHandler( selector: Selector, error: NSError)
     

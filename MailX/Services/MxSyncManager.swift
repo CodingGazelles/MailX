@@ -12,11 +12,11 @@ import Result
 
 
 
-enum MxSyncError: MxException {
-    case PersistenceManagerIsNil(rootError: MxException? )
-    case SyncManagerIsNil(rootError: MxException?)
-    case UnableToRealizeDBOperation(rootError: MxException?)
-    case UnableToRealizeModelOperation(rootError: MxException?)
+enum MxSyncError: MxExceptionProtocol {
+    case PersistenceManagerIsNil(rootError: MxExceptionProtocol? )
+    case SyncManagerIsNil(rootError: MxExceptionProtocol?)
+    case UnableToRealizeDBOperation(rootError: MxExceptionProtocol?)
+    case UnableToRealizeModelOperation(rootError: MxExceptionProtocol?)
 }
 
 class MxSyncManager {
@@ -26,8 +26,8 @@ class MxSyncManager {
     
     private let stateManager = MxStateManager.defaultManager()
     
-    private let dbManager = { () -> MxPersistenceManager in
-        return MxPersistenceManager.defaultManager()
+    private let dbManager = { () -> MxDBLevel in
+        return MxDBLevel.defaultManager()
     }()
     
     
@@ -69,7 +69,7 @@ class MxSyncManager {
                     MxLog.error("Unable to fetch one mailbox", error: error)
                     
                     let error = MxSyncError.UnableToRealizeModelOperation(rootError: error)
-                    MxStateManager.defaultManager().dispatch( MxAddErrorsAction( errors: [MxErrorSO( error: error )]))
+                    MxStateManager.defaultManager().dispatch( MxAddErrorsAction( errors: [MxSOError( error: error )]))
                 }
                 
             }
@@ -79,7 +79,7 @@ class MxSyncManager {
             MxLog.error("Unable to fetch mailboxes", error: error)
             
             let error = MxSyncError.UnableToRealizeModelOperation(rootError: error)
-            MxStateManager.defaultManager().dispatch( MxAddErrorsAction( errors: [MxErrorSO( error: error )]))
+            MxStateManager.defaultManager().dispatch( MxAddErrorsAction( errors: [MxSOError( error: error )]))
             
         }
         
@@ -174,7 +174,7 @@ class MxSyncManager {
                 case let .Failure(error):
                     
                     let error = MxSyncError.UnableToRealizeDBOperation(rootError: error)
-                    MxStateManager.defaultManager().dispatch( MxAddErrorsAction( errors: [MxErrorSO( error: error )]))
+                    MxStateManager.defaultManager().dispatch( MxAddErrorsAction( errors: [MxSOError( error: error )]))
                     
                 }
             }
@@ -192,7 +192,7 @@ class MxSyncManager {
             case let .Failure(error):
                 
                 let error = MxSyncError.UnableToRealizeDBOperation(rootError: error)
-                MxStateManager.defaultManager().dispatch( MxAddErrorsAction( errors: [MxErrorSO( error: error )]))
+                MxStateManager.defaultManager().dispatch( MxAddErrorsAction( errors: [MxSOError( error: error )]))
                 
             }
         }
@@ -228,7 +228,7 @@ class MxSyncManager {
         
     }
     
-    func remoteDataHasArrived( mailbox mailbox: MxMailboxModel, payload: [MxModelType], error: MxProxyError?){
+    func remoteDataHasArrived( mailbox mailbox: MxMailboxModel, payload: [MxModelObjectProtocol], error: MxProxyError?){
         
         MxLog.info("\(#function): receiving remote data from mailbox \(mailbox.email)")
         

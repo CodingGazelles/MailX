@@ -10,6 +10,3 @@ import Foundation
 
 
 
-struct MxPropertiesState: MxStateType {
-    var labelShortListCodes = [String]()
-}

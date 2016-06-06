@@ -12,48 +12,36 @@ import Result
 
 
 
-//typealias MxProviderModelResult = Result<MxProviderModel, MxDBError>
-
-final class MxProviderModel: MxModelType {
+final class MxProviderModel: MxModelObjectProtocol {
     
-    var UID: MxUID
+    var id: MxObjectId
     var code: String
+    var name: String
     
-    weak var _dbo: MxProviderDBO?
-    
-    init(UID: MxUID?, code: String){
-        self.UID = UID ?? MxUID()
+    init( id: MxObjectId, code: String, name: String){
+        self.id = id
         self.code = code
+        self.name = name
     }
 }
 
 extension MxProviderModel: MxLocalPersistable {
     
-    var dbo: MxProviderDBO? {
-        get {
-            return _dbo
-        }
-        set {
-            _dbo = newValue
-        }
-    }
-    
     convenience init( dbo: MxProviderDBO){
         self.init(
-            UID: dbo.UID
+            id: dbo.id
             , code: dbo.code)
         
-        self.dbo = dbo
     }
     
     
     // MARK: - Insert
     
-    func insert() -> Result<Bool, MxModelError> {
+    func insert() -> Result<Bool, MxStackError> {
         
         MxLog.verbose("Processing: \(#function). Args: provider=\(self) ")
         
-        let db = MxPersistenceManager.defaultManager().db
+        let db = MxDBLevel.defaultManager().db
         
         do {
             
@@ -61,10 +49,8 @@ extension MxProviderModel: MxLocalPersistable {
                 
                 let newProviderDbo: MxProviderDBO = try context.create()
                 
-                newProviderDbo.UID = self.UID
+                newProviderDbo.id = self.id
                 newProviderDbo.code = self.code
-                
-                self.dbo = newProviderDbo
                 
                 save()
                 
@@ -74,9 +60,9 @@ extension MxProviderModel: MxLocalPersistable {
         } catch {
             
             return Result.Failure(
-                MxModelError.UnableToExecuteDBOperation(
+                MxStackError.UnableToExecuteDBOperation(
                     operationType: MxDBOperation.MxCreateOperation
-                    , DBOType: MxBusinessObjectEnum.Provider
+                    , DBOType: MxProviderDBO.self
                     , message: "Error while calling context.create on MxProviderDBO. Args: provider=\(self)"
                     , rootError: error))
         }
@@ -85,39 +71,38 @@ extension MxProviderModel: MxLocalPersistable {
     
     // MARK: - Delete
     
-    func delete() -> Result<Bool, MxModelError> {
+    func delete() -> Result<Bool, MxStackError> {
         fatalError("Func not implemented")
     }
     
-    static func delete( uids uids: [MxUID]) -> Result<Bool, MxModelError> {
+    static func delete( uids uids: [MxInternalId]) -> Result<Bool, MxStackError> {
         fatalError("Func not implemented")
     }
     
     
     // MARK: - Update
     
-    func update() -> Result<Bool, MxModelError> {
+    func update() -> Result<Bool, MxStackError> {
         fatalError("Func not implemented")
     }
     
     
     // MARK: - Fetch
     
-    static func fetch( uid uid: MxUID) -> Result<MxProviderModel, MxModelError> {
+    static func fetch( uid uid: MxInternalId) -> Result<MxProviderModel, MxStackError> {
         fatalError("Func not implemented")
     }
     
-    static func fetch( uids uids: [MxUID]) -> Result<[Result<MxProviderModel, MxModelError>], MxDBError> {
+    static func fetch( uids uids: [MxInternalId]) -> Result<[Result<MxProviderModel, MxStackError>], MxDBError> {
         fatalError("Func not implemented")
     }
 }
 
-final class MxProviderModelId: MxRemoteId {
-    var value: String
-    init( value: String){
-        self.value = value
-    }
-}
+//extension MxProviderModel: MxSOConvertibleProtocol {
+//    func toSO() -> MxProviderSO {
+//        return MxProviderSO(model: self)
+//    }
+//}
 
 
 

@@ -15,7 +15,7 @@ import ReSwift
 class MxStateManager {
     
     private static let appStore = MxStateManager()
-    static func defaultManager() -> MxStateManager {
+    static func defaultState() -> MxStateManager {
         return appStore
     }
     
@@ -57,7 +57,7 @@ class MxStateManager {
             dispatch( MxSetPropertiesAction(properties: MxPropertiesState.readDefaultProperties()))
             
             MxLog.verbose("Dispatching loadMailboxes")
-            dispatch( setMailboxesActionCreator)
+            dispatchSetMailboxesAction()
             
             MxLog.verbose("Dispatching setLabelsActionCreator")
             dispatch( setLabelsActionCreator)

@@ -13,23 +13,18 @@ import Pipes
 
 
 
-//typealias MxMailboxModelResult = Result<MxMailboxModel, MxModelError>
-
-final class MxMailboxModel: MxModelType, MxRemotePersistable {
+final class MxMailboxModel: MxModelObjectProtocol {
     
-    var UID: MxUID
-    var remoteId: MxMailboxModelId?
+    var id:MxObjectId
     var email: String
     var name: String
     var connected: Bool
     var providerCode: String
     
     var proxy: MxMailboxProxy!
-    weak var _dbo: MxMailboxDBO?
     
-    init(UID: MxUID?, remoteId: MxMailboxModelId?, email: String, name: String, connected: Bool, providerCode: String){
-        self.UID = UID ?? MxUID()
-        self.remoteId = remoteId
+    init( id: MxObjectId, email: String, name: String, connected: Bool, providerCode: String){
+        self.id = id
         self.email = email
         self.name = name
         self.connected = connected
@@ -39,15 +34,6 @@ final class MxMailboxModel: MxModelType, MxRemotePersistable {
 
 extension MxMailboxModel: MxLocalPersistable {
     
-    var dbo: MxMailboxDBO? {
-        get {
-            return _dbo
-        }
-        set {
-            _dbo = newValue
-        }
-    }
-    
     convenience init?( dbo: MxMailboxDBO){
         
         guard dbo.provider != nil else {
@@ -55,26 +41,24 @@ extension MxMailboxModel: MxLocalPersistable {
         }
         
         self.init(
-            UID: dbo.UID
-            , remoteId: MxMailboxModelId( value: dbo.remoteId)
+            id: dbo.id
             , email: dbo.email
             , name: dbo.name
             , connected: false
             , providerCode: dbo.provider!.code)
         
-        self.dbo = dbo
     }
     
     
     // MARK: - Insert
     
-    func insert() -> Result<Bool, MxModelError> {
+    func insert() -> Result<Bool, MxStackError> {
         
         MxLog.verbose("Processing: \(#function). Args: mailbox=\(self)")
         
         let providerCode = self.providerCode
         //        let appProperties = MxAppProperties.defaultProperties()
-        let db = MxPersistenceManager.defaultManager().db
+        let db = MxDBLevel.defaultManager().db
         
         switch fetchProviderDBO( providerCode: providerCode) {
         case let .Success(provider):
@@ -84,13 +68,10 @@ extension MxMailboxModel: MxLocalPersistable {
                     
                     let newMailboxDbo: MxMailboxDBO = try context.create()
                     
-                    newMailboxDbo.UID = self.UID
-                    newMailboxDbo.remoteId = self.remoteId?.value ?? "nil"
+                    newMailboxDbo.id = self.id
                     newMailboxDbo.email = self.email
                     newMailboxDbo.name = self.name
                     newMailboxDbo.provider = provider
-                    
-                    self.dbo = newMailboxDbo
                     
                     save()
                 }
@@ -100,9 +81,9 @@ extension MxMailboxModel: MxLocalPersistable {
             } catch {
                 
                 return Result.Failure(
-                    MxModelError.UnableToExecuteDBOperation(
+                    MxStackError.UnableToExecuteDBOperation(
                         operationType: MxDBOperation.MxCreateOperation
-                        , DBOType: MxBusinessObjectEnum.Mailbox
+                        , DBOType: MxMailboxDBO.self
                         , message: "Error while calling context.create on MxMailboxDBO. Args: mailbox=\(self)"
                         , rootError: error))
             }
@@ -110,9 +91,9 @@ extension MxMailboxModel: MxLocalPersistable {
         case let .Failure(error):
             
             return Result.Failure(
-                MxModelError.UnableToExecuteDBOperation(
+                MxStackError.UnableToExecuteDBOperation(
                     operationType: MxDBOperation.MxFetchOperation
-                    , DBOType: MxBusinessObjectEnum.Provider
+                    , DBOType: MxProviderDBO.self
                     , message: "Error while calling fetchProviderDBO() with args: providerCode=\(providerCode)"
                     , rootError: error))
         }
@@ -121,44 +102,44 @@ extension MxMailboxModel: MxLocalPersistable {
     
     // MARK: - Delete
     
-    func delete() -> Result<Bool, MxModelError> {
+    func delete() -> Result<Bool, MxStackError> {
         fatalError("Func not implemented")
     }
     
-    static func delete( uids uids: [MxUID]) -> Result<Bool, MxModelError> {
+    static func delete( uids uids: [MxInternalId]) -> Result<Bool, MxStackError> {
         fatalError("Func not implemented")
     }
     
     
     // MARK: - Update
     
-    func update() -> Result<Bool, MxModelError> {
+    func update() -> Result<Bool, MxStackError> {
         fatalError("Func not implemented")
     }
     
     
     // MARK: - Fetch
     
-    static func fetch( uid uid: MxUID) -> Result<MxMailboxModel, MxModelError> {
+    static func fetch( id id: MxObjectId) -> Result<MxMailboxModel, MxStackError> {
         
-        switch fetchMailboxDBO( mailboxUID: uid) {
+        switch fetchMailboxDBO( mailboxId: id) {
             
         case let .Success(mailbox):
             return mailbox.toModel()
             
         case let .Failure(error):
             return .Failure(
-                MxModelError.UnableToExecuteDBOperation(
+                MxStackError.UnableToExecuteDBOperation(
                     operationType: MxDBOperation.MxFetchOperation
-                    , DBOType: MxBusinessObjectEnum.Mailbox
-                    , message: "Error while calling fetchMailboxDBO() with args: mailboxUID=\(uid)"
+                    , DBOType: MxMailboxModel.self
+                    , message: "Error while calling fetchMailboxDBO() with args: mailboxId=\(id)"
                     , rootError: error)
             )
         }
         
     }
     
-    static func fetch( uids uids: [MxUID]) -> Result<[Result<MxMailboxModel, MxModelError>], MxDBError> {
+    static func fetch( uids uids: [MxInternalId]) -> Result<[Result<MxMailboxModel, MxStackError>], MxDBError> {
         fatalError("Func not implemented")
     }
     
@@ -167,7 +148,7 @@ extension MxMailboxModel: MxLocalPersistable {
 extension MxMailboxModel {
     
     static func fetch()
-        -> Result<[Result<MxMailboxModel, MxModelError>], MxDBError> {
+        -> Result<[Result<MxMailboxModel, MxStackError>], MxDBError> {
             
             MxLog.debug("\(#function): fetching all mailboxes")
             
@@ -177,15 +158,21 @@ extension MxMailboxModel {
     
 }
 
+//extension MxMailboxModel {
+//    func toSO() -> MxMailboxSO {
+//        return MxMailboxSO(model: self)
+//    }
+//}
+
 
 // MARK: - MxRemoteId
 
-final class MxMailboxModelId: MxRemoteId{
-    var value: String
-    init( value: String){
-        self.value = value
-    }
-}
+//final class MxMailboxModelId: MxRemoteId{
+////    var value: String
+////    init( value: String){
+////        self.value = value
+////    }
+//}
 
 
 

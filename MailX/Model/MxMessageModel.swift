@@ -13,99 +13,83 @@ import Result
 
 
 
-final class MxMessageModel: MxModelType, MxRemotePersistable {
+final class MxMessageModel: MxModelObjectProtocol {
     
-    var UID: MxUID
-    var remoteId: MxMessageModelId?
+    var id: MxObjectId
     var value: String
-    var labelIds: [MxLabelModelId]
+    var labelIds: [MxObjectId]
     
-    weak var _dbo: MxMessageDBO?
-    
-    init(UID: MxUID?, remoteId: MxMessageModelId, value: String, labelIds: [MxLabelModelId]){
-        self.UID = UID ?? MxUID()
-        self.remoteId = remoteId
+    init( id: MxObjectId, value: String, labelIds: [MxObjectId]){
+        self.id = id
         self.value = value
         self.labelIds = labelIds
     }
-    
-    
 }
 
 
 extension MxMessageModel: MxLocalPersistable {
     
-    var dbo: MxMessageDBO? {
-        get {
-            return _dbo
-        }
-        set {
-            _dbo = newValue
-        }
-    }
-    
     convenience init( dbo: MxMessageDBO){
         
-        let remoteId = MxMessageModelId( value: dbo.remoteId)
+        let id = dbo.id
+        
         let labelIds = dbo.labels
-            |> map(){ MxLabelModelId( value: $0.remoteId) }
+            |> map(){ $0.id }
         
         self.init(
-            UID: dbo.UID
-            , remoteId: remoteId
+            id: id
             , value: "TO DO"
             , labelIds: labelIds)
         
-        self.dbo = dbo
     }
     
     
     // MARK: - Insert
     
-    func insert() -> Result<Bool, MxModelError> {
+    func insert() -> Result<Bool, MxStackError> {
         fatalError("Func not implemented")
     }
     
     
     // MARK: - Delete
     
-    func delete() -> Result<Bool, MxModelError> {
+    func delete() -> Result<Bool, MxStackError> {
         fatalError("Func not implemented")
     }
     
-    static func delete( uids uids: [MxUID]) -> Result<Bool, MxModelError> {
+    static func delete( uids uids: [MxInternalId]) -> Result<Bool, MxStackError> {
         fatalError("Func not implemented")
     }
     
     
     // MARK: - Update
     
-    func update() -> Result<Bool, MxModelError> {
+    func update() -> Result<Bool, MxStackError> {
         fatalError("Func not implemented")
     }
     
     
     // MARK: - Fetch
     
-    static func fetch( uid uid: MxUID) -> Result<MxMessageModel, MxModelError> {
+    static func fetch( uid uid: MxInternalId) -> Result<MxMessageModel, MxStackError> {
         fatalError("Func not implemented")
     }
     
-    static func fetch( uids uids: [MxUID]) -> Result<[Result<MxMessageModel, MxModelError>], MxDBError> {
+    static func fetch( uids uids: [MxInternalId]) -> Result<[Result<MxMessageModel, MxStackError>], MxDBError> {
         fatalError("Func not implemented")
     }
 }
 
 extension MxMessageModel {
     
-    static func deleteMessages( mailboxUID mailboxUID: MxUID, labelCode: String)
+    static func deleteMessages( mailboxId mailboxId: MxObjectId, labelCode: String)
         -> Result< Bool,MxDBError> {
             
-            MxLog.debug("Processing: \(#function). Args: mailboxId=\(mailboxUID), labelId=\(labelCode)")
+            MxLog.debug("Processing: \(#function). Args: mailboxId=\(mailboxId), labelId=\(labelCode)")
             
-            let db = MxPersistenceManager.defaultManager().db
+            let db = MxDBLevel.defaultManager().db
             
-            switch fetchMessageDBOs( mailboxUID: mailboxUID, labelCode: labelCode) {
+            switch fetchMessageDBOs( mailboxId: mailboxId, labelCode: labelCode) {
             case let .Success(messages):
                 
                 MxLog.debug("Deleting message(s): \(messages)")
@@ -137,10 +121,10 @@ extension MxMessageModel {
 
 // MARK: - MxRemoteId
 
-final class MxMessageModelId: MxRemoteId {
-    var value: String
-    init( value: String){
-        self.value = value
-    }
-}
+//final class MxMessageModelId: MxRemoteId {
+//    var value: String
+//    init( value: String){
+//        self.value = value
+//    }
+//}
 

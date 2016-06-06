@@ -8,32 +8,64 @@ import SugarRecordRealm
 
 
 
+// TODO: ranger dans le bon fichier
+
+// MARK: - Indicates that Model can be saved in local DB
+
+protocol MxLocalPersistable {
+    
+    associatedtype DBO: MxDBOType
+    
+    init?(dbo: DBO)
+    
+    // Fetch
+    static func fetch( uid uid: MxInternalId) -> Result<Self, MxStackError>
+    static func fetch( uids uids: [MxInternalId]) -> Result<[Result<Self, MxStackError>], MxDBError>
+    
+    // Insert
+    func insert() -> Result<Bool,MxStackError>
+    
+    // Delete
+    func delete() -> Result<Bool,MxStackError>
+    static func delete( uids uids: [MxInternalId]) -> Result<Bool, MxStackError>
+    
+    // Update
+    func update() -> Result<Bool,MxStackError>
+    
+    
+}
+
+
+
 // MARK: - Protocols
 
-protocol MxDBOType: class, SugarRecordRealm.Entity, MxBusinessObjectType {
-    var _UID: String { get set }
+protocol MxDBOType: class, SugarRecordRealm.Entity, MxBusinessObjectProtocol {
+    
+    var internalId: String { get set }
+    var remoteId: String { get set }
     
     func delete() -> Result<Bool,MxDBError>
 }
 
 extension MxDBOType {
-
-    var UID: MxUID {
+    
+    var id: MxObjectId {
         get {
-            return MxUID(value: _UID)
+            return MxObjectId(internalId: MxInternalId(value: internalId), remoteId: MxRemoteId(value: remoteId))
         }
         set {
-            _UID = newValue.value
+            self.internalId = newValue.internalId.value
+            self.remoteId = newValue.remoteId.value
         }
     }
 
     func primaryKey() -> String? {
-        return "_UID"
+        return "internalId"
     }
     
     func delete() -> Result<Bool,MxDBError> {
         
-        let db = MxPersistenceManager.defaultManager().db
+        let db = MxDBLevel.defaultManager().db
         
         do {
             
@@ -59,7 +91,7 @@ extension MxDBOType {
 
 protocol MxConvertibleToModel {
     associatedtype Model: MxLocalPersistable
-    func toModel() -> Result<Model,MxModelError>
+    func toModel() -> Result<Model,MxStackError>
 }
 
 
@@ -68,7 +100,8 @@ protocol MxConvertibleToModel {
 class MxProviderDBO: RealmSwift.Object, MxDBOType, MxConvertibleToModel {
     
     // properties
-    dynamic var _UID = ""
+    dynamic var internalId: String = ""
+    dynamic var remoteId: String = ""
     dynamic var code: String = ""
     
     // relationships
@@ -77,12 +110,12 @@ class MxProviderDBO: RealmSwift.Object, MxDBOType, MxConvertibleToModel {
     }
     
     override static func indexedProperties() -> [String] {
-        return ["_UID", "code"]
+        return ["internalId", "code"]
     }
 }
 
 extension MxProviderDBO {
-    func toModel() -> Result<MxProviderModel, MxModelError> {
+    func toModel() -> Result<MxProviderModel, MxStackError> {
         fatalError("Func not implemented")
     }
 }
@@ -93,28 +126,28 @@ extension MxProviderDBO {
 final class MxMailboxDBO : RealmSwift.Object, MxDBOType, MxConvertibleToModel {
     
     // properties
-    dynamic var _UID = ""
+    dynamic var internalId: String = ""
     dynamic var remoteId: String = ""
     dynamic var email: String = ""
     dynamic var name: String = ""
     
     // relationships
-    dynamic var provider: MxProviderDBO?
+    dynamic var provider: MxProviderDBO!
     var labels: [MxLabelDBO] {
         return linkingObjects( MxLabelDBO.self, forProperty: "mailbox")
     }
     
     override static func indexedProperties() -> [String] {
-        return ["_UID", "remoteId"]
+        return ["internalId", "remoteId"]
     }
 }
 
 extension MxMailboxDBO {
-    func toModel() -> Result<MxMailboxModel,MxModelError> {
+    func toModel() -> Result<MxMailboxModel,MxStackError> {
         
         guard self.provider != nil else {
             
-            let error =  MxModelError.UnableToConvertDBOToModel(
+            let error =  MxStackError.UnableToConvertDBOToModel(
                 dbo: self
                 , message: "Mailbox without a provider"
                 , rootError: nil)
@@ -131,30 +164,30 @@ extension MxMailboxDBO {
 final class MxLabelDBO: RealmSwift.Object, MxDBOType, MxConvertibleToModel {
     
     // properties
-    dynamic var _UID = ""
+    dynamic var internalId: String = ""
     dynamic var remoteId: String = ""
     dynamic var code: String = ""
     dynamic var name: String = ""
     dynamic var ownerType: String = ""
     
     // relationships
-    dynamic var mailbox: MxMailboxDBO?
+    dynamic var mailbox: MxMailboxDBO!
     var messages: [MxMessageDBO] {
         return linkingObjects( MxMessageDBO.self, forProperty: "labels")
     }
     
     override static func indexedProperties() -> [String] {
-        return ["_UID", "remoteId"]
+        return ["internalId", "remoteId"]
     }
     
 }
 
 extension MxLabelDBO {
-    func toModel() -> Result<MxLabelModel, MxModelError> {
+    func toModel() -> Result<MxLabelModel, MxStackError> {
         
         guard MxLabelOwnerType( rawValue: self.ownerType) != nil else {
             
-            let error =  MxModelError.UnableToConvertDBOToModel(
+            let error =  MxStackError.UnableToConvertDBOToModel(
                 dbo: self
                 , message: "Unable to instanciate MxLabelOwnerType with MxLabelDBO with args: \(self)"
                 , rootError: nil)
@@ -172,7 +205,7 @@ extension MxLabelDBO {
 final class MxMessageDBO: RealmSwift.Object, MxDBOType, MxConvertibleToModel {
     
     // properties
-    dynamic var _UID = ""
+    dynamic var internalId: String = ""
     dynamic var remoteId: String = ""
     
     // relationships
@@ -185,30 +218,11 @@ final class MxMessageDBO: RealmSwift.Object, MxDBOType, MxConvertibleToModel {
 }
 
 extension MxMessageDBO {
-    func toModel() -> Result<MxMessageModel, MxModelError> {
+    func toModel() -> Result<MxMessageModel, MxStackError> {
         fatalError("Func not implemented")
     }
 }
 
 
-// MARK: - DB Error
 
-enum MxDBOperation {
-    case MxInsertOperation
-    case MxDeleteOperation
-    case MxUodateOperation
-    case MxFetchOperation
-    case MxCreateOperation
-}
-
-enum MxDBError: MxException {
-    case UnableToExecuteOperation(
-        operationType: MxDBOperation
-        , DBOType: Any.Type
-        , message: String
-        , rootError: ErrorType?)
-    case DataInconsistent(
-        object: MxBusinessObjectType
-        , message: String)
-}
 

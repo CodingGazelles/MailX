@@ -10,29 +10,27 @@ import Foundation
 
 
 
-struct MxMessageSO: MxStateObjectType {
+struct MxMessageSO: MxStateObjectProtocol {
     
-    var UID: MxUID
-    var id: String
+    var id: MxObjectId
     
-    init(UID: MxUID?, id: String){
-        self.UID = UID ?? MxUID()
+    init(id: MxObjectId){
         self.id = id
     }
     
-    init(messageSO: MxMessageSO){
-        self.init(UID: messageSO.UID, id: messageSO.id)
+}
+
+extension MxMessageSO: MxInitWithModel {
+    init( model: MxMessageModel){
+        self.init(id: model.id)
     }
 }
 
-struct MxMessageState: MxStateType {
-    var messages = [MxMessageRow]()
-}
 
 
-extension MxMessageSO: MxMessageRow {}
-
-protocol MxMessageRow: MxStateObjectType {
-    var id: String { get set }
-}
+//extension MxMessageSO: MxMessageRow {}
+//
+//protocol MxMessageRow: MxStateObjectProtocol {
+//    var id: String { get set }
+//}
 

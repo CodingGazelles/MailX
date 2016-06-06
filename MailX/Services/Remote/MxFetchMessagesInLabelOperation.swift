@@ -16,9 +16,9 @@ typealias MxFetchMessagesInLabelCompletionHandler = (messages: [MxMessageModel]?
 class MxFetchMessagesInLabelOperation : MxSyncOperation {
     
     var completionHandler: MxFetchMessagesInLabelCompletionHandler
-    var labelId: MxLabelModel.Id
+    var labelId: MxObjectId
     
-    init( labelId: MxLabelModel.Id, bridge: MxMailboxBridge, completionHandler: MxFetchMessagesInLabelCompletionHandler) {
+    init( labelId: MxObjectId, bridge: MxMailboxBridge, completionHandler: MxFetchMessagesInLabelCompletionHandler) {
         
         self.completionHandler = completionHandler
         self.labelId = labelId

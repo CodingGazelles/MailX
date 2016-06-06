@@ -10,32 +10,29 @@ import Foundation
 
 
 
-struct MxErrorSO: MxStateObjectType, ErrorType {
+struct MxSOError: MxStateObjectProtocol, MxExceptionProtocol {
     
-    var UID: MxUID
+    var id: MxObjectId
     var message: String
     
-    init(UID: MxUID?, message: String){
-        self.UID = UID ?? MxUID()
+    init(id: MxObjectId, message: String){
+        self.id = id
         self.message = message
     }
     
-    init( error: MxException){
-        self.init( UID: nil, message: error.description)
+    init( error: MxExceptionProtocol){
+        self.init( id: MxObjectId(), message: error.description)
     }
 }
 
-extension MxErrorSO {
-    init( error: MxModelError){
-        self.init(UID: nil, message: error.description)
+extension MxSOError {
+    init( error: MxStackError){
+        self.init(id: MxObjectId(), message: error.description)
     }
 }
 
-func errorSO( error error: MxModelError) -> MxErrorSO {
-    return MxErrorSO(error: error)
+func errorSO( error error: MxStackError) -> MxSOError {
+    return MxSOError(error: error)
 }
 
 
-struct MxErrorsState: MxStateType {
-    var errors = [MxErrorSO]()
-}

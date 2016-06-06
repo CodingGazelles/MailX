@@ -17,16 +17,16 @@ import SugarRecordRealm
 
 // MARK: -
 
-class MxPersistenceManager {
+class MxDBLevel: MxStackLevelProtocol {
     
     // MARK: - Shared instance
     
-    private static let sharedInstance = MxPersistenceManager()
-    static func defaultManager() -> MxPersistenceManager {
-        return sharedInstance
-    }
+//    private static let sharedInstance = MxDBLevel()
+//    static func defaultManager() -> MxDBLevel {
+//        return sharedInstance
+//    }
     
-    private init(){}
+    init(){}
     
     
     // Mark: - Default DB
@@ -56,7 +56,7 @@ func fetchProviderDBO( providerCode providerCode: String) -> Result<MxProviderDB
     
     MxLog.verbose("Processing: \(#function). Args: providerCode=\(providerCode)")
     
-    let db = MxPersistenceManager.defaultManager().db
+    let db = MxDBLevel.defaultManager().db
     
     let predicate: NSPredicate = NSPredicate( format: "code == %@", providerCode)
     do {
@@ -75,13 +75,13 @@ func fetchProviderDBO( providerCode providerCode: String) -> Result<MxProviderDB
     }
 }
 
-func fetchMailboxDBO( mailboxUID mailboxUID: MxUID) -> Result<MxMailboxDBO, MxDBError> {
+func fetchMailboxDBO( mailboxId mailboxId: MxObjectId) -> Result<MxMailboxDBO, MxDBError> {
     
-    MxLog.verbose("Processing: \(#function). Args: mailboxUID=\(mailboxUID)")
+    MxLog.verbose("Processing: \(#function). Args: mailboxId=\(mailboxId)")
     
-    let db = MxPersistenceManager.defaultManager().db
+    let db = MxDBLevel.defaultManager().db
     
-    let predicate: NSPredicate = NSPredicate( format: "_UID == %@", mailboxUID.value)
+    let predicate: NSPredicate = NSPredicate( format: "_UID == %@", mailboxId.internalId.value)
     do {
         
         let result = try db.fetch(Request<MxMailboxDBO>().filteredWith( predicate: predicate)).first
@@ -93,7 +93,7 @@ func fetchMailboxDBO( mailboxUID mailboxUID: MxUID) -> Result<MxMailboxDBO, MxDB
             MxDBError.UnableToExecuteOperation(
                 operationType: MxDBOperation.MxFetchOperation
                 , DBOType: Mirror( reflecting: MxMailboxDBO()).subjectType
-                , message: "Error while fetching mailbox. Args: mailboxId=\(mailboxUID)"
+                , message: "Error while fetching mailbox. Args: mailboxId=\(mailboxId)"
                 , rootError: error))
     }
 }
@@ -102,7 +102,7 @@ func fetchMailboxDBOs() -> Result<[MxMailboxDBO], MxDBError> {
     
     MxLog.verbose("Processing: \(#function)")
     
-    let db = MxPersistenceManager.defaultManager().db
+    let db = MxDBLevel.defaultManager().db
     
     do {
         
@@ -120,12 +120,12 @@ func fetchMailboxDBOs() -> Result<[MxMailboxDBO], MxDBError> {
     }
 }
 
-func fetchMessageDBOs( mailboxUID mailboxUID: MxUID, labelCode: String)
+func fetchMessageDBOs( mailboxId mailboxId: MxObjectId, labelCode: String)
     -> Result<[MxMessageDBO], MxDBError> {
         
-        MxLog.verbose("Processing: \(#function). Args: mailboxUID=\(mailboxUID), labelCode=\(labelCode)")
+        MxLog.verbose("Processing: \(#function). Args: mailboxId=\(mailboxId), labelCode=\(labelCode)")
         
-        switch fetchMailboxDBO( mailboxUID: mailboxUID) {
+        switch fetchMailboxDBO( mailboxId: mailboxId) {
         case let .Success(value):
             
             let result = value
@@ -142,36 +142,16 @@ func fetchMessageDBOs( mailboxUID mailboxUID: MxUID, labelCode: String)
                 MxDBError.UnableToExecuteOperation(
                     operationType: MxDBOperation.MxFetchOperation
                     , DBOType: Mirror( reflecting: MxMailboxDBO()).subjectType
-                    , message: "Error while fetching mailbox \(mailboxUID)"
+                    , message: "Error while fetching mailbox \(mailboxId)"
                     , rootError: error))
+            
         }
 }
 
-func fetchMessageDBOs( uids uids: [MxUID]) -> Result<[MxMessageDBO], MxDBError> {
+func fetchMessageDBOs( uids uids: [MxObjectId]) -> Result<[MxMessageDBO], MxDBError> {
         
     MxLog.verbose("Processing: \(#function). Args: uids=\(uids)")
-    
     fatalError("Func not implemented")
-        
-//        switch fetchMailboxDBO( mailboxUID: mailboxUID) {
-//        case let .Success(value):
-//            
-//            let result = value
-//                .labels
-//                .filter { (label: MxLabelDBO) -> Bool in
-//                    return label.code == labelCode }
-//                .first!
-//                .messages
-//            return Result.Success( result)
-//            
-//        case let .Failure(error):
-//            
-//            return Result.Failure(
-//                MxDBError.UnableToExecuteOperation(
-//                    operationType: MxDBOperation.MxFetchOperation
-//                    , DBOType: MxBusinessObjectEnum.Mailbox
-//                    , message: "Error while fetching mailbox \(mailboxUID)"
-//                    , rootError: error))
-//        }
+    
 }
 

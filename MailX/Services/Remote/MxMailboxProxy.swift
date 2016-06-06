@@ -10,10 +10,6 @@ import Foundation
 
 
 
-enum MxProxyError: MxException {
-    case BridgeReturnedError( rootError: MxBridgeError)
-}
-
 class MxMailboxProxy {
     
     lazy private var syncManager = { () -> MxSyncManager in
@@ -34,7 +30,7 @@ class MxMailboxProxy {
         self.bridge = bridge
         
         operationsQueue = NSOperationQueue()
-        operationsQueue.name = mailbox.remoteId!.value
+        operationsQueue.name = mailbox.id.remoteId.value
         operationsQueue.maxConcurrentOperationCount = 1
     }
     
@@ -92,7 +88,7 @@ class MxMailboxProxy {
     
     // MARK: - Fetch messages
     
-    func fetchMessagesInLabel( labelId labelId: MxLabelModel.Id) {
+    func fetchMessagesInLabel( labelId labelId: MxObjectId) {
         MxLog.debug("Processing \(#function). Args: labelId: \(labelId)")
         
         MxLog.verbose("Creating fetch messages ticket to mailbox: \(bridge.mailbox)")
@@ -116,7 +112,7 @@ class MxMailboxProxy {
     Push local alterations to remote mailbox
     */
     
-    func pushTickets( mailboxId mailboxId: MxMailboxModel.Id){
+    func pushTickets( mailboxId mailboxId: MxObjectId){
     
     }
 }

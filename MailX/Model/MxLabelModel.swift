@@ -13,30 +13,25 @@ import Pipes
 
 
 
-final class MxLabelModel: MxModelType, MxRemotePersistable {
+final class MxLabelModel: MxModelObjectProtocol {
     
-    var UID: MxUID
-    var remoteId: MxLabelModelId?
+    var id: MxObjectId
     var code: String
     var name: String
     var ownerType: MxLabelOwnerType
-    var mailboxUID: MxUID
+    var mailboxId: MxObjectId
     
-    weak var _dbo: MxLabelDBO?
-    
-    init(UID: MxUID?
-        , remoteId: MxLabelModelId?
+    init( id: MxObjectId
         , code: String
         , name: String
         , ownerType: MxLabelOwnerType
-        , mailboxUID: MxUID){
+        , mailboxId: MxObjectId){
         
-        self.UID = UID ?? MxUID()
-        self.remoteId = remoteId
+        self.id = id
         self.code = code
         self.name = name
         self.ownerType = ownerType
-        self.mailboxUID = mailboxUID
+        self.mailboxId = mailboxId
     }
 }
 
@@ -45,45 +40,32 @@ final class MxLabelModel: MxModelType, MxRemotePersistable {
 
 extension MxLabelModel: MxLocalPersistable {
     
-    var dbo: MxLabelDBO? {
-        get {
-            return _dbo
-        }
-        set {
-            _dbo = newValue
-        }
-    }
-    
     convenience init?( dbo: MxLabelDBO){
         
         guard let ownerType = MxLabelOwnerType( rawValue: dbo.ownerType) else {
             return nil
         }
         
-        let remoteId = MxLabelModelId( value: dbo.remoteId)
-        let mailboxUID = MxUID(uid: dbo.UID)
-        
         self.init(
-            UID: dbo.UID
-            , remoteId: remoteId
+            id: dbo.id
             , code: dbo.code
             , name: dbo.name
             , ownerType: ownerType
-            , mailboxUID: mailboxUID)
+            , mailboxId: dbo.mailbox.id)
         
-        self.dbo = dbo
+        
     }
     
     
     // MARK: - Insert
     
-    func insert() -> Result<Bool, MxModelError> {
+    func insert() -> Result<Bool, MxStackError> {
         
         MxLog.verbose("Processing: \(#function) on: \(self)")
         
-        let db = MxPersistenceManager.defaultManager().db
+        let db = MxDBLevel.defaultManager().db
         
-        switch fetchMailboxDBO( mailboxUID: mailboxUID) {
+        switch fetchMailboxDBO( mailboxId: mailboxId) {
         case let .Success(mailboxDbo):
             
             do {
@@ -91,15 +73,12 @@ extension MxLabelModel: MxLocalPersistable {
                     
                     let newLabelDbo: MxLabelDBO = try context.create()
                     
-                    newLabelDbo.UID = MxUID()
-                    newLabelDbo.remoteId = self.remoteId?.value ?? ""
+                    newLabelDbo.id = self.id
                     newLabelDbo.code = self.code
                     newLabelDbo.name = self.name
                     newLabelDbo.ownerType = MxLabelOwnerType.SYSTEM.rawValue
                     
                     newLabelDbo.mailbox = mailboxDbo
-                    
-                    self.dbo = newLabelDbo
                     
                     save()
                 }
@@ -109,9 +88,9 @@ extension MxLabelModel: MxLocalPersistable {
             } catch {
                 
                 return Result.Failure(
-                    MxModelError.UnableToExecuteDBOperation(
+                    MxStackError.UnableToExecuteDBOperation(
                         operationType: MxDBOperation.MxCreateOperation
-                        , DBOType: MxBusinessObjectEnum.Mailbox
+                        , DBOType: MxLabelDBO.self
                         , message: "Error while calling context.create on MxLabelDBO on: \(self)"
                         , rootError: error))
             }
@@ -119,10 +98,10 @@ extension MxLabelModel: MxLocalPersistable {
         case let .Failure(error):
             
             return Result.Failure(
-                MxModelError.UnableToExecuteDBOperation(
+                MxStackError.UnableToExecuteDBOperation(
                     operationType: MxDBOperation.MxFetchOperation
-                    , DBOType: MxBusinessObjectEnum.Mailbox
-                    , message: "Error while calling fetchMailboxDBO() with args: mailboxUID=\(mailboxUID)"
+                    , DBOType: MxMailboxDBO.self
+                    , message: "Error while calling fetchMailboxDBO() with args: mailboxId=\(mailboxId)"
                     , rootError: error))
         }
     }
@@ -130,52 +109,52 @@ extension MxLabelModel: MxLocalPersistable {
     
     // MARK: - Delete
     
-    func delete() -> Result<Bool, MxModelError> {
+    func delete() -> Result<Bool, MxStackError> {
         fatalError("Func not implemented")
     }
     
-    static func delete( uids uids: [MxUID]) -> Result<Bool, MxModelError> {
+    static func delete( uids uids: [MxInternalId]) -> Result<Bool, MxStackError> {
         fatalError("Func not implemented")
     }
     
     
     // MARK: - Update
     
-    func update() -> Result<Bool, MxModelError> {
+    func update() -> Result<Bool, MxStackError> {
         fatalError("Func not implemented")
     }
     
     
     // MARK: - Fetch
     
-    static func fetch( uid uid: MxUID) -> Result<MxLabelModel, MxModelError> {
+    static func fetch( uid uid: MxInternalId) -> Result<MxLabelModel, MxStackError> {
         fatalError("Func not implemented")
     }
     
-    static func fetch( uids uids: [MxUID]) -> Result<[Result<MxLabelModel, MxModelError>], MxDBError> {
+    static func fetch( uids uids: [MxInternalId]) -> Result<[Result<MxLabelModel, MxStackError>], MxDBError> {
         fatalError("Func not implemented")
     }
 }
 
 extension MxLabelModel {
     
-    static func fetchLabels( mailboxUID mailboxUID: MxUID) -> Result<[Result<MxLabelModel, MxModelError>], MxDBError> {
+    static func fetchLabels( mailboxId mailboxId: MxObjectId) -> Result<[Result<MxLabelModel, MxStackError>], MxDBError> {
             
-            MxLog.verbose("Processing: \(#function). Args: mailbox=\(mailboxUID)")
+            MxLog.verbose("Processing: \(#function). Args: mailbox=\(mailboxId)")
             
-            return fetchMailboxDBO( mailboxUID: mailboxUID)
+            return fetchMailboxDBO( mailboxId: mailboxId)
                 |> { $0.labels}
                 |> map(){ $0.toModel()}
             
     }
     
-    static func deleteLabels( mailboxUID mailboxUID: MxUID) -> Result< Bool, MxModelError> {
+    static func deleteLabels( mailboxId mailboxId: MxObjectId) -> Result< Bool, MxStackError> {
         
-        MxLog.verbose("Processing: \(#function). Args: mailbox=\(mailboxUID)")
+        MxLog.verbose("Processing: \(#function). Args: mailbox=\(mailboxId)")
         
-        let db = MxPersistenceManager.defaultManager().db
+        let db = MxDBLevel.defaultManager().db
         
-        switch fetchMailboxDBO( mailboxUID: mailboxUID) {
+        switch fetchMailboxDBO( mailboxId: mailboxId) {
         case let .Success(mailbox):
             
             // one can delete only USER labels
@@ -193,44 +172,34 @@ extension MxLabelModel {
             } catch {
                 
                 return .Failure(
-                    MxModelError.UnableToExecuteDBOperation(
+                    MxStackError.UnableToExecuteDBOperation(
                         operationType: MxDBOperation.MxDeleteOperation
-                        , DBOType: MxBusinessObjectEnum.Label
+                        , DBOType: MxLabelDBO.self
                         , message: "Error while calling context.remove() with args: labels\(labels)"
                         , rootError: error))
                 
             }
         case let .Failure(error):
             return Result.Failure(
-                MxModelError.UnableToExecuteDBOperation(
+                MxStackError.UnableToExecuteDBOperation(
                     operationType: MxDBOperation.MxFetchOperation
-                    , DBOType: MxBusinessObjectEnum.Mailbox
-                    , message: "Error while calling fetchMailboxDBO with args: mailboxUID\(mailboxUID)"
+                    , DBOType: MxMailboxModel.self
+                    , message: "Error while calling fetchMailboxDBO with args: mailboxId\(mailboxId)"
                     , rootError: error))
         }
     }
 }
 
 
-// MARK: - MxConvertibleToStateObject
-
-extension MxLabelModel: MxConvertibleToStateObject {
-    
-    func toSO() -> MxLabelSO {
-        let so = MxLabelSO(model: self)
-        return so
-    }
-}
-
-
-// MARK: - Remote Id
-
-final class MxLabelModelId: MxRemoteId {
-    var value: String
-    init( value: String){
-        self.value = value
-    }
-}
+//// MARK: - MxConvertibleToStateObject
+//
+//extension MxLabelModel {
+//    
+//    func toSO() -> MxLabelSO {
+//        let so = MxLabelSO(model: self)
+//        return so
+//    }
+//}
 
 
 // MARK: - Label Owner Type

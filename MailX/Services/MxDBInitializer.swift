@@ -26,7 +26,7 @@ class MxDBInitializer {
         
         for providerCode in providers.keys {
             
-            let provider = MxProviderModel(UID: MxUID(), code: providerCode)
+            let provider = MxProviderModel(id: MxObjectId(), code: providerCode)
             provider.insert()
             
         }
@@ -51,8 +51,7 @@ class MxDBInitializer {
         let providers = appProperties.providers()
         
         let mailbox = MxMailboxModel(
-            UID: MxUID()
-            , remoteId: nil
+            id: MxObjectId()
             , email: email
             , name: name
             , connected: false
@@ -68,12 +67,11 @@ class MxDBInitializer {
             let labelName = appProperties.systemLabels().labelName( labelCode: labelCode)
             
             let label = MxLabelModel(
-                UID: MxUID()
-                , remoteId: nil
+                id: MxObjectId()
                 , code: labelCode
                 , name: labelName
                 , ownerType: MxLabelOwnerType.SYSTEM
-                , mailboxUID: mailbox.UID)
+                , mailboxId: mailbox.id)
             
             MxLog.debug("Inserting label: \(label)")
             label.insert()

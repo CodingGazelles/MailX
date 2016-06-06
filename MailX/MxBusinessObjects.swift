@@ -10,75 +10,97 @@ import Foundation
 
 
 
-// Mark: - UID
+// MARK: - Business object
 
-struct MxUID: Hashable, Equatable {
+protocol MxBusinessObjectProtocol: Loggable {
+    var id: MxObjectId { get set }
+    var className: String { get }
+    var hashValue: Int { get }
+}
+
+extension MxBusinessObjectProtocol {
+    var className: String {
+        return "\(Self.self)"
+    }
+    
+    var hashValue: Int {
+        return id.hashValue
+    }
+}
+
+func ==<BO: MxBusinessObjectProtocol>(lhs: BO, rhs: BO) -> Bool{
+    return lhs.id == rhs.id
+}
+
+
+// MARK: - MxID
+
+class MxObjectId: Hashable, Equatable {
+    var internalId: MxInternalId
+    var remoteId: MxRemoteId
+    
+    convenience init() {
+        self.init( internalId: MxInternalId(), remoteId: MxRemoteId(value: nil))
+    }
+    
+    init( internalId: MxInternalId, remoteId: MxRemoteId) {
+        self.internalId = internalId
+        self.remoteId = remoteId
+    }
+    
+    var hashValue: Int {
+        return (internalId.value + remoteId.value).hashValue
+    }
+}
+
+func ==(lhs: MxObjectId, rhs: MxObjectId) -> Bool{
+    return lhs.internalId == rhs.internalId && lhs.remoteId == rhs.remoteId
+}
+
+
+// MARK: - MxInternalId
+
+class MxInternalId: Hashable, Equatable {
     var value: String
+    
     init(){
         self.value = NSUUID().UUIDString
     }
-    init(value: String){
+    
+    init( value: String) {
         self.value = value
     }
-    init(uid: MxUID){
-        self.value = uid.value
-    }
+    
     var hashValue: Int {
         return value.hashValue
     }
 }
 
-func ==(lhs: MxUID, rhs: MxUID) -> Bool{
+func ==(lhs: MxInternalId, rhs: MxInternalId) -> Bool{
     return lhs.value == rhs.value
 }
 
 
-// Mark: - Business object
+// MARK: - MxRemoteId
 
-enum MxBusinessObjectEnum {
-    case Provider
-    case Mailbox
-    case Label
-    case Message
-}
+class MxRemoteId: Hashable, Equatable {
+    var value: String
+    
+    init( value: String?) {
+        self.value = value ?? ""
+    }
 
-protocol MxBusinessObjectType: Loggable {
-    var UID: MxUID { get set }
-    var hashValue: Int { get }
-}
-
-extension MxBusinessObjectType {
     var hashValue: Int {
-        return UID.value.hashValue
+        return value.hashValue
     }
 }
 
-func ==<BO: MxBusinessObjectType>(lhs: BO, rhs: BO) -> Bool{
-    return lhs.UID == rhs.UID
+func ==(lhs: MxRemoteId, rhs: MxRemoteId) -> Bool{
+    return lhs.hashValue == rhs.hashValue
 }
 
 
-// Mark: - Error
 
-protocol MxException: ErrorType, Loggable {}
-
-enum MxError: MxException {
-    
-    // when data are incoherent or missing
-    case DataInconsistent( object: MxBusinessObjectType?, message: String, rootError: ErrorType?)
-    
-    // when can continue processing
-    case InternalStateIncoherent( operationName: String, message: String, rootError: ErrorType?)
-    
-    // when a func returns an exception
-    case OperationDidThrow( operationName: String, message: String, rootError: ErrorType? )
-    
-    // when a func return is incoherent
-    case UnexpectedReturn( operationName: String, message: String, rootError: ErrorType?)
-    
-    // when a call parameter is incoherent
-    case UnexpectedParameter( operationName: String, message: String, rootError: ErrorType?)
-}
 
 
 

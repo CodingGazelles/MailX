@@ -14,7 +14,7 @@ import Result
 
 // MARK: - MxResult
 
-extension Result where Error: MxException {
+extension Result where Error: MxExceptionProtocol {
     
 //    func unwrap() -> Value? {
 //        switch self {
@@ -37,7 +37,7 @@ extension Result where Error: MxException {
 }
 
 
-//func isSuccess(result: Result<MxBusinessObjectType, MxDBError>) -> Bool {
+//func isSuccess(result: Result<MxBusinessObjectProtocol, MxDBError>) -> Bool {
 //    switch result{
 //    case .Success:
 //        return true

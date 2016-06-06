@@ -15,43 +15,61 @@ import Pipes
 
 struct MxSetMailboxesAction: MxAction {
     var mailboxes: [MxMailboxSO]
-    var errors: [MxErrorSO]
+    var errors: [MxSOError]
 }
 
-let setMailboxesActionCreator = { (state: MxAppState) -> MxAction in
-    
-    MxLog.debug("Processing func action creator setMailboxesActionCreator")
-    
-    let result = MxMailboxModel.fetch()
-        |> map({toSO(mailbox: $0)})
 
-    switch result {
-    case let .Success(value):
+func dispatchSetMailboxesAction() {
+    
+    MxLog.debug("\(dispatchSetMailboxesAction): dispatching SetMailboxesAction")
+    
+    
+    let state = MxStateManager.defaultState()
+    let stack = MxPersistenceStackManager.sharedInstance()
+    
+    
+    state.dispatch( MxStartLoadingAction())
+    
+    let queue: dispatch_queue_t = dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)
+    dispatch_async( queue, {
         
-        let results: [MxMailboxSOResult] = value
-        
-        let mailboxes = results
-            |> filter(){ $0.value != nil}
-            |> map(){ $0.value! }
-        
-        let errors = results
-            |> filter(){ $0.error != nil}
-            |> map(){ $0.error!}
-        
-        let action = MxSetMailboxesAction(mailboxes: mailboxes, errors: errors)
-        MxLog.debug("Returning action: \(action)")
-        
-        return action
-        
-    case let .Failure(error):
-        
-        let action = MxAddErrorsAction(errors: [MxErrorSO(error: error)])
-        MxLog.debug("Returning action: \(action)")
-        
-        return action
-    }
-
+        stack.getAllObjects(objectType: MxMailboxModel.self) { result in
+            
+            dispatch_async(dispatch_get_main_queue()) {
+                
+                switch result {
+                case let .Success(results):
+                    
+                    let errors = results
+                        .filter(){ $0.error != nil }
+                        .map(){ MxSOError( error: $0.error!) }
+                    
+                    let mailboxes = results
+                        .filter(){ $0.value != nil }
+                        .map(){ MxMailboxSO(model: $0.value! as! MxMailboxModel ) }
+                    
+                    let action = MxSetMailboxesAction(mailboxes: mailboxes, errors: errors)
+                    MxLog.debug("Dispatching action: \(action)")
+                    
+                    state.dispatch(action)
+                    
+                case let .Failure(error):
+                    
+                    let action = MxAddErrorsAction(errors: [MxSOError(error: error)])
+                    MxLog.debug("Dispatching action: \(action)")
+                    
+                    state.dispatch(action)
+                    
+                }
+                
+                state.dispatch( MxStopLoadingAction())
+                
+            }
+        }
+    })
 }
+
+
 
 
 

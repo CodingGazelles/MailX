@@ -26,7 +26,7 @@ struct MxSelectLabelAction: MxAction {
 
 struct MxSetLabelsAction: MxAction {
     var labels: [MxLabelSO]
-    var errors: [MxErrorSO]
+    var errors: [MxSOError]
 }
 
 
@@ -48,7 +48,7 @@ let setLabelsActionCreator = { (state: MxAppState) -> MxAction in
                 , name: systemLabels.labelName( labelCode: $0)
                 , ownerType: MxLabelOwnerType.SYSTEM.rawValue )!}
         
-        let action = MxSetLabelsAction( labels: defaultLabels, errors: [MxErrorSO]())
+        let action = MxSetLabelsAction( labels: defaultLabels, errors: [MxSOError]())
         MxLog.debug("Returning action: \(action)")
         
         return action
@@ -65,7 +65,7 @@ let setLabelsActionCreator = { (state: MxAppState) -> MxAction in
             
             let errosSO = results
                 |> filter(){ $0.error != nil }
-                |> map(){ MxErrorSO( error: $0.error! )}
+                |> map(){ MxSOError( error: $0.error! )}
 
             let labelsSO = results
                 |> filter(){ $0.value != nil}
@@ -77,7 +77,7 @@ let setLabelsActionCreator = { (state: MxAppState) -> MxAction in
             
         case let .Failure( error):
             
-            let action = MxAddErrorsAction(errors: [MxErrorSO(error: error)])
+            let action = MxAddErrorsAction(errors: [MxSOError(error: error)])
             MxLog.debug("Returning action: \(action)")
             return action
         }

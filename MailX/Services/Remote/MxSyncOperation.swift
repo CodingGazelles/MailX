@@ -10,10 +10,6 @@ import Foundation
 
 
 
-enum MxRemoteOperationError: MxException {
-    
-}
-
 class MxSyncOperation : NSOperation {
     
     var bridge: MxMailboxBridge

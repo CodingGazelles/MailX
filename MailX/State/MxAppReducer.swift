@@ -62,7 +62,7 @@ struct MxAppReducer: Reducer {
             let message = "Reducer received an unidentified action. Unable to treat it. action: \(action)"
             
             MxLog.error( message)
-            state.errorsState.errors.appendContentsOf( [MxErrorSO(UID: nil, message: message)])
+            state.errorsState.errors.appendContentsOf( [MxSOError(UID: nil, message: message)])
             
         }
         

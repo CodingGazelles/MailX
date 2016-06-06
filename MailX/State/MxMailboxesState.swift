@@ -14,76 +14,50 @@ import Result
 
 // MARK: - State Object
 
-typealias MxMailboxSOResult = Result<MxMailboxSO, MxErrorSO>
+typealias MxMailboxSOResult = Result<MxMailboxSO, MxSOError>
 
-struct MxMailboxSO: MxStateObjectType {
+struct MxMailboxSO: MxStateObjectProtocol {
     
-    var UID: MxUID
-    var remoteId: String?
+    var id: MxObjectId
+    var email: String
     var name: String
     var connected: Bool
+    var providerCode: String
     
-    init(UID: MxUID?, remoteId: String?, name: String, connected: Bool){
-        self.UID = UID ?? MxUID()
-        self.remoteId = remoteId
+    init( id: MxObjectId, email: String, name: String, connected: Bool, providerCode: String){
+        self.id = id
+        self.email = email
         self.name = name
         self.connected = connected
+        self.providerCode = providerCode
     }
     
-    init(mailboxSO: MxMailboxSO){
-        self.init(
-            UID: mailboxSO.UID
-            , remoteId: mailboxSO.remoteId
-            , name: mailboxSO.name
-            , connected: mailboxSO.connected)
-    }
 }
 
 extension MxMailboxSO: MxInitWithModel {
     init( model: MxMailboxModel){
         self.init(
-            UID: model.UID
-            , remoteId: model.remoteId?.value
+            id: model.id
+            , email: model.email
             , name: model.name
-            , connected: model.connected)
+            , connected: model.connected
+            , providerCode: model.providerCode)
     }
 }
 
-func toSO( mailbox mailbox: Result<MxMailboxModel, MxModelError> ) -> MxMailboxSOResult {
-    switch mailbox {
-    case let .Success(model):
-        return Result.Success( MxMailboxSO(model: model))
-    case let .Failure( error):
-        return Result.Failure( errorSO(error: error))
-    }
-}
+//func toSO( mailbox mailbox: Result<MxMailboxModel, MxStackError> ) -> MxMailboxSOResult {
+//    switch mailbox {
+//    case let .Success(model):
+//        return Result.Success( MxMailboxSO(model: model))
+//    case let .Failure( error):
+//        return Result.Failure( errorSO(error: error))
+//    }
+//}
+//
 
 
-// MARK: - State
 
-struct MxMailboxesState: MxStateType {
-    
-    var allMailboxes = [MxMailboxSO]()
-    var mailboxSelection = MxMailboxSelection.None
-    
-    enum MxMailboxSelection {
-        case All
-        case One(MxMailboxSO)
-        case None
-    }
-    
-    func selectedMailbox() -> [MxMailboxSO]{
-        switch mailboxSelection {
-        case .All:
-            return allMailboxes
-        case .None:
-            return []
-        case .One(let selectedMailbox):
-            return [selectedMailbox]
-        }
-    }
-    
-}
+
 
 
 

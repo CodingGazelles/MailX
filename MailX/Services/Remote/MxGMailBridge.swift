@@ -13,11 +13,6 @@ import GTMOAuth2
 
 
 
-enum MxBridgeError: MxException {
-    case ProviderReturnedConnectionError( rootError: ErrorType)
-    case ProviderReturnedFetchError( rootError: ErrorType)
-}
-
 class MxGMailBridge : NSObject, MxMailboxBridge {
     
     var mailbox: MxMailboxModel
@@ -187,12 +182,11 @@ class MxGMailBridge : NSObject, MxMailboxBridge {
             for response in labelsResponse.labels as! [GTLGmailLabel] {
                 
                 let label = MxLabelModel(
-                    UID: nil
-                    , remoteId: MxLabelModel.Id(value: response.identifier)
+                    id: MxObjectId( internalId: MxInternalId(), remoteId: MxRemoteId(value: response.identifier))
                     , code: response.name
                     , name: ""
                     , ownerType: MxLabelOwnerType.SYSTEM
-                    , mailboxUID: mailbox.UID)
+                    , mailboxId: mailbox.id)
                     
                 labels.append(label)
                 
@@ -208,14 +202,14 @@ class MxGMailBridge : NSObject, MxMailboxBridge {
     
     //MARK: - Fetch remote messages
     
-    func sendFetchMessagesInLabelRequest(labelId labelId: MxLabelModel.Id, completionHandler: MxFetchMessagesInLabelCompletionHandler) {
+    func sendFetchMessagesInLabelRequest(labelId labelId: MxObjectId, completionHandler: MxFetchMessagesInLabelCompletionHandler) {
         
         MxLog.debug("Processing \(#function)")
         
         self.fetchMessagesInLabelCompletionHandler = completionHandler
         
         let query = GTLQueryGmail.queryForUsersMessagesList()
-        query.labelIds = [labelId.value]
+        query.labelIds = [labelId.remoteId.value]
         
         //    [query setLabelIds: labelsArray];
         
@@ -252,10 +246,9 @@ class MxGMailBridge : NSObject, MxMailboxBridge {
                     MxLog.debug("Message:\(response)")
                     
                     let message = MxMessageModel(
-                        UID: nil
-                        , remoteId: MxMessageModelId( value: response.identifier)
+                        id: MxObjectId( internalId: MxInternalId(), remoteId: MxRemoteId( value: response.identifier))
                         , value: ""
-                        , labelIds: [MxLabelModelId]()
+                        , labelIds: [MxObjectId]()
                     )
                     messages.append( message)
                 }
