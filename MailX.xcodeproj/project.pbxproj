@@ -10,6 +10,9 @@
 		78156F2C38FF98059753DA3D /* Pods_MailX.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 666015A3551CB8A57FA51D6C /* Pods_MailX.framework */; };
 		DF241EF91D03D80900C61196 /* MxNetworkLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF241EF81D03D80900C61196 /* MxNetworkLevel.swift */; };
 		DF241EFB1D0502B600C61196 /* MxErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF241EFA1D0502B600C61196 /* MxErrors.swift */; };
+		DF241EFE1D05C02600C61196 /* BrightFutures.framework.dSYM in Resources */ = {isa = PBXBuildFile; fileRef = DF241EFC1D05C02600C61196 /* BrightFutures.framework.dSYM */; };
+		DF241EFF1D05C02600C61196 /* BrightFutures.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF241EFD1D05C02600C61196 /* BrightFutures.framework */; };
+		DF2AA0A51D07A24100B215D3 /* MxStackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFBBCEF31D034AB900D8BB4E /* MxStackManager.swift */; };
 		DF2E22301CFC8B4500F303F5 /* Box.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF2E221E1CFC8A7700F303F5 /* Box.framework */; };
 		DF2E22311CFC8B4500F303F5 /* Box.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DF2E221E1CFC8A7700F303F5 /* Box.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DF2E22321CFC8B4500F303F5 /* ReactiveCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF2E221F1CFC8A7700F303F5 /* ReactiveCocoa.framework */; };
@@ -77,7 +80,6 @@
 		DFB84F2C1CEB51980088090D /* MxProvidersState.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB84F291CEB51980088090D /* MxProvidersState.swift */; };
 		DFBBCEED1D01EEAE00D8BB4E /* MxMailboxModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFBBCEEC1D01EEAE00D8BB4E /* MxMailboxModel.swift */; };
 		DFBBCEF01D02D79B00D8BB4E /* MxUIStateObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFBBCEEF1D02D79B00D8BB4E /* MxUIStateObjects.swift */; };
-		DFBBCEF41D034AB900D8BB4E /* MxPersistenceStackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFBBCEF31D034AB900D8BB4E /* MxPersistenceStackManager.swift */; };
 		DFBBCEF61D034DE300D8BB4E /* MxMemoryLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFBBCEF51D034DE300D8BB4E /* MxMemoryLevel.swift */; };
 		DFBBCEF81D03951800D8BB4E /* MxStackProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFBBCEF71D03951800D8BB4E /* MxStackProtocols.swift */; };
 		DFBBCEFA1D03999500D8BB4E /* MxMemoryCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFBBCEF91D03999500D8BB4E /* MxMemoryCache.swift */; };
@@ -101,7 +103,7 @@
 		DFE26F291CEF56F100FB401A /* MxAppStateActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE26F261CEF56F100FB401A /* MxAppStateActions.swift */; };
 		DFE26F2C1CEF570100FB401A /* MxAppReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE26F2A1CEF570100FB401A /* MxAppReducer.swift */; };
 		DFE26F2D1CEF570100FB401A /* MxLabelReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE26F2B1CEF570100FB401A /* MxLabelReducer.swift */; };
-		DFE26F2F1CEF7B2700FB401A /* MxStateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE26F2E1CEF7B2700FB401A /* MxStateManager.swift */; };
+		DFE26F2F1CEF7B2700FB401A /* MxStoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE26F2E1CEF7B2700FB401A /* MxStoreManager.swift */; };
 		DFE26F311CEF7CB400FB401A /* MxStateArchiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE26F301CEF7CB400FB401A /* MxStateArchiver.swift */; };
 		DFE26F331CEF91B800FB401A /* MxPropertiesState.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE26F321CEF91B800FB401A /* MxPropertiesState.swift */; };
 		DFE26F351CEF9B6B00FB401A /* MxAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFE26F341CEF9B6B00FB401A /* MxAction.swift */; };
@@ -177,6 +179,8 @@
 		666015A3551CB8A57FA51D6C /* Pods_MailX.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MailX.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DF241EF81D03D80900C61196 /* MxNetworkLevel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MxNetworkLevel.swift; sourceTree = "<group>"; };
 		DF241EFA1D0502B600C61196 /* MxErrors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MxErrors.swift; sourceTree = "<group>"; };
+		DF241EFC1D05C02600C61196 /* BrightFutures.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = BrightFutures.framework.dSYM; path = Carthage/Build/Mac/BrightFutures.framework.dSYM; sourceTree = SOURCE_ROOT; };
+		DF241EFD1D05C02600C61196 /* BrightFutures.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BrightFutures.framework; path = Carthage/Build/Mac/BrightFutures.framework; sourceTree = SOURCE_ROOT; };
 		DF2E221E1CFC8A7700F303F5 /* Box.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Box.framework; path = Carthage/Build/Mac/Box.framework; sourceTree = SOURCE_ROOT; };
 		DF2E221F1CFC8A7700F303F5 /* ReactiveCocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ReactiveCocoa.framework; path = Carthage/Build/Mac/ReactiveCocoa.framework; sourceTree = SOURCE_ROOT; };
 		DF2E22201CFC8A7700F303F5 /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Realm.framework; path = Carthage/Build/Mac/Realm.framework; sourceTree = SOURCE_ROOT; };
@@ -245,7 +249,7 @@
 		DFB84F291CEB51980088090D /* MxProvidersState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxProvidersState.swift; path = State/MxProvidersState.swift; sourceTree = "<group>"; };
 		DFBBCEEC1D01EEAE00D8BB4E /* MxMailboxModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxMailboxModel.swift; path = Model/MxMailboxModel.swift; sourceTree = "<group>"; };
 		DFBBCEEF1D02D79B00D8BB4E /* MxUIStateObjects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxUIStateObjects.swift; path = State/MxUIStateObjects.swift; sourceTree = "<group>"; };
-		DFBBCEF31D034AB900D8BB4E /* MxPersistenceStackManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MxPersistenceStackManager.swift; sourceTree = "<group>"; };
+		DFBBCEF31D034AB900D8BB4E /* MxStackManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MxStackManager.swift; sourceTree = "<group>"; };
 		DFBBCEF51D034DE300D8BB4E /* MxMemoryLevel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MxMemoryLevel.swift; sourceTree = "<group>"; };
 		DFBBCEF71D03951800D8BB4E /* MxStackProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MxStackProtocols.swift; sourceTree = "<group>"; };
 		DFBBCEF91D03999500D8BB4E /* MxMemoryCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MxMemoryCache.swift; sourceTree = "<group>"; };
@@ -264,7 +268,7 @@
 		DFE26F261CEF56F100FB401A /* MxAppStateActions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxAppStateActions.swift; path = State/MxAppStateActions.swift; sourceTree = "<group>"; };
 		DFE26F2A1CEF570100FB401A /* MxAppReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxAppReducer.swift; path = State/MxAppReducer.swift; sourceTree = "<group>"; };
 		DFE26F2B1CEF570100FB401A /* MxLabelReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxLabelReducer.swift; path = State/MxLabelReducer.swift; sourceTree = "<group>"; };
-		DFE26F2E1CEF7B2700FB401A /* MxStateManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxStateManager.swift; path = State/MxStateManager.swift; sourceTree = "<group>"; };
+		DFE26F2E1CEF7B2700FB401A /* MxStoreManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxStoreManager.swift; path = State/MxStoreManager.swift; sourceTree = "<group>"; };
 		DFE26F301CEF7CB400FB401A /* MxStateArchiver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MxStateArchiver.swift; sourceTree = "<group>"; };
 		DFE26F321CEF91B800FB401A /* MxPropertiesState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxPropertiesState.swift; path = State/MxPropertiesState.swift; sourceTree = "<group>"; };
 		DFE26F341CEF9B6B00FB401A /* MxAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxAction.swift; path = State/MxAction.swift; sourceTree = "<group>"; };
@@ -278,6 +282,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DFD44ABC1D010820001DF6F5 /* CleanroomLogger.framework in Frameworks */,
+				DF241EFF1D05C02600C61196 /* BrightFutures.framework in Frameworks */,
 				DFB84EF11CEAB62B0088090D /* GTL.framework in Frameworks */,
 				DF2E223C1CFC8B4500F303F5 /* RxSwift.framework in Frameworks */,
 				DFB84ED31CEAB24D0088090D /* SystemConfiguration.framework in Frameworks */,
@@ -328,6 +333,7 @@
 		DF2E22531CFC8BD300F303F5 /* dSYM */ = {
 			isa = PBXGroup;
 			children = (
+				DF241EFC1D05C02600C61196 /* BrightFutures.framework.dSYM */,
 				DFD44AB21D010796001DF6F5 /* CleanroomASL.framework.dSYM */,
 				DFD44AB31D010796001DF6F5 /* CleanroomLogger.framework.dSYM */,
 				DF2E22411CFC8BAC00F303F5 /* ReactiveCocoa.framework.dSYM */,
@@ -343,10 +349,10 @@
 			name = dSYM;
 			sourceTree = "<group>";
 		};
-		DFA313061CF0E3F600500607 /* PersistenceStack */ = {
+		DFA313061CF0E3F600500607 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				DFBBCEF31D034AB900D8BB4E /* MxPersistenceStackManager.swift */,
+				DFBBCEF31D034AB900D8BB4E /* MxStackManager.swift */,
 				DFB84EB81CEAB03F0088090D /* MxSyncManager.swift */,
 				DFBBCEF71D03951800D8BB4E /* MxStackProtocols.swift */,
 				DFB84EA71CEAABF30088090D /* ModelObjects */,
@@ -354,7 +360,7 @@
 				DFBBCEF21D02D97D00D8BB4E /* DB */,
 				DFB84EBD1CEAB0BC0088090D /* Network */,
 			);
-			name = PersistenceStack;
+			name = Model;
 			sourceTree = "<group>";
 		};
 		DFB84E2F1CEAA72D0088090D = {
@@ -387,7 +393,7 @@
 				DFA313071CF1290900500607 /* MxBusinessObjects.swift */,
 				DF241EFA1D0502B600C61196 /* MxErrors.swift */,
 				DFE26F171CEE99E200FB401A /* UI */,
-				DFA313061CF0E3F600500607 /* PersistenceStack */,
+				DFA313061CF0E3F600500607 /* Model */,
 				DFB84E811CEAA8BD0088090D /* Deps */,
 				DFB84EA41CEAAB4A0088090D /* Helpers */,
 				DFB84E661CEAA8560088090D /* MailX-Bridging-Header.h */,
@@ -420,6 +426,7 @@
 			isa = PBXGroup;
 			children = (
 				DF2E22531CFC8BD300F303F5 /* dSYM */,
+				DF241EFD1D05C02600C61196 /* BrightFutures.framework */,
 				DFD44AB41D010796001DF6F5 /* CleanroomASL.framework */,
 				DFD44AB51D010796001DF6F5 /* CleanroomLogger.framework */,
 				DF2E221E1CFC8A7700F303F5 /* Box.framework */,
@@ -605,7 +612,7 @@
 				DFB84EFE1CEABA2F0088090D /* UIState */,
 				DFB84EB41CEAB0020088090D /* UserActions */,
 				DFBBCEEE1D02D6BF00D8BB4E /* StateObjects */,
-				DFE26F2E1CEF7B2700FB401A /* MxStateManager.swift */,
+				DFE26F2E1CEF7B2700FB401A /* MxStoreManager.swift */,
 				DFE26F301CEF7CB400FB401A /* MxStateArchiver.swift */,
 			);
 			name = UI;
@@ -720,6 +727,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DF241EFE1D05C02600C61196 /* BrightFutures.framework.dSYM in Resources */,
 				DFB84E401CEAA72E0088090D /* Assets.xcassets in Resources */,
 				DFB84EA61CEAAB8A0088090D /* Properties.plist in Resources */,
 				DF2FFBA41CFCB29A001DF44F /* MailXStoryboard.storyboard in Resources */,
@@ -804,6 +812,7 @@
 				DFA313081CF1290A00500607 /* MxBusinessObjects.swift in Sources */,
 				DFB84EBC1CEAB03F0088090D /* MxSyncManager.swift in Sources */,
 				DF4479401CEB689000E3A685 /* MxLabelModel.swift in Sources */,
+				DF2AA0A51D07A24100B215D3 /* MxStackManager.swift in Sources */,
 				DFE26F271CEF56F100FB401A /* MxLabelActions.swift in Sources */,
 				DFE26F371CEFA3EE00FB401A /* MxMailboxActions.swift in Sources */,
 				DFB84EC81CEAB0DD0088090D /* MxGMailBridge.swift in Sources */,
@@ -826,7 +835,6 @@
 				DFB84E7F1CEAA8580088090D /* MxUserPreferences.swift in Sources */,
 				DF241EFB1D0502B600C61196 /* MxErrors.swift in Sources */,
 				DFB84EAF1CEAABFF0088090D /* MxModelObjects.swift in Sources */,
-				DFBBCEF41D034AB900D8BB4E /* MxPersistenceStackManager.swift in Sources */,
 				DFB84E3C1CEAA72E0088090D /* AppDelegate.swift in Sources */,
 				DFA313031CF0C02600500607 /* MxErrorActions.swift in Sources */,
 				DFB84EBB1CEAB03F0088090D /* MxDBLevel.swift in Sources */,
@@ -841,7 +849,7 @@
 				DFE26F311CEF7CB400FB401A /* MxStateArchiver.swift in Sources */,
 				DFB84E7D1CEAA8580088090D /* MxLogs.swift in Sources */,
 				DFB84EAD1CEAABFF0088090D /* MxDBObjects.swift in Sources */,
-				DFE26F2F1CEF7B2700FB401A /* MxStateManager.swift in Sources */,
+				DFE26F2F1CEF7B2700FB401A /* MxStoreManager.swift in Sources */,
 				DFBBCEF81D03951800D8BB4E /* MxStackProtocols.swift in Sources */,
 				DFE26F2D1CEF570100FB401A /* MxLabelReducer.swift in Sources */,
 				DFB84EC71CEAB0DD0088090D /* MxFetchMessagesInLabelOperation.swift in Sources */,

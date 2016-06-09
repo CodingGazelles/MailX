@@ -9,6 +9,7 @@
 import Foundation
 
 import Result
+import BrightFutures
 
 
 
@@ -23,67 +24,125 @@ class MxMemoryLevel: MxStackLevelProtocol {
                         "\(MxMessageModel.self)"    :   MxMemoryCache<MxMessageModel>()     ]
     }
     
-    func getObject( id id: MxObjectId, objectType: Any.Type, callback: (Result<MxModelObjectProtocol,MxStackError>) -> Void) {
+    func getObject<T: MxModelObjectProtocol>( id id: MxObjectId) -> Future<T,MxStackError> {
         
-        let result = cache(objectType: objectType).getObject(key: id)
+        MxLog.debug("\(#function) searching for object \(T.self) with \(id) in memory cache")
         
-        guard result != nil else {
+        let promise = Promise<T, MxStackError>()
+        
+        ImmediateExecutionContext {
+         
+            let cache: MxMemoryCache<T> = self.cache()
+            let result = cache.getObject(key: id)
             
-            return callback( .Failure( MxStackError.ModelObjectNotFound(
-                id: id,
-                message: nil,
-                rootError: nil)))
+            if result != nil {
+                
+                MxLog.debug("Found \(result)")
+                
+                promise.success(result!)
+                
+            } else {
+                
+                let error = MxStackError.SearchFailed(
+                    object: id,
+                    typeName: "\(T.self)",
+                    message: "Failed at searching for object \(T.self) with id \(id) in memory cache",
+                    rootError: nil)
+                
+                MxLog.error(error.description)
+                
+                promise.failure(error)
+            }
+            
         }
         
-        callback( .Success(result!))
+        return promise.future
     }
     
-    func getAllObjects(
-        objectType objectType: Any.Type,
-                   callback: (Result<[Result<MxModelObjectProtocol,MxStackError>],MxStackError>) -> Void)
-    {
+    
+    func getAllObjects<T: MxModelObjectProtocol>() -> Future<[Result<T,MxStackError>],MxStackError> {
         
-        let results = cache(objectType: objectType).getAllObjects()
-            .map{ (mo: MxModelObjectProtocol) -> Result<MxModelObjectProtocol,MxStackError> in
+        MxLog.debug("\(#function) searching for all objects \(T.self) in memory cache")
+        
+        let promise = Promise<[Result<T,MxStackError>],MxStackError>()
+        
+        ImmediateExecutionContext {
+        
+            let cache: MxMemoryCache<T> = self.cache()
+            let results = cache.getAllObjects()
+            .map{ (mo: T) -> Result<T,MxStackError> in
                 return .Success( mo ) }
         
-        callback( .Success(results))
-        
-    }
-    
-    func setObject(
-        object object: MxModelObjectProtocol,
-               objectType: Any.Type,
-               callback: (Result<MxModelObjectProtocol,MxStackError>) -> Void)
-    {
-        
-        cache(objectType: objectType).setObject(object: object, key: object.id)
-        callback( .Success(object))
-        
-    }
-
-    func removeObject(
-        id id: MxObjectId,
-           objectType: Any.Type,
-           callback: (Result<MxModelObjectProtocol,MxStackError>) -> Void)
-    {
-        
-        let result = cache(objectType: objectType).removeObject(key: id)
-        
-        guard result != nil else {
+            MxLog.debug("Search succeeded \(results)")
             
-            return callback( .Failure( MxStackError.ModelObjectNotFound(
-                id: id,
-                message: nil,
-                rootError: nil)))
+            promise.success( results)
+            
         }
         
-        callback( .Success(result!))
+        return promise.future
+    }
+    
+    
+    func setObject<T: MxModelObjectProtocol>( object object: T) -> Future<T,MxStackError> {
+        
+        MxLog.debug("\(#function) inserting object \(object) in memory cache")
+        
+        let promise = Promise<T,MxStackError>()
+        
+        ImmediateExecutionContext {
+        
+            let cache: MxMemoryCache<T> = self.cache()
+            cache.setObject(object: object, key: object.id)
+            
+            MxLog.debug("Set succeeded \(object)")
+            
+            promise.success(object)
+            
+        }
+        
+        return promise.future
+    }
+    
+
+    func removeObject<T: MxModelObjectProtocol>( id id: MxObjectId) -> Future<T,MxStackError> {
+        
+        MxLog.debug("\(#function) removing object \(T.self) with \(id) from memory cache")
+        
+        let promise = Promise<T,MxStackError>()
+        
+        ImmediateExecutionContext {
+            
+            let cache: MxMemoryCache<T> = self.cache()
+            let result = cache.removeObject(key: id)
+            
+            if result != nil {
+                
+                MxLog.debug("Remove succeeded \(result!)")
+                
+                promise.success(result!)
+                
+            } else {
+                
+                let error = MxStackError.DeleteFailed(
+                    object: id,
+                    typeName: "\(T.self)",
+                    message: "Failed at deleting of object \(T.self) fwith id \(id) from memory cache",
+                    rootError: nil)
+                
+                MxLog.error(error.description)
+                
+                promise.failure(error)
+                
+            }
+            
+        }
+        
+        return promise.future
         
     }
     
-    private func cache(objectType objectType: Any.Type) -> MxMemoryBaseCache {
-        return _caches["\(objectType)"]!
+    private func cache<T: MxModelObjectProtocol>() -> MxMemoryCache<T> {
+        return _caches["\(T.self)"]! as! MxMemoryCache<T>
     }
     
 }

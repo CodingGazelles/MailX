@@ -12,18 +12,18 @@ import Foundation
 
 class MxMemoryBaseCache {
     
-    func setObject( object object: MxBusinessObjectProtocol, key: MxObjectId) {
-        fatalError("Function not implemented")
-    }
-    func getObject( key key: MxObjectId) -> MxModelObjectProtocol? {
-        fatalError("Function not implemented")
-    }
-    func getAllObjects() -> [MxModelObjectProtocol] {
-        fatalError("Function not implemented")
-    }
-    func removeObject( key key: MxObjectId) -> MxModelObjectProtocol? {
-        fatalError("Function not implemented")
-    }
+//    func setObject( object object: MxBusinessObjectProtocol, key: MxObjectId) {
+//        fatalError("Function not implemented")
+//    }
+//    func getObject( key key: MxObjectId) -> MxModelObjectProtocol? {
+//        fatalError("Function not implemented")
+//    }
+//    func getAllObjects() -> [MxModelObjectProtocol] {
+//        fatalError("Function not implemented")
+//    }
+//    func removeObject( key key: MxObjectId) -> MxModelObjectProtocol? {
+//        fatalError("Function not implemented")
+//    }
     
 }
 

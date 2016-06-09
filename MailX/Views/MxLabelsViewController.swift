@@ -16,7 +16,7 @@ class MxLabelsViewController: NSViewController {
     
     let kLabelViewIdentifier = "LabelView"
     
-    let storeManager = MxStateManager.defaultManager()
+    let state = MxStoreManager.defaultStore()
     
     // IBOutlets
     @IBOutlet weak var tableView: NSTableView!
@@ -28,9 +28,9 @@ class MxLabelsViewController: NSViewController {
     @IBAction func showAllLabelsButtonTapped( sender: AnyObject){
         switch showAllLabels {
         case true:
-            storeManager.dispatch(MxShowDefaultsLabelsAction())
+            state.dispatch(MxShowDefaultsLabelsAction())
         case false:
-            storeManager.dispatch(MxShowAllLabelsAction())
+            state.dispatch(MxShowAllLabelsAction())
         }
     }
     
@@ -46,13 +46,13 @@ extension MxLabelsViewController: StoreSubscriber {
     override func viewWillAppear() {
         super.viewWillAppear()
         
-        storeManager.store.subscribe(self)
+        state.store.subscribe(self)
     }
     
     override func viewWillDisappear() {
         super.viewWillDisappear()
         
-        storeManager.store.unsubscribe(self)
+        state.store.unsubscribe(self)
     }
     
     func newState(state: MxAppState) {

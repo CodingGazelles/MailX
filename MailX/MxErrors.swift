@@ -35,48 +35,32 @@ enum MxError: MxExceptionProtocol {
 
 enum MxStackError: MxExceptionProtocol {
     
-    case ModelObjectNotFound( id: MxObjectId, message: String?, rootError: MxExceptionProtocol?)
-    case UndexpectedError( object: Any, message: String?, rootError: MxExceptionProtocol?)
-    case ModelError( object: Any, message: String?, rootError: MxExceptionProtocol?)
-    case MemoryError( object: Any, message: String?, rootError: MxExceptionProtocol?)
-    case DBError( object: Any, message: String?, rootError: MxExceptionProtocol?)
-    case NetworkError( object: Any, message: String?, rootError: MxExceptionProtocol?)
+    case SearchFailed( object: Any?, typeName: String, message: String, rootError: ErrorType?)
+    case InsertFailed( object: Any?, typeName: String, message: String, rootError: ErrorType?)
+    case UpdateFailed( object: Any?, typeName: String, message: String, rootError: ErrorType?)
+    case DeleteFailed( object: Any?, typeName: String, message: String, rootError: ErrorType?)
+    
+    case ModelError( object: Any?, message: String, rootError: ErrorType?)
+    
+    case MemoryError( object: Any?, message: String, rootError: ErrorType?)
+    case DBError( object: Any?, message: String, rootError: ErrorType?)
+    case NetworkError( object: Any?, message: String, rootError: ErrorType?)
+    
+    case UndexpectedError( object: Any?, message: String, rootError: ErrorType?)
     
 }
 
 
 // MARK: - DB Error
 
-enum MxDBOperation {
-    case MxInsertOperation
-    case MxDeleteOperation
-    case MxUodateOperation
-    case MxFetchOperation
-    case MxCreateOperation
-}
-
 enum MxDBError: MxExceptionProtocol {
+
+    case FetchError( object: Any?, typeName: String, message: String, rootError: ErrorType?)
+    case InsertError( object: Any?, typeName: String, message: String, rootError: ErrorType?)
+    case UpdateError( object: Any?, typeName: String, message: String, rootError: ErrorType?)
+    case DeleteError( object: Any?, typeName: String, message: String, rootError: ErrorType?)
     
-    case UnableToExecuteOperation(
-        operationType: MxDBOperation
-        , DBOType: Any.Type
-        , message: String
-        , rootError: ErrorType?)
-    
-    case DataInconsistent(
-        object: MxBusinessObjectProtocol
-        , message: String)
-    
-    case UnableToConvertDBOToModel(
-        dbo: MxDBOType
-        , message: String
-        , rootError: ErrorType?)
-    
-    case UnableToExecuteDBOperation(
-        operationType: MxDBOperation
-        , DBOType: Any.Type
-        , message: String
-        , rootError: ErrorType?)
+    case UndexpectedError( object: Any?, message: String, rootError: MxExceptionProtocol?)
 }
 
 

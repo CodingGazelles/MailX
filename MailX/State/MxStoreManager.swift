@@ -12,10 +12,10 @@ import ReSwift
 
 
 
-class MxStateManager {
+class MxStoreManager {
     
-    private static let appStore = MxStateManager()
-    static func defaultState() -> MxStateManager {
+    private static let appStore = MxStoreManager()
+    static func defaultStore() -> MxStoreManager {
         return appStore
     }
     
@@ -23,6 +23,12 @@ class MxStateManager {
     typealias ReActionCreator = (state: MxAppState, store: Store<MxAppState>) -> Action?
     
     let store = Store<MxAppState>(reducer: MxAppReducer(), state: nil, middleware: [])
+    
+    var state: MxAppState {
+        get {
+            return store.state
+        }
+    }
     
     func dispatch(action: Action) -> Any {
         MxLog.debug("Dispatching action: \(action)")
@@ -57,10 +63,12 @@ class MxStateManager {
             dispatch( MxSetPropertiesAction(properties: MxPropertiesState.readDefaultProperties()))
             
             MxLog.verbose("Dispatching loadMailboxes")
+            
             dispatchSetMailboxesAction()
             
             MxLog.verbose("Dispatching setLabelsActionCreator")
-            dispatch( setLabelsActionCreator)
+            
+            dispatchSetLabelsAction()
             
 //            dispatch( loadAllMessages)
             
@@ -68,6 +76,7 @@ class MxStateManager {
     }
     
     func loadLastSavedState() -> MxAppState {
+        
         MxLog.info("Loading state")
         
         guard let state = MxAppState.readSavedState() else {

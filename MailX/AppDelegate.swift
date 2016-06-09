@@ -19,7 +19,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         return MxSyncManager.defaultManager()
     }()
     
-    lazy var stateManager = MxStateManager.defaultManager()
+    lazy var stateManager = MxStoreManager.defaultStore()
     
     
     func applicationDidFinishLaunching(aNotification: NSNotification) {

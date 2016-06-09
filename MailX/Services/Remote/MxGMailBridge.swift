@@ -247,10 +247,10 @@ class MxGMailBridge : NSObject, MxMailboxBridge {
                     
                     let message = MxMessageModel(
                         id: MxObjectId( internalId: MxInternalId(), remoteId: MxRemoteId( value: response.identifier))
-                        , value: ""
-                        , labelIds: [MxObjectId]()
-                    )
+                        , value: "")
+                    
                     messages.append( message)
+                    
                 }
             } else {
                 MxLog.verbose( "No message found.")

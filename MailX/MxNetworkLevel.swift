@@ -8,6 +8,28 @@
 
 import Foundation
 
+import BrightFutures
+import Result
 
 
-class MxNetworkLevel: MxStackLevelProtocol {}
+
+class MxNetworkLevel: MxStackLevelProtocol {
+
+
+    func getObject<T: MxModelObjectProtocol>( id id: MxObjectId) -> Future<T,MxStackError> {
+        fatalError("Func not implemented")
+    }
+    
+    func getAllObjects<T: MxModelObjectProtocol>() -> Future<[Result<T,MxStackError>],MxStackError> {
+        fatalError("Func not implemented")
+    }
+    
+    func setObject<T: MxModelObjectProtocol>(object object: T) -> Future<T,MxStackError> {
+        fatalError("Func not implemented")
+    }
+    
+    func removeObject<T: MxModelObjectProtocol>(id id: MxObjectId) -> Future<T,MxStackError> {
+        fatalError("Func not implemented")
+    }
+    
+}

@@ -30,72 +30,80 @@ extension MxProviderModel: MxLocalPersistable {
     convenience init( dbo: MxProviderDBO){
         self.init(
             id: dbo.id
-            , code: dbo.code)
+            , code: dbo.code
+            , name: dbo.name)
         
     }
     
-    
-    // MARK: - Insert
-    
-    func insert() -> Result<Bool, MxStackError> {
+    func updateDBO( dbo dbo: MxProviderDBO) {
         
-        MxLog.verbose("Processing: \(#function). Args: provider=\(self) ")
+        dbo.id = self.id
+        dbo.code = self.code
+        dbo.name = self.name
         
-        let db = MxDBLevel.defaultManager().db
-        
-        do {
-            
-            try db.operation{ (context, save) throws -> Void in
-                
-                let newProviderDbo: MxProviderDBO = try context.create()
-                
-                newProviderDbo.id = self.id
-                newProviderDbo.code = self.code
-                
-                save()
-                
-            }
-            return .Success(true)
-            
-        } catch {
-            
-            return Result.Failure(
-                MxStackError.UnableToExecuteDBOperation(
-                    operationType: MxDBOperation.MxCreateOperation
-                    , DBOType: MxProviderDBO.self
-                    , message: "Error while calling context.create on MxProviderDBO. Args: provider=\(self)"
-                    , rootError: error))
-        }
     }
     
+//    // MARK: - Insert
+//    
+//    func insert() -> Result<Bool, MxStackError> {
+//        
+//        MxLog.verbose("Processing: \(#function). Args: provider=\(self) ")
+//        
+//        let db = MxDBLevel.defaultManager().db
+//        
+//        do {
+//            
+//            try db.operation{ (context, save) throws -> Void in
+//                
+//                let newProviderDbo: MxProviderDBO = try context.create()
+//                
+//                newProviderDbo.id = self.id
+//                newProviderDbo.code = self.code
+//                
+//                save()
+//                
+//            }
+//            return .Success(true)
+//            
+//        } catch {
+//            
+//            return Result.Failure(
+//                MxStackError.UnableToExecuteDBOperation(
+//                    operationType: MxDBOperation.MxCreateOperation
+//                    , DBOType: MxProviderDBO.self
+//                    , message: "Error while calling context.create on MxProviderDBO. Args: provider=\(self)"
+//                    , rootError: error))
+//        }
+//    }
     
-    // MARK: - Delete
     
-    func delete() -> Result<Bool, MxStackError> {
-        fatalError("Func not implemented")
-    }
-    
-    static func delete( uids uids: [MxInternalId]) -> Result<Bool, MxStackError> {
-        fatalError("Func not implemented")
-    }
-    
-    
-    // MARK: - Update
-    
-    func update() -> Result<Bool, MxStackError> {
-        fatalError("Func not implemented")
-    }
-    
-    
-    // MARK: - Fetch
-    
-    static func fetch( uid uid: MxInternalId) -> Result<MxProviderModel, MxStackError> {
-        fatalError("Func not implemented")
-    }
-    
-    static func fetch( uids uids: [MxInternalId]) -> Result<[Result<MxProviderModel, MxStackError>], MxDBError> {
-        fatalError("Func not implemented")
-    }
+//    // MARK: - Delete
+//    
+//    func delete() -> Result<Bool, MxStackError> {
+//        fatalError("Func not implemented")
+//    }
+//    
+//    static func delete( uids uids: [MxInternalId]) -> Result<Bool, MxStackError> {
+//        fatalError("Func not implemented")
+//    }
+//    
+//    
+//    // MARK: - Update
+//    
+//    func update() -> Result<Bool, MxStackError> {
+//        fatalError("Func not implemented")
+//    }
+//    
+//    
+//    // MARK: - Fetch
+//    
+//    static func fetch( uid uid: MxInternalId) -> Result<MxProviderModel, MxStackError> {
+//        fatalError("Func not implemented")
+//    }
+//    
+//    static func fetch( uids uids: [MxInternalId]) -> Result<[Result<MxProviderModel, MxStackError>], MxDBError> {
+//        fatalError("Func not implemented")
+//    }
 }
 
 //extension MxProviderModel: MxSOConvertibleProtocol {

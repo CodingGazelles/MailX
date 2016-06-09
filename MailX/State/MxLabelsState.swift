@@ -21,8 +21,9 @@ struct MxLabelSO: MxStateObjectProtocol {
     var code: String
     var name: String
     var ownerType: String
+    var mailboxId: MxObjectId
     
-    init?( id: MxObjectId, code: String, name: String, ownerType: String){
+    init?( id: MxObjectId, code: String, name: String, ownerType: String, mailboxId: MxObjectId){
         
         guard MxLabelOwnerType(rawValue: ownerType) != nil else {
             return nil
@@ -32,6 +33,7 @@ struct MxLabelSO: MxStateObjectProtocol {
         self.code = code
         self.name = name
         self.ownerType = ownerType
+        self.mailboxId = mailboxId
     }
     
 }
@@ -42,7 +44,8 @@ extension MxLabelSO: MxInitWithModel {
             id: model.id
             , code: model.code
             , name: model.name
-            , ownerType: model.ownerType.rawValue)!
+            , ownerType: model.ownerType.rawValue
+            , mailboxId: model.mailboxId)!
     }
 }
 

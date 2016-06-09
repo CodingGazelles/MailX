@@ -11,6 +11,7 @@ import Foundation
 import ReSwift
 import Pipes
 import Result
+import BrightFutures
 
 
 
@@ -32,55 +33,99 @@ struct MxSetLabelsAction: MxAction {
 
 // MARK: - Actions creators
 
-let setLabelsActionCreator = { (state: MxAppState) -> MxAction in
+func dispatchSetLabelsAction() {
     
-    MxLog.debug("Processing func action creator setLabelsActionCreator")
+    MxLog.debug("Processing MxSetLabelsAction")
     
-    switch state.mailboxesState.mailboxSelection{
+    let store = MxStoreManager.defaultStore()
+    let stack = MxStackManager.sharedInstance()
+    
+    store.dispatch( MxStartLoadingAction())
+    
+    switch store.state.mailboxesState.mailboxSelection {
     case .All, .None:
         
         let systemLabels = MxAppProperties.defaultProperties().systemLabels()
         let defaultLabels = MxAppProperties.defaultProperties().defaultLabels()
-            |> map{ MxLabelSO(
-                UID: nil
-                , remoteId: nil
+            .map{ MxLabelSO(
+                id: MxObjectId()
                 , code: $0
                 , name: systemLabels.labelName( labelCode: $0)
-                , ownerType: MxLabelOwnerType.SYSTEM.rawValue )!}
+                , ownerType: MxLabelOwnerType.SYSTEM.rawValue
+                , mailboxId: MxObjectId())!}
         
         let action = MxSetLabelsAction( labels: defaultLabels, errors: [MxSOError]())
-        MxLog.debug("Returning action: \(action)")
         
-        return action
+        MxLog.debug("Dispatching action: \(action)")
+        
+        store.dispatch(action)
         
     case .One(let selectedMailbox):
         
-        let result = fetchMailboxDBO( mailboxUID: selectedMailbox.UID)
+        let _: Future<[Result<MxLabelModel,MxStackError>],MxStackError> = stack.getAllObjects()
         
-        switch result {
-        case let .Success( mailboxDBO):
-            
-            let results = mailboxDBO.labels
-                |> map(){ $0.toModel()}
-            
-            let errosSO = results
-                |> filter(){ $0.error != nil }
-                |> map(){ MxSOError( error: $0.error! )}
-
-            let labelsSO = results
-                |> filter(){ $0.value != nil}
-                |> map(){ $0.value!.toSO() }
-            
-            let action = MxSetLabelsAction( labels: labelsSO, errors: errosSO)
-            MxLog.debug("Returning action: \(action)")
-            return action
-            
-        case let .Failure( error):
-            
-            let action = MxAddErrorsAction(errors: [MxSOError(error: error)])
-            MxLog.debug("Returning action: \(action)")
-            return action
+            .andThen( context: Queue.main.context) {_ in
+                
+                store.dispatch( MxStopLoadingAction())
+                
         }
+        
+            .onSuccess( Queue.main.context) { results in
+                
+                let errors = results
+                    .filter{ $0.error != nil }
+                    .map{ MxSOError( error: $0.error!) }
+                
+                let labels = results
+                    .filter{ $0.value != nil }
+                    .map{ $0.value! }
+                    .filter{ $0.mailboxId == selectedMailbox.id }
+                    .map{ MxLabelSO( model: $0) }
+                
+                let action = MxSetLabelsAction( labels: labels, errors: errors)
+                
+                MxLog.debug("Dispatching action: \(action)")
+                
+                store.dispatch(action)
+                
+        }
+        
+            .onFailure( Queue.main.context) { error in
+                
+                let action = MxAddErrorsAction(errors: [MxSOError(error: error)])
+                
+                MxLog.debug("Dispatching action: \(action)")
+                
+                store.dispatch(action)
+                
+        }
+        
+//        let result = fetchMailboxDBO( mailboxUID: selectedMailbox.UID)
+        
+//        switch result {
+//        case let .Success( mailboxDBO):
+//            
+//            let results = mailboxDBO.labels
+//                |> map(){ $0.toModel()}
+//            
+//            let errosSO = results
+//                |> filter(){ $0.error != nil }
+//                |> map(){ MxSOError( error: $0.error! )}
+//
+//            let labelsSO = results
+//                |> filter(){ $0.value != nil}
+//                |> map(){ $0.value!.toSO() }
+//            
+//            let action = MxSetLabelsAction( labels: labelsSO, errors: errosSO)
+//            MxLog.debug("Returning action: \(action)")
+//            return action
+//            
+//        case let .Failure( error):
+//            
+//            let action = MxAddErrorsAction(errors: [MxSOError(error: error)])
+//            MxLog.debug("Returning action: \(action)")
+//            return action
+//        }
         
     }
     

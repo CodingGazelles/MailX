@@ -9,6 +9,7 @@
 import Foundation
 
 import Result
+import BrightFutures
 
 
 
@@ -24,26 +25,14 @@ class MxSyncManager {
     
     // MARK: - Private properties
     
-    private let stateManager = MxStateManager.defaultManager()
-    
-    private let dbManager = { () -> MxDBLevel in
-        return MxDBLevel.defaultManager()
-    }()
+    private let store = MxStoreManager.defaultStore()
+    private let stack = MxStackManager.sharedInstance()
     
     
     // MARK: - Shared instance
     
     private static let sharedInstance = { () -> MxSyncManager in
-        
         let syncManager = MxSyncManager()
-        
-        for mailbox in MxSyncManager.allMailboxes() {
-            
-            let proxy = MxMailboxProxy( mailbox: mailbox)
-            mailbox.proxy = proxy
-            
-        }
-        
         return syncManager
     }()
     
@@ -51,41 +40,6 @@ class MxSyncManager {
         return sharedInstance
     }
     
-    private static func allMailboxes() -> [MxMailboxModel] {
-    
-        var mailboxes = [MxMailboxModel]()
-        
-        switch MxMailboxModel.fetch() {
-        case let .Success(results):
-            
-            for result in results {
-                switch result {
-                case let .Success(mailbox):
-                    
-                    mailboxes.append(mailbox)
-                    
-                case let .Failure(error):
-                    
-                    MxLog.error("Unable to fetch one mailbox", error: error)
-                    
-                    let error = MxSyncError.UnableToRealizeModelOperation(rootError: error)
-                    MxStateManager.defaultManager().dispatch( MxAddErrorsAction( errors: [MxSOError( error: error )]))
-                }
-                
-            }
-            
-        case let .Failure(error):
-            
-            MxLog.error("Unable to fetch mailboxes", error: error)
-            
-            let error = MxSyncError.UnableToRealizeModelOperation(rootError: error)
-            MxStateManager.defaultManager().dispatch( MxAddErrorsAction( errors: [MxSOError( error: error )]))
-            
-        }
-        
-        return mailboxes
-        
-    }
     
     private init(){}
     
@@ -94,68 +48,109 @@ class MxSyncManager {
     
     func startSynchronization(){
         
-        MxLog.debug("\(#function): initiating sync of local db with remote mailbox")
-        
-        for mailbox in MxSyncManager.allMailboxes() {
-            
-            MxLog.debug("Connecting to remote mailbox \(mailbox.email)")
-            mailbox.proxy.connect()
-            
-        }
-        
-        MxLog.debug("Updating local information")
+        connectMailboxes()
         
         updateMailboxes()
         
-        MxLog.debug("Starting synchronization (initiating pulling data from providers)")
-        
-        syncMailboxes()
+        startSync()
         
     }
     
-    func syncMailboxes() {
+    private func connectMailboxes() {
+        
+        MxLog.debug("Connecting to remote mailboxes")
+        
+        let _: Future<[Result<MxMailboxModel,MxStackError>],MxStackError> = stack.getAllObjects()
+            
+            .onSuccess(Queue.main.context) { results in
+                
+                results
+                    .filter{ $0.value != nil }
+                    .map{
+                        
+                        let mailbox = $0.value
+                        let proxy = MxMailboxProxy( mailbox: mailbox!)
+                        
+                        mailbox!.proxy = proxy
+                        
+                        MxLog.debug("Connecting to remote mailbox \(mailbox!.email)")
+                        
+                        proxy.connect()
+                        
+                }
+                
+            }
+            
+            .onFailure(Queue.main.context) { error in
+                
+                MxLog.error("Error while loading all mailboxes")
+                
+            }
+        
+    }
+    
+    private func startSync() {
+        
+        MxLog.debug("Starting synchronization (initiating pulling data from providers)")
+        
         //todo
+        
     }
     
     
     //MARK: - Update local store with remote data
     
-    func updateMailboxes(){
+    private func updateMailboxes(){
         
-        MxLog.debug("\(#function): updating all mailboxes ")
+        MxLog.debug("Updating all mailboxes ")
         
-        for mailbox in MxSyncManager.allMailboxes() {
-            // pullHistory
-            // todo
-            //
-//            MxLog.debug("Partial update of mailbox: \(mailboxId)")
-            //        updatePartial(mailboxId: mailboxId)
+        let _: Future<[Result<MxMailboxModel,MxStackError>],MxStackError> = stack.getAllObjects()
             
-            runFullUpdate(mailbox: mailbox)
+            .onSuccess(Queue.main.context) { results in
+                
+                results
+                    .filter{ $0.value != nil }
+                    .map{
+                        
+                        
+                        let mailbox = $0.value
+                        self.runFullUpdate(mailbox: mailbox!)
+                        
+                }
+                
+            }
+            
+            .onFailure(Queue.main.context) { error in
+                
+                MxLog.error("Error while loading all mailboxes")
+                
         }
+        
     }
     
-    // incremental update
-    func runIncrementalUpdate( mailboxId mailboxId: MxMailboxModelId){
+    
+    private func runIncrementalUpdate( mailboxId mailboxId: MxObjectId){
         
         MxLog.debug("Doing incremental update of mailbox: \(mailboxId)")
         
         fatalError("Func not implemented")
     }
     
-    func runFullUpdate(mailbox mailbox: MxMailboxModel){
+    
+    private func runFullUpdate(mailbox mailbox: MxMailboxModel){
         
-        MxLog.debug("\(#function): processing full update of mailbox: \(mailbox.email)")
+        MxLog.debug("Executing full update of mailbox \(mailbox.email)")
         
         emptyLocalData(mailbox: mailbox)
+        
         fetchRemoteData(mailbox: mailbox)
         
     }
     
-    // full update
-    func emptyLocalData( mailbox mailbox: MxMailboxModel) {
+    
+    private func emptyLocalData( mailbox mailbox: MxMailboxModel) {
         
-        MxLog.debug("\(#function): processing full delete of local data of mailbox: \(mailbox.email)")
+        MxLog.debug("Executing full delete of local data of mailbox: \(mailbox.email)")
         
         let mailboxDbo = mailbox.dbo
         let labels = mailboxDbo!.labels
@@ -174,7 +169,7 @@ class MxSyncManager {
                 case let .Failure(error):
                     
                     let error = MxSyncError.UnableToRealizeDBOperation(rootError: error)
-                    MxStateManager.defaultManager().dispatch( MxAddErrorsAction( errors: [MxSOError( error: error )]))
+                    MxStoreManager.defaultManager().dispatch( MxAddErrorsAction( errors: [MxSOError( error: error )]))
                     
                 }
             }
@@ -192,16 +187,16 @@ class MxSyncManager {
             case let .Failure(error):
                 
                 let error = MxSyncError.UnableToRealizeDBOperation(rootError: error)
-                MxStateManager.defaultManager().dispatch( MxAddErrorsAction( errors: [MxSOError( error: error )]))
+                MxStoreManager.defaultManager().dispatch( MxAddErrorsAction( errors: [MxSOError( error: error )]))
                 
             }
         }
         
     }
     
-    func fetchRemoteData( mailbox mailbox: MxMailboxModel){
+    private func fetchRemoteData( mailbox mailbox: MxMailboxModel){
         
-        MxLog.debug("\(#function): processing full fetch of remote data of mailbox: \(mailbox.email)")
+        MxLog.debug("Executing full fetch of remote data of mailbox: \(mailbox.email)")
         
         MxLog.debug("Fetching labels of mailbox \(mailbox.email)")
         
@@ -211,11 +206,11 @@ class MxSyncManager {
         
         
         // fetch messages in INBOX
-//        MxLog.debug("Fetching messages in INBOX for mailbox: \(mailbox.email)")
-//        
-//        proxies[mailboxUID]!.fetchMessagesInLabel(labelId: MxLabelModel.Id(value: "INBOX"))
+        //        MxLog.debug("Fetching messages in INBOX for mailbox: \(mailbox.email)")
+        //
+        //        proxies[mailboxUID]!.fetchMessagesInLabel(labelId: MxLabelModel.Id(value: "INBOX"))
         
-    
+        
         //
         //        // sync messages of system labels
         //        let labels = localStore.fetchLabels(mailboxId: mailboxId)

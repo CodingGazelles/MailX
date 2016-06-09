@@ -15,11 +15,11 @@ class MxDBInitializer {
     static func insertDefaultProviders(){
         
         guard MxUserPreferences.sharedPreferences().defaultProvidersInserted == false else {
-            MxLog.debug("Processing \(#function) defaults providers already inserted")
+            MxLog.debug("Processing defaults providers already inserted")
             return
         }
         
-        MxLog.debug("Processing \(#function) inserting defaults providers")
+        MxLog.debug("Processing inserting defaults providers")
         
         let appProperties = MxAppProperties.defaultProperties()
         let providers = appProperties.providers()
@@ -41,7 +41,7 @@ class MxDBInitializer {
             return
         }
         
-        MxLog.debug("\(#function) inserting default mailboxes")
+        MxLog.debug("Inserting default mailboxes")
         
         let email = "mailxtest10@gmail.com"
         let name = "TestMailbox"

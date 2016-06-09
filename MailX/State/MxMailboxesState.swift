@@ -22,14 +22,14 @@ struct MxMailboxSO: MxStateObjectProtocol {
     var email: String
     var name: String
     var connected: Bool
-    var providerCode: String
+    var providerId: MxObjectId
     
-    init( id: MxObjectId, email: String, name: String, connected: Bool, providerCode: String){
+    init( id: MxObjectId, email: String, name: String, connected: Bool, providerId: MxObjectId){
         self.id = id
         self.email = email
         self.name = name
         self.connected = connected
-        self.providerCode = providerCode
+        self.providerId = providerId
     }
     
 }
@@ -41,7 +41,7 @@ extension MxMailboxSO: MxInitWithModel {
             , email: model.email
             , name: model.name
             , connected: model.connected
-            , providerCode: model.providerCode)
+            , providerId: model.providerId)
     }
 }
 

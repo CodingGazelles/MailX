@@ -13,13 +13,16 @@ import Foundation
 // MARK: - Business object
 
 protocol MxBusinessObjectProtocol: Loggable {
+    
     var id: MxObjectId { get set }
-    var className: String { get }
+    var typeName: String { get }
     var hashValue: Int { get }
+
 }
 
 extension MxBusinessObjectProtocol {
-    var className: String {
+    
+    var typeName: String {
         return "\(Self.self)"
     }
     
@@ -35,11 +38,12 @@ func ==<BO: MxBusinessObjectProtocol>(lhs: BO, rhs: BO) -> Bool{
 
 // MARK: - MxID
 
-class MxObjectId: Hashable, Equatable {
+struct MxObjectId: Hashable, Equatable {
+    
     var internalId: MxInternalId
     var remoteId: MxRemoteId
     
-    convenience init() {
+    init() {
         self.init( internalId: MxInternalId(), remoteId: MxRemoteId(value: nil))
     }
     
@@ -60,7 +64,8 @@ func ==(lhs: MxObjectId, rhs: MxObjectId) -> Bool{
 
 // MARK: - MxInternalId
 
-class MxInternalId: Hashable, Equatable {
+struct MxInternalId: Hashable, Equatable {
+    
     var value: String
     
     init(){
@@ -83,7 +88,8 @@ func ==(lhs: MxInternalId, rhs: MxInternalId) -> Bool{
 
 // MARK: - MxRemoteId
 
-class MxRemoteId: Hashable, Equatable {
+struct MxRemoteId: Hashable, Equatable {
+    
     var value: String
     
     init( value: String?) {

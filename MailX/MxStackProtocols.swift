@@ -9,29 +9,26 @@
 import Foundation
 
 import Result
+import BrightFutures
 
 
+
+enum MxStatckLevel: Int {
+    case Memory=0
+    case DB=1
+    case Network=2
+}
 
 protocol MxStackLevelProtocol {
     
-    func getObject(
-        id id: MxObjectId,
-           objectType: Any.Type,
-           callback: (Result<MxModelObjectProtocol,MxStackError>) -> Void)
     
-    func getAllObjects(
-        objectType objectType: Any.Type,
-                   callback: (Result<[Result<MxModelObjectProtocol,MxStackError>],MxStackError>) -> Void)
+    func getObject<T: MxModelObjectProtocol>( id id: MxObjectId) -> Future<T,MxStackError>
     
-    func setObject(
-        object object: MxModelObjectProtocol,
-               objectType: Any.Type,
-               callback: (Result<MxModelObjectProtocol,MxStackError>) -> Void)
+    func getAllObjects<T: MxModelObjectProtocol>() -> Future<[Result<T,MxStackError>],MxStackError>
     
-    func removeObject(
-        id id: MxObjectId,
-           objectType: Any.Type,
-           callback: (Result<MxModelObjectProtocol,MxStackError>) -> Void)
+    func setObject<T: MxModelObjectProtocol>(object object: T) -> Future<T,MxStackError>
+    
+    func removeObject<T: MxModelObjectProtocol>(id id: MxObjectId) -> Future<T,MxStackError>
     
 }
 

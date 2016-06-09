@@ -8,10 +8,11 @@
 # github "antitypical/Result" ~> 0.4
 # github "robrix/Box" "1.2.2"
 # github "pepibumur/sugarrecord"
-github "emaloney/CleanroomLogger"
+# github "emaloney/CleanroomLogger"
 # github "ReSwift/ReSwift"
 # github "ReSwift/ReSwift-Recorder"
 # github "jarsen/pipes"
+github "Thomvis/BrightFutures"
 
 
 
