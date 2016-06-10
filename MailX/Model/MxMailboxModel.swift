@@ -10,64 +10,77 @@ import Foundation
 
 import Result
 import Pipes
+import RealmSwift
 
 
 
-final class MxMailboxModel: MxModelObjectProtocol {
+final class MxMailboxModel: Object, MxDBOProtocol, MxModelObjectProtocol {
     
-    var id:MxObjectId
+    // properties
+    dynamic var internalId: String = ""
+    dynamic var remoteId: String = ""
+    dynamic var email: String = ""
+    dynamic var name: String = ""
     
-    var email: String
-    var name: String
-    var connected: Bool
+    // relationships
+    dynamic var provider: MxProviderModel?
+    let labels = LinkingObjects(fromType: MxLabelModel.self, property: "mailbox")
+    let messages = LinkingObjects(fromType: MxMessageModel.self, property: "mailbox")
     
-    var providerId: MxObjectId
-    
-    var proxy: MxMailboxProxy!
-    
-    init( id: MxObjectId, email: String, name: String, connected: Bool, providerId: MxObjectId){
-        self.id = id
-        self.email = email
-        self.name = name
-        self.connected = connected
-        self.providerId = providerId
+    override static func indexedProperties() -> [String] {
+        return ["internalId", "remoteId"]
     }
+    
+    override static func ignoredProperties() -> [String] {
+        return ["connected", "proxy"]
+    }
+    
+    var connected: Bool = false
+    var proxy: MxMailboxProxy!
+
 }
 
-extension MxMailboxModel: MxLocalPersistable {
-    
-    convenience init?( dbo: MxMailboxDBO){
-        
-        guard dbo.providerInternalId.characters.count > 0 || dbo.providerRemoteId.characters.count > 0 else {
-            return nil
-        }
-        
-        self.init(
-            id: dbo.id
-            , email: dbo.email
-            , name: dbo.name
-            , connected: false
-            , providerId:
-                MxObjectId(
-                    internalId: MxInternalId(value: dbo.providerInternalId),
-                    remoteId: MxRemoteId(value: dbo.providerRemoteId))
-        )
-        
-    }
-    
-    func updateDBO(dbo dbo: MxMailboxDBO) {
-        
-        dbo.id = self.id
-        
-        dbo.email = self.email
-        dbo.name = self.name
-        
-        dbo.providerInternalId = self.providerId.internalId.value
-        dbo.providerRemoteId = self.providerId.remoteId.value
-        
-    }
-    
-    
+//class MxMailboxDBO : MxBaseDBO {
+//    
+//    
+//    
+//}
+
+//extension MxMailboxModel: MxLocalPersistable {
+//    
+//    convenience init?( dbo: MxMailboxDBO){
+//        
+//        guard dbo.providerInternalId.characters.count > 0 || dbo.providerRemoteId.characters.count > 0 else {
+//            return nil
+//        }
+//        
+//        self.init(
+//            id: dbo.id
+//            , email: dbo.email
+//            , name: dbo.name
+//            , connected: false
+//            , providerId:
+//                MxObjectId(
+//                    internalId: MxInternalId(value: dbo.providerInternalId),
+//                    remoteId: MxRemoteId(value: dbo.providerRemoteId))
+//        )
+//        
+//    }
+//    
+//    func updateDBO(dbo dbo: MxMailboxDBO) {
+//        
+//        dbo.id = self.id
+//        
+//        dbo.email = self.email
+//        dbo.name = self.name
+//        
+//        dbo.providerInternalId = self.providerId.internalId.value
+//        dbo.providerRemoteId = self.providerId.remoteId.value
+//        
+//    }
+//    
+//}
+
 //    // MARK: - Insert
 //    
 //    func insert() -> Result<Bool, MxStackError> {
@@ -161,7 +174,7 @@ extension MxMailboxModel: MxLocalPersistable {
 //        fatalError("Func not implemented")
 //    }
     
-}
+
 
 //extension MxMailboxModel {
 //    

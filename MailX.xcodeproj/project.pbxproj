@@ -17,30 +17,29 @@
 		DF2E22311CFC8B4500F303F5 /* Box.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DF2E221E1CFC8A7700F303F5 /* Box.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DF2E22321CFC8B4500F303F5 /* ReactiveCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF2E221F1CFC8A7700F303F5 /* ReactiveCocoa.framework */; };
 		DF2E22331CFC8B4500F303F5 /* ReactiveCocoa.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DF2E221F1CFC8A7700F303F5 /* ReactiveCocoa.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		DF2E22341CFC8B4500F303F5 /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF2E22201CFC8A7700F303F5 /* Realm.framework */; };
-		DF2E22351CFC8B4500F303F5 /* Realm.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DF2E22201CFC8A7700F303F5 /* Realm.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		DF2E22361CFC8B4500F303F5 /* RealmSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF2E22211CFC8A7700F303F5 /* RealmSwift.framework */; };
-		DF2E22371CFC8B4500F303F5 /* RealmSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DF2E22211CFC8A7700F303F5 /* RealmSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DF2E22381CFC8B4500F303F5 /* RxBlocking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF2E22221CFC8A7700F303F5 /* RxBlocking.framework */; };
 		DF2E22391CFC8B4500F303F5 /* RxBlocking.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DF2E22221CFC8A7700F303F5 /* RxBlocking.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DF2E223A1CFC8B4500F303F5 /* RxCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF2E22231CFC8A7700F303F5 /* RxCocoa.framework */; };
 		DF2E223B1CFC8B4500F303F5 /* RxCocoa.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DF2E22231CFC8A7700F303F5 /* RxCocoa.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DF2E223C1CFC8B4500F303F5 /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF2E22241CFC8A7700F303F5 /* RxSwift.framework */; };
 		DF2E223D1CFC8B4500F303F5 /* RxSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DF2E22241CFC8A7700F303F5 /* RxSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		DF2E223E1CFC8B4500F303F5 /* SugarRecordRealm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF2E22261CFC8A7700F303F5 /* SugarRecordRealm.framework */; };
-		DF2E223F1CFC8B4500F303F5 /* SugarRecordRealm.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DF2E22261CFC8A7700F303F5 /* SugarRecordRealm.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DF2E224A1CFC8BAC00F303F5 /* ReactiveCocoa.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = DF2E22411CFC8BAC00F303F5 /* ReactiveCocoa.framework.dSYM */; };
-		DF2E224B1CFC8BAC00F303F5 /* Realm.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = DF2E22421CFC8BAC00F303F5 /* Realm.framework.dSYM */; };
-		DF2E224C1CFC8BAC00F303F5 /* RealmSwift.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = DF2E22431CFC8BAC00F303F5 /* RealmSwift.framework.dSYM */; };
 		DF2E224D1CFC8BAC00F303F5 /* Result.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = DF2E22441CFC8BAC00F303F5 /* Result.framework.dSYM */; };
 		DF2E224E1CFC8BAC00F303F5 /* RxBlocking.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = DF2E22451CFC8BAC00F303F5 /* RxBlocking.framework.dSYM */; };
 		DF2E224F1CFC8BAC00F303F5 /* RxCocoa.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = DF2E22461CFC8BAC00F303F5 /* RxCocoa.framework.dSYM */; };
 		DF2E22501CFC8BAC00F303F5 /* RxSwift.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = DF2E22471CFC8BAC00F303F5 /* RxSwift.framework.dSYM */; };
 		DF2E22511CFC8BAC00F303F5 /* RxTests.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = DF2E22481CFC8BAC00F303F5 /* RxTests.framework.dSYM */; };
-		DF2E22521CFC8BAC00F303F5 /* SugarRecordRealm.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = DF2E22491CFC8BAC00F303F5 /* SugarRecordRealm.framework.dSYM */; };
 		DF2FFBA41CFCB29A001DF44F /* MailXStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DF4F05E51CF9D8B500123CA3 /* MailXStoryboard.storyboard */; };
 		DF44793C1CEB680700E3A685 /* MxProviderModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF44793B1CEB680700E3A685 /* MxProviderModel.swift */; };
 		DF4479401CEB689000E3A685 /* MxLabelModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF44793F1CEB689000E3A685 /* MxLabelModel.swift */; };
+		DF5B57DF1D09E066007729FA /* Realm.framework.dSYM in Resources */ = {isa = PBXBuildFile; fileRef = DF5B57DB1D09E066007729FA /* Realm.framework.dSYM */; };
+		DF5B57E01D09E066007729FA /* RealmSwift.framework.dSYM in Resources */ = {isa = PBXBuildFile; fileRef = DF5B57DC1D09E066007729FA /* RealmSwift.framework.dSYM */; };
+		DF5B57E11D09E066007729FA /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF5B57DD1D09E066007729FA /* Realm.framework */; };
+		DF5B57E21D09E066007729FA /* RealmSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF5B57DE1D09E066007729FA /* RealmSwift.framework */; };
+		DF5B57E31D09E070007729FA /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF5B57DD1D09E066007729FA /* Realm.framework */; };
+		DF5B57E41D09E070007729FA /* Realm.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DF5B57DD1D09E066007729FA /* Realm.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		DF5B57E51D09E073007729FA /* RealmSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF5B57DE1D09E066007729FA /* RealmSwift.framework */; };
+		DF5B57E61D09E073007729FA /* RealmSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DF5B57DE1D09E066007729FA /* RealmSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DF98B55E1CF9222500DAC34F /* Pipes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF98B55B1CF9222500DAC34F /* Pipes.framework */; };
 		DF98B55F1CF9222500DAC34F /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF98B55C1CF9222500DAC34F /* Result.framework */; };
 		DF98B5621CF9222E00DAC34F /* Pipes.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DF98B55B1CF9222500DAC34F /* Pipes.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -137,14 +136,11 @@
 				DFD44ABF1D010856001DF6F5 /* CleanroomLogger.framework.dSYM in CopyFiles */,
 				DFD44ABE1D010853001DF6F5 /* CleanroomASL.framework.dSYM in CopyFiles */,
 				DF2E224A1CFC8BAC00F303F5 /* ReactiveCocoa.framework.dSYM in CopyFiles */,
-				DF2E224B1CFC8BAC00F303F5 /* Realm.framework.dSYM in CopyFiles */,
-				DF2E224C1CFC8BAC00F303F5 /* RealmSwift.framework.dSYM in CopyFiles */,
 				DF2E224D1CFC8BAC00F303F5 /* Result.framework.dSYM in CopyFiles */,
 				DF2E224E1CFC8BAC00F303F5 /* RxBlocking.framework.dSYM in CopyFiles */,
 				DF2E224F1CFC8BAC00F303F5 /* RxCocoa.framework.dSYM in CopyFiles */,
 				DF2E22501CFC8BAC00F303F5 /* RxSwift.framework.dSYM in CopyFiles */,
 				DF2E22511CFC8BAC00F303F5 /* RxTests.framework.dSYM in CopyFiles */,
-				DF2E22521CFC8BAC00F303F5 /* SugarRecordRealm.framework.dSYM in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -154,17 +150,16 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				DF5B57E61D09E073007729FA /* RealmSwift.framework in Embed Frameworks */,
+				DF5B57E41D09E070007729FA /* Realm.framework in Embed Frameworks */,
 				DF2E223B1CFC8B4500F303F5 /* RxCocoa.framework in Embed Frameworks */,
-				DF2E22351CFC8B4500F303F5 /* Realm.framework in Embed Frameworks */,
 				DFE26F041CEBF7EC00FB401A /* ReSwift.framework in Embed Frameworks */,
 				DF2E22331CFC8B4500F303F5 /* ReactiveCocoa.framework in Embed Frameworks */,
 				DF2E223D1CFC8B4500F303F5 /* RxSwift.framework in Embed Frameworks */,
 				DFD44ABD1D010820001DF6F5 /* CleanroomLogger.framework in Embed Frameworks */,
 				DFD44ABB1D010820001DF6F5 /* CleanroomASL.framework in Embed Frameworks */,
 				DF98B5621CF9222E00DAC34F /* Pipes.framework in Embed Frameworks */,
-				DF2E22371CFC8B4500F303F5 /* RealmSwift.framework in Embed Frameworks */,
 				DF2E22391CFC8B4500F303F5 /* RxBlocking.framework in Embed Frameworks */,
-				DF2E223F1CFC8B4500F303F5 /* SugarRecordRealm.framework in Embed Frameworks */,
 				DF2E22311CFC8B4500F303F5 /* Box.framework in Embed Frameworks */,
 				DF98B5641CF9223300DAC34F /* Result.framework in Embed Frameworks */,
 				DFB84EF91CEAB6520088090D /* GTL.framework in Embed Frameworks */,
@@ -183,25 +178,23 @@
 		DF241EFD1D05C02600C61196 /* BrightFutures.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BrightFutures.framework; path = Carthage/Build/Mac/BrightFutures.framework; sourceTree = SOURCE_ROOT; };
 		DF2E221E1CFC8A7700F303F5 /* Box.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Box.framework; path = Carthage/Build/Mac/Box.framework; sourceTree = SOURCE_ROOT; };
 		DF2E221F1CFC8A7700F303F5 /* ReactiveCocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ReactiveCocoa.framework; path = Carthage/Build/Mac/ReactiveCocoa.framework; sourceTree = SOURCE_ROOT; };
-		DF2E22201CFC8A7700F303F5 /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Realm.framework; path = Carthage/Build/Mac/Realm.framework; sourceTree = SOURCE_ROOT; };
-		DF2E22211CFC8A7700F303F5 /* RealmSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RealmSwift.framework; path = Carthage/Build/Mac/RealmSwift.framework; sourceTree = SOURCE_ROOT; };
 		DF2E22221CFC8A7700F303F5 /* RxBlocking.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxBlocking.framework; path = Carthage/Build/Mac/RxBlocking.framework; sourceTree = SOURCE_ROOT; };
 		DF2E22231CFC8A7700F303F5 /* RxCocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxCocoa.framework; path = Carthage/Build/Mac/RxCocoa.framework; sourceTree = SOURCE_ROOT; };
 		DF2E22241CFC8A7700F303F5 /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxSwift.framework; path = Carthage/Build/Mac/RxSwift.framework; sourceTree = SOURCE_ROOT; };
 		DF2E22251CFC8A7700F303F5 /* RxTests.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxTests.framework; path = Carthage/Build/Mac/RxTests.framework; sourceTree = SOURCE_ROOT; };
-		DF2E22261CFC8A7700F303F5 /* SugarRecordRealm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SugarRecordRealm.framework; path = Carthage/Build/Mac/SugarRecordRealm.framework; sourceTree = SOURCE_ROOT; };
 		DF2E22411CFC8BAC00F303F5 /* ReactiveCocoa.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = ReactiveCocoa.framework.dSYM; path = ../Carthage/Build/Mac/ReactiveCocoa.framework.dSYM; sourceTree = "<group>"; };
-		DF2E22421CFC8BAC00F303F5 /* Realm.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = Realm.framework.dSYM; path = ../Carthage/Build/Mac/Realm.framework.dSYM; sourceTree = "<group>"; };
-		DF2E22431CFC8BAC00F303F5 /* RealmSwift.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = RealmSwift.framework.dSYM; path = ../Carthage/Build/Mac/RealmSwift.framework.dSYM; sourceTree = "<group>"; };
 		DF2E22441CFC8BAC00F303F5 /* Result.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = Result.framework.dSYM; path = ../Carthage/Build/Mac/Result.framework.dSYM; sourceTree = "<group>"; };
 		DF2E22451CFC8BAC00F303F5 /* RxBlocking.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = RxBlocking.framework.dSYM; path = ../Carthage/Build/Mac/RxBlocking.framework.dSYM; sourceTree = "<group>"; };
 		DF2E22461CFC8BAC00F303F5 /* RxCocoa.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = RxCocoa.framework.dSYM; path = ../Carthage/Build/Mac/RxCocoa.framework.dSYM; sourceTree = "<group>"; };
 		DF2E22471CFC8BAC00F303F5 /* RxSwift.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = RxSwift.framework.dSYM; path = ../Carthage/Build/Mac/RxSwift.framework.dSYM; sourceTree = "<group>"; };
 		DF2E22481CFC8BAC00F303F5 /* RxTests.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = RxTests.framework.dSYM; path = ../Carthage/Build/Mac/RxTests.framework.dSYM; sourceTree = "<group>"; };
-		DF2E22491CFC8BAC00F303F5 /* SugarRecordRealm.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = SugarRecordRealm.framework.dSYM; path = ../Carthage/Build/Mac/SugarRecordRealm.framework.dSYM; sourceTree = "<group>"; };
 		DF44793B1CEB680700E3A685 /* MxProviderModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxProviderModel.swift; path = Model/MxProviderModel.swift; sourceTree = "<group>"; };
 		DF44793F1CEB689000E3A685 /* MxLabelModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxLabelModel.swift; path = Model/MxLabelModel.swift; sourceTree = "<group>"; };
 		DF4F05E51CF9D8B500123CA3 /* MailXStoryboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = MailXStoryboard.storyboard; path = Views/MailXStoryboard.storyboard; sourceTree = "<group>"; };
+		DF5B57DB1D09E066007729FA /* Realm.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = Realm.framework.dSYM; path = Carthage/Build/Mac/Realm.framework.dSYM; sourceTree = SOURCE_ROOT; };
+		DF5B57DC1D09E066007729FA /* RealmSwift.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = RealmSwift.framework.dSYM; path = Carthage/Build/Mac/RealmSwift.framework.dSYM; sourceTree = SOURCE_ROOT; };
+		DF5B57DD1D09E066007729FA /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Realm.framework; path = Carthage/Build/Mac/Realm.framework; sourceTree = SOURCE_ROOT; };
+		DF5B57DE1D09E066007729FA /* RealmSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RealmSwift.framework; path = Carthage/Build/Mac/RealmSwift.framework; sourceTree = SOURCE_ROOT; };
 		DF98B55B1CF9222500DAC34F /* Pipes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Pipes.framework; sourceTree = "<group>"; };
 		DF98B55C1CF9222500DAC34F /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Result.framework; sourceTree = "<group>"; };
 		DFA313021CF0C02600500607 /* MxErrorActions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxErrorActions.swift; path = State/MxErrorActions.swift; sourceTree = "<group>"; };
@@ -281,23 +274,24 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DF5B57E11D09E066007729FA /* Realm.framework in Frameworks */,
 				DFD44ABC1D010820001DF6F5 /* CleanroomLogger.framework in Frameworks */,
+				DF5B57E51D09E073007729FA /* RealmSwift.framework in Frameworks */,
 				DF241EFF1D05C02600C61196 /* BrightFutures.framework in Frameworks */,
 				DFB84EF11CEAB62B0088090D /* GTL.framework in Frameworks */,
+				DF5B57E31D09E070007729FA /* Realm.framework in Frameworks */,
 				DF2E223C1CFC8B4500F303F5 /* RxSwift.framework in Frameworks */,
+				DF5B57E21D09E066007729FA /* RealmSwift.framework in Frameworks */,
 				DFB84ED31CEAB24D0088090D /* SystemConfiguration.framework in Frameworks */,
 				DF2E22381CFC8B4500F303F5 /* RxBlocking.framework in Frameworks */,
 				DFD44ABA1D010820001DF6F5 /* CleanroomASL.framework in Frameworks */,
 				DFB84ED11CEAB23C0088090D /* Security.framework in Frameworks */,
-				DF2E22341CFC8B4500F303F5 /* Realm.framework in Frameworks */,
 				DF98B5631CF9223300DAC34F /* Result.framework in Frameworks */,
 				DF98B55E1CF9222500DAC34F /* Pipes.framework in Frameworks */,
 				DF2E223A1CFC8B4500F303F5 /* RxCocoa.framework in Frameworks */,
 				DFE26F021CEBF7BA00FB401A /* ReSwift.framework in Frameworks */,
 				DF98B55F1CF9222500DAC34F /* Result.framework in Frameworks */,
 				DF2E22321CFC8B4500F303F5 /* ReactiveCocoa.framework in Frameworks */,
-				DF2E22361CFC8B4500F303F5 /* RealmSwift.framework in Frameworks */,
-				DF2E223E1CFC8B4500F303F5 /* SugarRecordRealm.framework in Frameworks */,
 				DFB84ECF1CEAB2310088090D /* Cocoa.framework in Frameworks */,
 				DF2E22301CFC8B4500F303F5 /* Box.framework in Frameworks */,
 				78156F2C38FF98059753DA3D /* Pods_MailX.framework in Frameworks */,
@@ -333,18 +327,17 @@
 		DF2E22531CFC8BD300F303F5 /* dSYM */ = {
 			isa = PBXGroup;
 			children = (
+				DF5B57DB1D09E066007729FA /* Realm.framework.dSYM */,
+				DF5B57DC1D09E066007729FA /* RealmSwift.framework.dSYM */,
 				DF241EFC1D05C02600C61196 /* BrightFutures.framework.dSYM */,
 				DFD44AB21D010796001DF6F5 /* CleanroomASL.framework.dSYM */,
 				DFD44AB31D010796001DF6F5 /* CleanroomLogger.framework.dSYM */,
 				DF2E22411CFC8BAC00F303F5 /* ReactiveCocoa.framework.dSYM */,
-				DF2E22421CFC8BAC00F303F5 /* Realm.framework.dSYM */,
-				DF2E22431CFC8BAC00F303F5 /* RealmSwift.framework.dSYM */,
 				DF2E22441CFC8BAC00F303F5 /* Result.framework.dSYM */,
 				DF2E22451CFC8BAC00F303F5 /* RxBlocking.framework.dSYM */,
 				DF2E22461CFC8BAC00F303F5 /* RxCocoa.framework.dSYM */,
 				DF2E22471CFC8BAC00F303F5 /* RxSwift.framework.dSYM */,
 				DF2E22481CFC8BAC00F303F5 /* RxTests.framework.dSYM */,
-				DF2E22491CFC8BAC00F303F5 /* SugarRecordRealm.framework.dSYM */,
 			);
 			name = dSYM;
 			sourceTree = "<group>";
@@ -426,18 +419,17 @@
 			isa = PBXGroup;
 			children = (
 				DF2E22531CFC8BD300F303F5 /* dSYM */,
+				DF5B57DD1D09E066007729FA /* Realm.framework */,
+				DF5B57DE1D09E066007729FA /* RealmSwift.framework */,
 				DF241EFD1D05C02600C61196 /* BrightFutures.framework */,
 				DFD44AB41D010796001DF6F5 /* CleanroomASL.framework */,
 				DFD44AB51D010796001DF6F5 /* CleanroomLogger.framework */,
 				DF2E221E1CFC8A7700F303F5 /* Box.framework */,
 				DF2E221F1CFC8A7700F303F5 /* ReactiveCocoa.framework */,
-				DF2E22201CFC8A7700F303F5 /* Realm.framework */,
-				DF2E22211CFC8A7700F303F5 /* RealmSwift.framework */,
 				DF2E22221CFC8A7700F303F5 /* RxBlocking.framework */,
 				DF2E22231CFC8A7700F303F5 /* RxCocoa.framework */,
 				DF2E22241CFC8A7700F303F5 /* RxSwift.framework */,
 				DF2E22251CFC8A7700F303F5 /* RxTests.framework */,
-				DF2E22261CFC8A7700F303F5 /* SugarRecordRealm.framework */,
 				DF98B55B1CF9222500DAC34F /* Pipes.framework */,
 				DF98B55C1CF9222500DAC34F /* Result.framework */,
 				DFE26F011CEBF7BA00FB401A /* ReSwift.framework */,
@@ -731,6 +723,8 @@
 				DFB84E401CEAA72E0088090D /* Assets.xcassets in Resources */,
 				DFB84EA61CEAAB8A0088090D /* Properties.plist in Resources */,
 				DF2FFBA41CFCB29A001DF44F /* MailXStoryboard.storyboard in Resources */,
+				DF5B57DF1D09E066007729FA /* Realm.framework.dSYM in Resources */,
+				DF5B57E01D09E066007729FA /* RealmSwift.framework.dSYM in Resources */,
 				DFD44AB61D010796001DF6F5 /* CleanroomASL.framework.dSYM in Resources */,
 				DFB84F241CEB515F0088090D /* GTMOAuth2Window.xib in Resources */,
 				DFD44AB71D010796001DF6F5 /* CleanroomLogger.framework.dSYM in Resources */,

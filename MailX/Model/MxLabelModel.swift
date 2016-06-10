@@ -10,68 +10,67 @@ import Foundation
 
 import Result
 import Pipes
+import RealmSwift
 
 
 
-final class MxLabelModel: MxModelObjectProtocol {
+final class MxLabelModel: Object, MxDBOProtocol, MxModelObjectProtocol {
     
-    var id: MxObjectId
-    var code: String
-    var name: String
-    var ownerType: MxLabelOwnerType
-    var mailboxId: MxObjectId
+    // properties
+    dynamic var internalId: String = ""
+    dynamic var remoteId: String = ""
+    dynamic var code: String = ""
+    dynamic var name: String = ""
+    dynamic var ownerType: String = ""
     
-    init( id: MxObjectId
-        , code: String
-        , name: String
-        , ownerType: MxLabelOwnerType
-        , mailboxId: MxObjectId){
-        
-        self.id = id
-        self.code = code
-        self.name = name
-        self.ownerType = ownerType
-        self.mailboxId = mailboxId
+    // relationships
+    let messages = LinkingObjects(fromType: MxMessageModel.self, property: "label")
+    dynamic var mailbox: MxMailboxModel?
+    
+    override static func indexedProperties() -> [String] {
+        return ["internalId", "remoteId"]
     }
+    
 }
 
 
 // MARK: - MxRemotePersistable
 
-extension MxLabelModel: MxLocalPersistable {
-    
-    convenience init?( dbo: MxLabelDBO){
-        
-        guard let ownerType = MxLabelOwnerType( rawValue: dbo.ownerType) else {
-            return nil
-        }
-        
-        self.init(
-            id: dbo.id
-            , code: dbo.code
-            , name: dbo.name
-            , ownerType: ownerType
-            , mailboxId:
-                MxObjectId(
-                    internalId: MxInternalId( value: dbo.mailboxInternalId),
-                    remoteId: MxRemoteId( value: dbo.mailboxRemoteId))
-        )
-        
-        
-    }
-    
-    func updateDBO(dbo dbo: MxLabelDBO) {
-        
-        dbo.id = self.id
-        dbo.code = self.code
-        dbo.name = self.name
-        dbo.ownerType = MxLabelOwnerType.SYSTEM.rawValue
-        dbo.mailboxInternalId = self.mailboxId.internalId.value
-        dbo.mailboxRemoteId = self.mailboxId.remoteId.value
-        
-    }
-    
-    
+//extension MxLabelModel: MxLocalPersistable {
+//    
+//    convenience init?( dbo: MxLabelDBO){
+//        
+//        guard let ownerType = MxLabelOwnerType( rawValue: dbo.ownerType) else {
+//            return nil
+//        }
+//        
+//        self.init(
+//            id: dbo.id
+//            , code: dbo.code
+//            , name: dbo.name
+//            , ownerType: ownerType
+//            , mailboxId:
+//                MxObjectId(
+//                    internalId: MxInternalId( value: dbo.mailboxInternalId),
+//                    remoteId: MxRemoteId( value: dbo.mailboxRemoteId))
+//        )
+//        
+//        
+//    }
+//    
+//    func updateDBO(dbo dbo: MxLabelDBO) {
+//        
+//        dbo.id = self.id
+//        dbo.code = self.code
+//        dbo.name = self.name
+//        dbo.ownerType = MxLabelOwnerType.SYSTEM.rawValue
+//        dbo.mailboxInternalId = self.mailboxId.internalId.value
+//        dbo.mailboxRemoteId = self.mailboxId.remoteId.value
+//        
+//    }
+//    
+//}
+
 //    // MARK: - Insert
 //    
 //    func insert() -> Result<Bool, MxStackError> {
@@ -149,7 +148,7 @@ extension MxLabelModel: MxLocalPersistable {
 //    static func fetch( uids uids: [MxInternalId]) -> Result<[Result<MxLabelModel, MxStackError>], MxDBError> {
 //        fatalError("Func not implemented")
 //    }
-}
+
 
 //extension MxLabelModel {
 //    

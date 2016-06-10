@@ -79,7 +79,7 @@ func dispatchSetLabelsAction() {
                 let labels = results
                     .filter{ $0.value != nil }
                     .map{ $0.value! }
-                    .filter{ $0.mailboxId == selectedMailbox.id }
+                    .filter{ $0.mailbox?.internalId == selectedMailbox.internalId }
                     .map{ MxLabelSO( model: $0) }
                 
                 let action = MxSetLabelsAction( labels: labels, errors: errors)

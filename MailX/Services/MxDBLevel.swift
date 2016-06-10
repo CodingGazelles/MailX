@@ -11,7 +11,6 @@ import Foundation
 import RealmSwift
 import Result
 import Pipes
-import SugarRecordRealm
 import BrightFutures
 
 
@@ -26,39 +25,41 @@ class MxDBLevel: MxStackLevelProtocol {
     
     // Mark: - Default DB
     
-    lazy var db: RealmDefaultStorage = {
-        var configuration = Realm.Configuration()
-        configuration.path = databasePath("mailx-dog3.realm")
-        let _storage = RealmDefaultStorage(configuration: configuration)
-        return _storage
-    }()
+    //    lazy var db: RealmDefaultStorage = {
+    //        var configuration = Realm.Configuration()
+    //        configuration.path = databasePath("mailx-dog3.realm")
+    //        let _storage = RealmDefaultStorage(configuration: configuration)
+    //        return _storage
+    //    }()
+    
+    lazy var realm = try! Realm()
     
     
-    func getObject<T: MxModelObjectProtocol>( id id: MxObjectId) -> Future<T,MxStackError> {
-        
-        MxLog.debug("Searching for object \(T.self) with \(id) in DB")
-        
-        let promise = Promise<T, MxStackError>()
-        
-        ImmediateExecutionContext {
-            
-            // Model is not convertible to DBO and can't be stored in DB !!!!
-            
-            let error = MxStackError.SearchFailed(
-                object: id,
-                typeName: "\(T.self)",
-                message: "This object \(T.self) with id \(id) can't be stored in DB",
-                rootError: nil)
-            
-            MxLog.error(error.description)
-            
-            promise.failure(error)
-        }
-        
-        return promise.future
-    }
+    //    func getObject<T: MxModelObjectProtocol>( id id: MxObjectId) -> Future<T,MxStackError> {
+    //
+    //        MxLog.debug("Searching for object \(T.self) with \(id) in DB")
+    //
+    //        let promise = Promise<T, MxStackError>()
+    //
+    //        ImmediateExecutionContext {
+    //
+    //            // Model is not convertible to DBO and can't be stored in DB !!!!
+    //
+    //            let error = MxStackError.SearchFailed(
+    //                object: id,
+    //                typeName: "\(T.self)",
+    //                message: "This object \(T.self) with id \(id) can't be stored in DB",
+    //                rootError: nil)
+    //
+    //            MxLog.error(error.description)
+    //
+    //            promise.failure(error)
+    //        }
+    //
+    //        return promise.future
+    //    }
     
-    func getObject<T: MxModelObjectProtocol where T: MxLocalPersistable>( id id: MxObjectId) -> Future<T,MxStackError> {
+    func getObject<T: MxModelObjectProtocol where T: Object>( id id: MxObjectId) -> Future<T,MxStackError> {
         
         MxLog.debug("Searching for object \(T.self) with \(id) in DB")
         
@@ -66,26 +67,38 @@ class MxDBLevel: MxStackLevelProtocol {
         
         Queue.global.sync {
             
-            let result: Result<T.DBO, MxDBError> = self.fetchDBO(id: id)
+            MxLog.debug("Fetching DBO \(T.self) with id \(id)")
             
-            switch result {
-            case let .Success(dbo):
-                
-                MxLog.debug("Found \(dbo)")
-                
-                let mo: T = T.init(dbo: dbo)!
-                
-                promise.success(mo)
-                
-            case let .Failure(error):
+            let results = self.realm.objects(T).filter( "internalId == \(id.internalId.value)" )
+            
+            switch results.count {
+            case 0:
                 
                 let error = MxStackError.SearchFailed(
                     object: id,
                     typeName: "\(T.self)",
-                    message: "Failed at searching for object \(T.self) with id \(id) in DB",
-                    rootError: error)
+                    message: "No result while searching for object \(T.self) with id \(id) in DB",
+                    rootError: nil)
                 
-                MxLog.error(error.description)
+                MxLog.debug(error.description)
+                
+                promise.failure(error)
+                
+            case 1:
+                
+                MxLog.debug("Found \(results.first)")
+                
+                promise.success(results.first!)
+                
+            default:
+                
+                let error = MxStackError.SearchFailed(
+                    object: id,
+                    typeName: "\(T.self)",
+                    message: "Too many results while searching for object \(T.self) with id \(id) in DB",
+                    rootError: nil)
+                
+                MxLog.debug(error.description)
                 
                 promise.failure(error)
                 
@@ -102,35 +115,35 @@ class MxDBLevel: MxStackLevelProtocol {
         fatalError("Func not implemented")
     }
     
-    func setObject<T: MxModelObjectProtocol>(object object: T) -> Future<T,MxStackError> {
+    //    func setObject<T: MxModelObjectProtocol>(object object: T) -> Future<T,MxStackError> {
+    //
+    //        MxLog.debug("Inserting object \(object) in DB")
+    //
+    //        let promise = Promise<T, MxStackError>()
+    //
+    //        ImmediateExecutionContext {
+    //
+    //            // Model is not convertible to DBO and can't be stored in DB !!!!
+    //
+    //            let error = MxStackError.InsertFailed(
+    //                object: object,
+    //                typeName: "\(T.self)",
+    //                message: "This object \(object) can't be stored in DB",
+    //                rootError: nil)
+    //
+    //            MxLog.error(error.description)
+    //
+    //            promise.failure(error)
+    //        }
+    //
+    //        return promise.future
+    //
+    //    }
     
-        MxLog.debug("Inserting object \(object) in DB")
-        
-        let promise = Promise<T, MxStackError>()
-        
-        ImmediateExecutionContext {
-            
-            // Model is not convertible to DBO and can't be stored in DB !!!!
-            
-            let error = MxStackError.InsertFailed(
-                object: object,
-                typeName: "\(T.self)",
-                message: "This object \(object) can't be stored in DB",
-                rootError: nil)
-            
-            MxLog.error(error.description)
-            
-            promise.failure(error)
-        }
-        
-        return promise.future
-        
-    }
     
-    
-    func setObject<T: MxModelObjectProtocol where T: MxLocalPersistable>(object object: T) -> Future<T,MxStackError> {
+    func setObject<T: MxModelObjectProtocol where T: Object>(object object: T) -> Future<T,MxStackError> {
         
-        MxLog.debug("Inserting object \(object) in DB")
+        MxLog.debug("Inserting/updating object \(object) in DB")
         
         let promise = Promise<T, MxStackError>()
         
@@ -138,15 +151,11 @@ class MxDBLevel: MxStackLevelProtocol {
             
             do {
                 
-                try self.db.operation{ (context, save) throws -> Void in
+                try self.realm.write {
                     
-                    let dbo: T.DBO = try context.create()
+                    self.realm.add(object, update: true)
                     
-                    object.updateDBO(dbo: dbo)
-                    
-                    save()
-                    
-                    MxLog.debug("Inserted \(dbo)")
+                    MxLog.debug("Inserted/Updated \(object)")
                     
                 }
                 
@@ -157,7 +166,7 @@ class MxDBLevel: MxStackLevelProtocol {
                 let error = MxStackError.SearchFailed(
                     object: object,
                     typeName: "\(T.self)",
-                    message: "Failed at inserting object \(object) in DB",
+                    message: "Failed at inserting/updating object \(object) in DB",
                     rootError: error)
                 
                 MxLog.error(error.description)
@@ -168,7 +177,7 @@ class MxDBLevel: MxStackLevelProtocol {
             
         }
         
-       
+        
         return promise.future
     }
     
@@ -202,127 +211,124 @@ class MxDBLevel: MxStackLevelProtocol {
     //        }
     //    }
     
-    private func fetchDBO<T: MxDBOType>( id id: MxObjectId) -> Result<T, MxDBError> {
-        
-        MxLog.debug("\(#function): fetching \(T.self) with id \(id)")
-        
-        let predicate: NSPredicate = NSPredicate( format: "internalId == %@", id.internalId.value)
-        
-        do {
-            
-            let result = try db.fetch(Request<T>().filteredWith( predicate: predicate)).first
-            
-            return Result.Success(result!)
-            
-        } catch {
-            
-            return Result.Failure(
-                MxDBError.FetchError(
-                    object: id,
-                    typeName: "\(T.self)",
-                    message: "Error while fetching \(T.self) with id: \(id)",
-                    rootError: error))
-            
-        }
-    }
+    //    private func fetchDBO<T: MxDBOProtocol>( id id: MxObjectId) -> Result<T, MxDBError> {
+    //
+    //        MxLog.debug("Fetching DBO \(T.self) with id \(id)")
+    //
+    //        do {
+    //
+    //            let result = try realm.objects(T).filter( "internalId == \(id.internalId.value)" ).first
+    //            return Result.Success(result!)
+    //
+    //        } catch {
+    //
+    //            return Result.Failure(
+    //                MxDBError.FetchError(
+    //                    object: id,
+    //                    typeName: "\(T.self)",
+    //                    message: "Error while fetching \(T.self) with id: \(id)",
+    //                    rootError: error))
+    //
+    //        }
+    //    }
     
-    private func fetchDBOs<T: MxDBOType>() -> Result<[T], MxDBError> {
-        
-        MxLog.debug("\(#function): fetching \(T.self)")
-        
-        do {
-            
-            let result = try db.fetch(Request<T>())
-            return Result.Success(result)
-            
-        } catch {
-            
-            return Result.Failure(
-                MxDBError.FetchError(
-                    object: nil
-                    , typeName: "\(T.self)"
-                    , message: "Error while fetching \(T.self)."
-                    , rootError: error))
-        }
-        
-    }
+    //    private func fetchDBOs<T: MxDBOProtocol>() -> Result<[T], MxDBError> {
+    //
+    //        MxLog.debug("\(#function): fetching \(T.self)")
+    //
+    //        do {
+    //
+    //            let result = try realm.objects(T)
+    //            return Result.Success(result)
+    //
+    //        } catch {
+    //
+    //            return Result.Failure(
+    //                MxDBError.FetchError(
+    //                    object: nil
+    //                    , typeName: "\(T.self)"
+    //                    , message: "Error while fetching \(T.self)."
+    //                    , rootError: error))
+    //        }
+    //
+    //    }
     
     
-//    private func fetchMailboxDBO( mailboxId mailboxId: MxObjectId) -> Result<MxMailboxDBO, MxDBError> {
-//        
-//        MxLog.debug("Processing: \(#function). Args: mailboxId=\(mailboxId)")
-//        
-//        let predicate: NSPredicate = NSPredicate( format: "_UID == %@", mailboxId.internalId.value)
-//        do {
-//            
-//            let result = try db.fetch(Request<MxMailboxDBO>().filteredWith( predicate: predicate)).first
-//            return Result.Success(result!)
-//            
-//        } catch {
-//            
-//            return Result.Failure(
-//                MxDBError.UnableToExecuteOperation(
-//                    operationType: MxDBOperation.MxFetchOperation
-//                    , DBOType: Mirror( reflecting: MxMailboxDBO()).subjectType
-//                    , message: "Error while fetching mailbox. Args: mailboxId=\(mailboxId)"
-//                    , rootError: error))
-//        }
-//    }
+    //    private func fetchMailboxDBO( mailboxId mailboxId: MxObjectId) -> Result<MxMailboxDBO, MxDBError> {
+    //
+    //        MxLog.debug("Processing: \(#function). Args: mailboxId=\(mailboxId)")
+    //
+    //        let predicate: NSPredicate = NSPredicate( format: "_UID == %@", mailboxId.internalId.value)
+    //        do {
+    //
+    //            let result = try db.fetch(Request<MxMailboxDBO>().filteredWith( predicate: predicate)).first
+    //            return Result.Success(result!)
+    //
+    //        } catch {
+    //
+    //            return Result.Failure(
+    //                MxDBError.UnableToExecuteOperation(
+    //                    operationType: MxDBOperation.MxFetchOperation
+    //                    , DBOType: Mirror( reflecting: MxMailboxDBO()).subjectType
+    //                    , message: "Error while fetching mailbox. Args: mailboxId=\(mailboxId)"
+    //                    , rootError: error))
+    //        }
+    //    }
     
-//    private func fetchMailboxDBOs() -> Result<[MxMailboxDBO], MxDBError> {
-//        
-//        MxLog.verbose("Processing: \(#function)")
-//        
-//        do {
-//            
-//            let result = try db.fetch(Request<MxMailboxDBO>())
-//            return Result.Success(result)
-//            
-//        } catch {
-//            
-//            return Result.Failure(
-//                MxDBError.UnableToExecuteOperation(
-//                    operationType: MxDBOperation.MxFetchOperation
-//                    , DBOType: Mirror( reflecting: MxMailboxDBO()).subjectType
-//                    , message: "Error while fetching mailboxes."
-//                    , rootError: error))
-//        }
-//    }
+    //    private func fetchMailboxDBOs() -> Result<[MxMailboxDBO], MxDBError> {
+    //
+    //        MxLog.verbose("Processing: \(#function)")
+    //
+    //        do {
+    //
+    //            let result = try db.fetch(Request<MxMailboxDBO>())
+    //            return Result.Success(result)
+    //
+    //        } catch {
+    //
+    //            return Result.Failure(
+    //                MxDBError.UnableToExecuteOperation(
+    //                    operationType: MxDBOperation.MxFetchOperation
+    //                    , DBOType: Mirror( reflecting: MxMailboxDBO()).subjectType
+    //                    , message: "Error while fetching mailboxes."
+    //                    , rootError: error))
+    //        }
+    //    }
     
-//    private func fetchMessageDBOs( mailboxId mailboxId: MxObjectId, labelCode: String)
-//        -> Result<[MxMessageDBO], MxDBError> {
-//            
-//            MxLog.verbose("Processing: \(#function). Args: mailboxId=\(mailboxId), labelCode=\(labelCode)")
-//            
-//            switch fetchMailboxDBO( mailboxId: mailboxId) {
-//            case let .Success(value):
-//                
-//                let result = value
-//                    .labels
-//                    .filter { (label: MxLabelDBO) -> Bool in
-//                        return label.code == labelCode }
-//                    .first!
-//                    .messages
-//                return Result.Success( result)
-//                
-//            case let .Failure(error):
-//                
-//                return Result.Failure(
-//                    MxDBError.UnableToExecuteOperation(
-//                        operationType: MxDBOperation.MxFetchOperation
-//                        , DBOType: Mirror( reflecting: MxMailboxDBO()).subjectType
-//                        , message: "Error while fetching mailbox \(mailboxId)"
-//                        , rootError: error))
-//                
-//            }
-//    }
+    //    private func fetchMessageDBOs( mailboxId mailboxId: MxObjectId, labelCode: String)
+    //        -> Result<[MxMessageDBO], MxDBError> {
+    //
+    //            MxLog.verbose("Processing: \(#function). Args: mailboxId=\(mailboxId), labelCode=\(labelCode)")
+    //
+    //            switch fetchMailboxDBO( mailboxId: mailboxId) {
+    //            case let .Success(value):
+    //
+    //                let result = value
+    //                    .labels
+    //                    .filter { (label: MxLabelDBO) -> Bool in
+    //                        return label.code == labelCode }
+    //                    .first!
+    //                    .messages
+    //                return Result.Success( result)
+    //
+    //            case let .Failure(error):
+    //
+    //                return Result.Failure(
+    //                    MxDBError.UnableToExecuteOperation(
+    //                        operationType: MxDBOperation.MxFetchOperation
+    //                        , DBOType: Mirror( reflecting: MxMailboxDBO()).subjectType
+    //                        , message: "Error while fetching mailbox \(mailboxId)"
+    //                        , rootError: error))
+    //
+    //            }
+    //    }
     
-//    private func fetchMessageDBOs( uids uids: [MxObjectId]) -> Result<[MxMessageDBO], MxDBError> {
-//        
-//        MxLog.verbose("Processing: \(#function). Args: uids=\(uids)")
-//        fatalError("Func not implemented")
-//        
-//    }
+    //    private func fetchMessageDBOs( uids uids: [MxObjectId]) -> Result<[MxMessageDBO], MxDBError> {
+    //        
+    //        MxLog.verbose("Processing: \(#function). Args: uids=\(uids)")
+    //        fatalError("Func not implemented")
+    //        
+    //    }
 }
 
 

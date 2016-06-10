@@ -14,39 +14,46 @@ import Result
 
 // MARK: - Root model object
 
-protocol MxModelObjectProtocol: class, MxBusinessObjectProtocol {}
-
-//typealias MxMOResult = Result<MxModelObjectProtocol,MxStackError>
-//typealias MxSOResult = Result<MxStateObjectProtocol,MxSOError>
+protocol MxModelObjectProtocol: MxBusinessObjectProtocol {
+    init()
+}
 
 
 // MARK: - Indicates that Model can be saved in local DB
 
-protocol MxLocalPersistable: MxModelObjectProtocol {
-    
-    associatedtype DBO: MxDBOType
-    
-    init?(dbo: DBO)
-    
-    func updateDBO( dbo dbo: DBO)
-    
-//    // Fetch
-//    static func fetch( uid uid: MxInternalId) -> Result<Self, MxStackError>
-//    static func fetch( uids uids: [MxInternalId]) -> Result<[Result<Self, MxStackError>], MxDBError>
+//protocol MxLocalPersistable: MxModelObjectProtocol {
 //    
-//    // Insert
-//    func insert() -> Result<Bool,MxStackError>
+//    associatedtype DBO: MxBaseDBO
+//    var dbo: DBO? { get set }
 //    
-//    // Delete
-//    func delete() -> Result<Bool,MxStackError>
-//    static func delete( uids uids: [MxInternalId]) -> Result<Bool, MxStackError>
-//    
-//    // Update
-//    func update() -> Result<Bool,MxStackError>
+//}
+
+
+
+protocol MxDBOProtocol {
     
+    var internalId: String { get set }
+    var remoteId: String { get set }
     
 }
 
+extension MxDBOProtocol {
+    
+    var id: MxObjectId {
+        get {
+            return MxObjectId(internalId: MxInternalId(value: internalId), remoteId: MxRemoteId(value: remoteId))
+        }
+        set {
+            self.internalId = newValue.internalId.value
+            self.remoteId = newValue.remoteId.value
+        }
+    }
+    
+    static func primaryKey() -> String? {
+        return "internalId"
+    }
+    
+}
 
 
 

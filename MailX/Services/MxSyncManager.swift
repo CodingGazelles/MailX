@@ -64,18 +64,18 @@ class MxSyncManager {
             
             .onSuccess(Queue.main.context) { results in
                 
-                results
+                let _ = results
                     .filter{ $0.value != nil }
                     .map{
                         
                         let mailbox = $0.value
-                        let proxy = MxMailboxProxy( mailbox: mailbox!)
-                        
-                        mailbox!.proxy = proxy
+                        proxy = MxMailboxProxy( mailbox: mailbox!)
                         
                         MxLog.debug("Connecting to remote mailbox \(mailbox!.email)")
                         
-                        proxy.connect()
+                        mailbox!.proxy.connect()
+
+                        return mailbox
                         
                 }
                 
@@ -108,14 +108,15 @@ class MxSyncManager {
             
             .onSuccess(Queue.main.context) { results in
                 
-                results
+                let _ = results
                     .filter{ $0.value != nil }
                     .map{
-                        
                         
                         let mailbox = $0.value
                         self.runFullUpdate(mailbox: mailbox!)
                         
+                        return mailbox
+
                 }
                 
             }
@@ -205,21 +206,7 @@ class MxSyncManager {
         }
         
         
-        // fetch messages in INBOX
-        //        MxLog.debug("Fetching messages in INBOX for mailbox: \(mailbox.email)")
-        //
-        //        proxies[mailboxUID]!.fetchMessagesInLabel(labelId: MxLabelModel.Id(value: "INBOX"))
-        
-        
-        //
-        //        // sync messages of system labels
-        //        let labels = localStore.fetchLabels(mailboxId: mailboxId)
-        //
-        //        for label in labels {
-        //            if( label.type == MxLabelModel.OwnerType.SYSTEM){
-        //                proxies[mailboxId]!.fetchMessagesInLabel(labelId: label.id)
-        //            }
-        //        }
+
         
     }
     

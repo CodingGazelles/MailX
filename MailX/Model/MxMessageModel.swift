@@ -10,37 +10,43 @@ import Foundation
 
 import Pipes
 import Result
+import RealmSwift
 
 
 
-final class MxMessageModel: MxModelObjectProtocol {
+final class MxMessageModel: Object, MxDBOProtocol, MxModelObjectProtocol {
     
-    var id: MxObjectId
-    var value: String
+    // properties
+    dynamic var internalId: String = ""
+    dynamic var remoteId: String = ""
     
-    init( id: MxObjectId, value: String){
-        self.id = id
-        self.value = value
-    }
-}
-
-
-extension MxMessageModel: MxLocalPersistable {
+    // relationships
+    let labels = List<MxLabelModel>()
+    dynamic var mailbox: MxMailboxModel?
     
-    convenience init( dbo: MxMessageDBO){
-        
-        let id = dbo.id
-        
-        self.init(
-            id: id
-            , value: "TO DO")
-        
-    }
-    func updateDBO(dbo dbo: MxMessageDBO) {
-        // TO DO
+    override static func indexedProperties() -> [String] {
+        return ["internalId", "remoteId"]
     }
     
 }
+
+
+//extension MxMessageModel: MxLocalPersistable {
+//    
+//    convenience init( dbo: MxMessageDBO){
+//        
+//        let id = dbo.id
+//        
+//        self.init(
+//            id: id
+//            , value: "TO DO")
+//        
+//    }
+//    func updateDBO(dbo dbo: MxMessageDBO) {
+//        // TO DO
+//    }
+//    
+//}
 
 //extension MxMessageModel {
 //    
