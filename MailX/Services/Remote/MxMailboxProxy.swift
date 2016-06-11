@@ -76,10 +76,10 @@ class MxMailboxProxy {
         
         MxLog.debug("\(#function): receiving response from mailbox: \(mailbox.email) labels=\(labels), error=\(error)")
         
-        syncManager.remoteDataHasArrived(
-            mailbox: mailbox
-            , payload: labels!
-            , error: error != nil ? MxProxyError.BridgeReturnedError(rootError: error!) : nil)
+//        syncManager.remoteDataHasArrived(
+//            mailbox: mailbox
+//            , payload: labels!
+//            , error: error != nil ? MxProxyError.BridgeReturnedError(rootError: error!) : nil)
         
         
         MxLog.verbose("...")

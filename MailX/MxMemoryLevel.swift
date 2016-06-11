@@ -26,7 +26,7 @@ class MxMemoryLevel: MxStackLevelProtocol {
     
     func getObject<T: MxModelObjectProtocol>( id id: MxObjectId) -> Future<T,MxStackError> {
         
-        MxLog.debug("\(#function) searching for object \(T.self) with \(id) in memory cache")
+        MxLog.debug("Searching in memory cache for object \(T.self) with \(id)")
         
         let promise = Promise<T, MxStackError>()
         
@@ -37,7 +37,7 @@ class MxMemoryLevel: MxStackLevelProtocol {
             
             if result != nil {
                 
-                MxLog.debug("Found \(result)")
+                MxLog.debug("Found in memory cache \(result)")
                 
                 promise.success(result!)
                 
@@ -46,7 +46,7 @@ class MxMemoryLevel: MxStackLevelProtocol {
                 let error = MxStackError.SearchFailed(
                     object: id,
                     typeName: "\(T.self)",
-                    message: "Failed at searching for object \(T.self) with id \(id) in memory cache",
+                    message: "Failed at searching for object \(T.self) with id \(id)",
                     rootError: nil)
                 
                 MxLog.error(error.description)
@@ -60,20 +60,18 @@ class MxMemoryLevel: MxStackLevelProtocol {
     }
     
     
-    func getAllObjects<T: MxModelObjectProtocol>() -> Future<[Result<T,MxStackError>],MxStackError> {
+    func getAllObjects<T: MxModelObjectProtocol>() -> Future<[T],MxStackError> {
         
-        MxLog.debug("\(#function) searching for all objects \(T.self) in memory cache")
+        MxLog.debug("Searching in memory cache for all objects \(T.self)")
         
-        let promise = Promise<[Result<T,MxStackError>],MxStackError>()
+        let promise = Promise<[T],MxStackError>()
         
         ImmediateExecutionContext {
         
             let cache: MxMemoryCache<T> = self.cache()
             let results = cache.getAllObjects()
-            .map{ (mo: T) -> Result<T,MxStackError> in
-                return .Success( mo ) }
         
-            MxLog.debug("Search succeeded \(results)")
+            MxLog.debug("Found in memory cache succeeded \(results)")
             
             promise.success( results)
             
@@ -85,7 +83,7 @@ class MxMemoryLevel: MxStackLevelProtocol {
     
     func setObject<T: MxModelObjectProtocol>( object object: T) -> Future<T,MxStackError> {
         
-        MxLog.debug("\(#function) inserting object \(object) in memory cache")
+        MxLog.debug("Inserting in memory cache object \(object)")
         
         let promise = Promise<T,MxStackError>()
         
@@ -94,7 +92,7 @@ class MxMemoryLevel: MxStackLevelProtocol {
             let cache: MxMemoryCache<T> = self.cache()
             cache.setObject(object: object, key: object.id)
             
-            MxLog.debug("Set succeeded \(object)")
+            MxLog.debug("Set in memory cache succeeded \(object)")
             
             promise.success(object)
             
@@ -106,7 +104,7 @@ class MxMemoryLevel: MxStackLevelProtocol {
 
     func removeObject<T: MxModelObjectProtocol>( id id: MxObjectId) -> Future<T,MxStackError> {
         
-        MxLog.debug("\(#function) removing object \(T.self) with \(id) from memory cache")
+        MxLog.debug("Removing in memory cache object \(T.self) with \(id)")
         
         let promise = Promise<T,MxStackError>()
         
@@ -117,7 +115,7 @@ class MxMemoryLevel: MxStackLevelProtocol {
             
             if result != nil {
                 
-                MxLog.debug("Remove succeeded \(result!)")
+                MxLog.debug("Remove from memory cache succeeded \(result!)")
                 
                 promise.success(result!)
                 
@@ -126,7 +124,7 @@ class MxMemoryLevel: MxStackLevelProtocol {
                 let error = MxStackError.DeleteFailed(
                     object: id,
                     typeName: "\(T.self)",
-                    message: "Failed at deleting of object \(T.self) fwith id \(id) from memory cache",
+                    message: "Not found in memory cache object \(T.self) with id \(id)",
                     rootError: nil)
                 
                 MxLog.error(error.description)

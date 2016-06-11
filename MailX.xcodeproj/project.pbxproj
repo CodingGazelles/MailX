@@ -11,7 +11,6 @@
 		DF241EF91D03D80900C61196 /* MxNetworkLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF241EF81D03D80900C61196 /* MxNetworkLevel.swift */; };
 		DF241EFB1D0502B600C61196 /* MxErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF241EFA1D0502B600C61196 /* MxErrors.swift */; };
 		DF241EFE1D05C02600C61196 /* BrightFutures.framework.dSYM in Resources */ = {isa = PBXBuildFile; fileRef = DF241EFC1D05C02600C61196 /* BrightFutures.framework.dSYM */; };
-		DF241EFF1D05C02600C61196 /* BrightFutures.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF241EFD1D05C02600C61196 /* BrightFutures.framework */; };
 		DF2AA0A51D07A24100B215D3 /* MxStackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFBBCEF31D034AB900D8BB4E /* MxStackManager.swift */; };
 		DF2E22301CFC8B4500F303F5 /* Box.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF2E221E1CFC8A7700F303F5 /* Box.framework */; };
 		DF2E22311CFC8B4500F303F5 /* Box.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DF2E221E1CFC8A7700F303F5 /* Box.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -82,6 +81,8 @@
 		DFBBCEF61D034DE300D8BB4E /* MxMemoryLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFBBCEF51D034DE300D8BB4E /* MxMemoryLevel.swift */; };
 		DFBBCEF81D03951800D8BB4E /* MxStackProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFBBCEF71D03951800D8BB4E /* MxStackProtocols.swift */; };
 		DFBBCEFA1D03999500D8BB4E /* MxMemoryCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFBBCEF91D03999500D8BB4E /* MxMemoryCache.swift */; };
+		DFD1140C1D0B43B30032264B /* BrightFutures.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF241EFD1D05C02600C61196 /* BrightFutures.framework */; };
+		DFD1140D1D0B43B30032264B /* BrightFutures.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DF241EFD1D05C02600C61196 /* BrightFutures.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DFD3ACF11CFD0BC3007C909F /* MxDBInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFD3ACF01CFD0BC3007C909F /* MxDBInitializer.swift */; };
 		DFD44AB61D010796001DF6F5 /* CleanroomASL.framework.dSYM in Resources */ = {isa = PBXBuildFile; fileRef = DFD44AB21D010796001DF6F5 /* CleanroomASL.framework.dSYM */; };
 		DFD44AB71D010796001DF6F5 /* CleanroomLogger.framework.dSYM in Resources */ = {isa = PBXBuildFile; fileRef = DFD44AB31D010796001DF6F5 /* CleanroomLogger.framework.dSYM */; };
@@ -155,6 +156,7 @@
 				DF2E223B1CFC8B4500F303F5 /* RxCocoa.framework in Embed Frameworks */,
 				DFE26F041CEBF7EC00FB401A /* ReSwift.framework in Embed Frameworks */,
 				DF2E22331CFC8B4500F303F5 /* ReactiveCocoa.framework in Embed Frameworks */,
+				DFD1140D1D0B43B30032264B /* BrightFutures.framework in Embed Frameworks */,
 				DF2E223D1CFC8B4500F303F5 /* RxSwift.framework in Embed Frameworks */,
 				DFD44ABD1D010820001DF6F5 /* CleanroomLogger.framework in Embed Frameworks */,
 				DFD44ABB1D010820001DF6F5 /* CleanroomASL.framework in Embed Frameworks */,
@@ -277,7 +279,6 @@
 				DF5B57E11D09E066007729FA /* Realm.framework in Frameworks */,
 				DFD44ABC1D010820001DF6F5 /* CleanroomLogger.framework in Frameworks */,
 				DF5B57E51D09E073007729FA /* RealmSwift.framework in Frameworks */,
-				DF241EFF1D05C02600C61196 /* BrightFutures.framework in Frameworks */,
 				DFB84EF11CEAB62B0088090D /* GTL.framework in Frameworks */,
 				DF5B57E31D09E070007729FA /* Realm.framework in Frameworks */,
 				DF2E223C1CFC8B4500F303F5 /* RxSwift.framework in Frameworks */,
@@ -293,6 +294,7 @@
 				DF98B55F1CF9222500DAC34F /* Result.framework in Frameworks */,
 				DF2E22321CFC8B4500F303F5 /* ReactiveCocoa.framework in Frameworks */,
 				DFB84ECF1CEAB2310088090D /* Cocoa.framework in Frameworks */,
+				DFD1140C1D0B43B30032264B /* BrightFutures.framework in Frameworks */,
 				DF2E22301CFC8B4500F303F5 /* Box.framework in Frameworks */,
 				78156F2C38FF98059753DA3D /* Pods_MailX.framework in Frameworks */,
 			);
@@ -978,7 +980,7 @@
 				);
 				INFOPLIST_FILE = MailX/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = cool.dog3.MailX;
+				PRODUCT_BUNDLE_IDENTIFIER = cool.dog11.MailX;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "MailX-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -999,7 +1001,7 @@
 				);
 				INFOPLIST_FILE = MailX/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = cool.dog3.MailX;
+				PRODUCT_BUNDLE_IDENTIFIER = cool.dog11.MailX;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "MailX-Bridging-Header.h";
 			};

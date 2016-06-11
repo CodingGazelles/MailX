@@ -38,7 +38,7 @@ func ==<BO: MxBusinessObjectProtocol>(lhs: BO, rhs: BO) -> Bool{
 
 // MARK: - MxID
 
-struct MxObjectId: Hashable, Equatable {
+struct MxObjectId: Hashable, Equatable, Loggable {
     
     var internalId: MxInternalId
     var remoteId: MxRemoteId

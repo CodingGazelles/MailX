@@ -24,7 +24,7 @@ protocol MxStackLevelProtocol {
     
     func getObject<T: MxModelObjectProtocol>( id id: MxObjectId) -> Future<T,MxStackError>
     
-    func getAllObjects<T: MxModelObjectProtocol>() -> Future<[Result<T,MxStackError>],MxStackError>
+    func getAllObjects<T: MxModelObjectProtocol>() -> Future<[T],MxStackError>
     
     func setObject<T: MxModelObjectProtocol>(object object: T) -> Future<T,MxStackError>
     

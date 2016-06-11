@@ -95,7 +95,7 @@ struct MxPropertiesState: MxStateType {
 }
 
 struct MxErrorsState: MxStateType {
-    var errors = [MxSOError]()
+    var errors = [MxErrorSO]()
 }
 
 

@@ -8,8 +8,6 @@
 
 import Foundation
 
-import ReSwift
-import Pipes
 import Result
 import BrightFutures
 
@@ -27,7 +25,7 @@ struct MxSelectLabelAction: MxAction {
 
 struct MxSetLabelsAction: MxAction {
     var labels: [MxLabelSO]
-    var errors: [MxSOError]
+    var errors: [MxErrorSO]
 }
 
 
@@ -37,7 +35,7 @@ func dispatchSetLabelsAction() {
     
     MxLog.debug("Processing MxSetLabelsAction")
     
-    let store = MxStoreManager.defaultStore()
+    let store = MxStateManager.defaultStore()
     let stack = MxStackManager.sharedInstance()
     
     store.dispatch( MxStartLoadingAction())
@@ -51,10 +49,9 @@ func dispatchSetLabelsAction() {
                 id: MxObjectId()
                 , code: $0
                 , name: systemLabels.labelName( labelCode: $0)
-                , ownerType: MxLabelOwnerType.SYSTEM.rawValue
-                , mailboxId: MxObjectId())!}
+                , ownerType: MxLabelOwnerType.SYSTEM.rawValue)!}
         
-        let action = MxSetLabelsAction( labels: defaultLabels, errors: [MxSOError]())
+        let action = MxSetLabelsAction( labels: defaultLabels, errors: [MxErrorSO]())
         
         MxLog.debug("Dispatching action: \(action)")
         
@@ -62,7 +59,7 @@ func dispatchSetLabelsAction() {
         
     case .One(let selectedMailbox):
         
-        let _: Future<[Result<MxLabelModel,MxStackError>],MxStackError> = stack.getAllObjects()
+        let _: Future<[MxLabelModel],MxStackError> = stack.getAllObjects()
         
             .andThen( context: Queue.main.context) {_ in
                 
@@ -72,17 +69,11 @@ func dispatchSetLabelsAction() {
         
             .onSuccess( Queue.main.context) { results in
                 
-                let errors = results
-                    .filter{ $0.error != nil }
-                    .map{ MxSOError( error: $0.error!) }
-                
                 let labels = results
-                    .filter{ $0.value != nil }
-                    .map{ $0.value! }
-                    .filter{ $0.mailbox?.internalId == selectedMailbox.internalId }
+                    .filter{ $0.mailbox?.id == selectedMailbox.id }
                     .map{ MxLabelSO( model: $0) }
                 
-                let action = MxSetLabelsAction( labels: labels, errors: errors)
+                let action = MxSetLabelsAction( labels: labels, errors: [MxErrorSO]())
                 
                 MxLog.debug("Dispatching action: \(action)")
                 
@@ -92,7 +83,7 @@ func dispatchSetLabelsAction() {
         
             .onFailure( Queue.main.context) { error in
                 
-                let action = MxAddErrorsAction(errors: [MxSOError(error: error)])
+                let action = MxAddErrorsAction(errors: [MxErrorSO(error: error)])
                 
                 MxLog.debug("Dispatching action: \(action)")
                 
@@ -100,32 +91,6 @@ func dispatchSetLabelsAction() {
                 
         }
         
-//        let result = fetchMailboxDBO( mailboxUID: selectedMailbox.UID)
-        
-//        switch result {
-//        case let .Success( mailboxDBO):
-//            
-//            let results = mailboxDBO.labels
-//                |> map(){ $0.toModel()}
-//            
-//            let errosSO = results
-//                |> filter(){ $0.error != nil }
-//                |> map(){ MxSOError( error: $0.error! )}
-//
-//            let labelsSO = results
-//                |> filter(){ $0.value != nil}
-//                |> map(){ $0.value!.toSO() }
-//            
-//            let action = MxSetLabelsAction( labels: labelsSO, errors: errosSO)
-//            MxLog.debug("Returning action: \(action)")
-//            return action
-//            
-//        case let .Failure( error):
-//            
-//            let action = MxAddErrorsAction(errors: [MxSOError(error: error)])
-//            MxLog.debug("Returning action: \(action)")
-//            return action
-//        }
         
     }
     

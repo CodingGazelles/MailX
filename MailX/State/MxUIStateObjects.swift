@@ -12,7 +12,7 @@ import Foundation
 
 // MARK: - State objects
 
-protocol MxStateObjectProtocol: MxBusinessObjectProtocol, MxInitWithModel {}
+protocol MxStateObjectProtocol: MxBusinessObjectProtocol {}
 
 protocol MxInitWithModel {
     associatedtype Model: MxModelObjectProtocol

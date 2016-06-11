@@ -15,29 +15,14 @@ import Result
 // MARK: - Root model object
 
 protocol MxModelObjectProtocol: MxBusinessObjectProtocol {
-    init()
-}
-
-
-// MARK: - Indicates that Model can be saved in local DB
-
-//protocol MxLocalPersistable: MxModelObjectProtocol {
-//    
-//    associatedtype DBO: MxBaseDBO
-//    var dbo: DBO? { get set }
-//    
-//}
-
-
-
-protocol MxDBOProtocol {
     
     var internalId: String { get set }
     var remoteId: String { get set }
     
+    init()
 }
 
-extension MxDBOProtocol {
+extension MxModelObjectProtocol {
     
     var id: MxObjectId {
         get {
@@ -47,10 +32,6 @@ extension MxDBOProtocol {
             self.internalId = newValue.internalId.value
             self.remoteId = newValue.remoteId.value
         }
-    }
-    
-    static func primaryKey() -> String? {
-        return "internalId"
     }
     
 }

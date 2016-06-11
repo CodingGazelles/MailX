@@ -21,9 +21,8 @@ struct MxLabelSO: MxStateObjectProtocol {
     var code: String
     var name: String
     var ownerType: String
-    var mailboxId: MxObjectId
     
-    init?( id: MxObjectId, code: String, name: String, ownerType: String, mailboxId: MxObjectId){
+    init?( id: MxObjectId, code: String, name: String, ownerType: String){
         
         guard MxLabelOwnerType(rawValue: ownerType) != nil else {
             return nil
@@ -33,7 +32,6 @@ struct MxLabelSO: MxStateObjectProtocol {
         self.code = code
         self.name = name
         self.ownerType = ownerType
-        self.mailboxId = mailboxId
     }
     
 }
@@ -44,31 +42,11 @@ extension MxLabelSO: MxInitWithModel {
             id: model.id
             , code: model.code
             , name: model.name
-            , ownerType: model.ownerType.rawValue
-            , mailboxId: model.mailboxId)!
+            , ownerType: model.ownerType)!
     }
 }
 
-//func toSO( label label: Result<MxLabelModel,MxStackError>) -> Result<MxLabelSO, MxSOError> {
-//    switch label {
-//    case let .Success(model):
-//        return Result.Success( MxLabelSO(model: model))
-//    case let .Failure( error):
-//        return Result.Failure( errorSO(error: error))
-//    }
-//}
 
-
-
-
-//MARK: Extensions
-
-//extension MxLabelSO: MxLabelRow {}
-//
-//protocol MxLabelRow: MxStateObjectProtocol {
-//    var code: String { get set }
-//    var name: String { get set }
-//}
 
 
 

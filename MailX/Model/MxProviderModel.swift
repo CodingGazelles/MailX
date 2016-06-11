@@ -13,7 +13,7 @@ import RealmSwift
 
 
 
-final class MxProviderModel: Object, MxDBOProtocol, MxModelObjectProtocol {
+final class MxProviderModel: Object, MxModelObjectProtocol {
     
     // properties
     dynamic var internalId: String = ""
@@ -26,6 +26,10 @@ final class MxProviderModel: Object, MxDBOProtocol, MxModelObjectProtocol {
     
     override static func indexedProperties() -> [String] {
         return ["internalId", "remoteId"]
+    }
+    
+    override static func primaryKey() -> String? {
+        return "internalId"
     }
     
 }

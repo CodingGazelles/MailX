@@ -12,22 +12,30 @@ import Foundation
 
 class MxDBInitializer {
     
+    private static let stack = MxStackManager.sharedInstance()
+    
     static func insertDefaultProviders(){
         
         guard MxUserPreferences.sharedPreferences().defaultProvidersInserted == false else {
-            MxLog.debug("Processing defaults providers already inserted")
+            MxLog.debug("Defaults providers already inserted")
             return
         }
         
-        MxLog.debug("Processing inserting defaults providers")
+        MxLog.debug("Inserting defaults providers")
         
         let appProperties = MxAppProperties.defaultProperties()
         let providers = appProperties.providers()
         
         for providerCode in providers.keys {
             
-            let provider = MxProviderModel(id: MxObjectId(), code: providerCode)
-            provider.insert()
+            var provider = MxProviderModel()
+            provider.id = MxObjectId()
+            provider.code = providerCode
+            provider.name = ""
+            
+            MxLog.debug("Inserting \(provider)")
+            
+            stack.setObject(object: provider)
             
         }
         
@@ -37,7 +45,7 @@ class MxDBInitializer {
     static func insertTestMailbox(){
         
         guard MxUserPreferences.sharedPreferences().testMailboxInserted == false else {
-            MxLog.debug("Processing \(#function) test mailbox already inserted")
+            MxLog.debug("Test mailbox already inserted")
             return
         }
         
@@ -50,33 +58,33 @@ class MxDBInitializer {
         let appProperties = MxAppProperties.defaultProperties()
         let providers = appProperties.providers()
         
-        let mailbox = MxMailboxModel(
-            id: MxObjectId()
-            , email: email
-            , name: name
-            , connected: false
-            , providerCode: providerCode)
+        var mailbox = MxMailboxModel()
+        mailbox.id = MxObjectId()
+        mailbox.email = email
+        mailbox.name = name
+        mailbox.connected = false
         
-        MxLog.debug("Inserting mailbox: \(mailbox)")
-        mailbox.insert()
+        MxLog.debug("Inserting \(mailbox)")
         
-        let labels = (providers[providerCode]![MxAppProperties.k_Provider_Labels] as! [String:String]).keys
+        stack.setObject(object: mailbox)
         
-        for labelCode in labels {
-            
-            let labelName = appProperties.systemLabels().labelName( labelCode: labelCode)
-            
-            let label = MxLabelModel(
-                id: MxObjectId()
-                , code: labelCode
-                , name: labelName
-                , ownerType: MxLabelOwnerType.SYSTEM
-                , mailboxId: mailbox.id)
-            
-            MxLog.debug("Inserting label: \(label)")
-            label.insert()
-            
-        }
+//        let labels = (providers[providerCode]![MxAppProperties.k_Provider_Labels] as! [String:String]).keys
+//        
+//        for labelCode in labels {
+//            
+//            let labelName = appProperties.systemLabels().labelName( labelCode: labelCode)
+//            
+//            var label = MxLabelModel()
+//            label.id = MxObjectId()
+//            label.code = labelCode
+//            label.name = labelName
+//            label.ownerType = MxLabelOwnerType.SYSTEM.rawValue
+//            
+//            MxLog.debug("Inserting \(label)")
+//            
+//            stack.setObject(object: label)
+//            
+//        }
         
         MxUserPreferences.sharedPreferences().testMailboxInserted = true
     }

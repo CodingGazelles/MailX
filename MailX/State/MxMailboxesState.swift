@@ -14,7 +14,7 @@ import Result
 
 // MARK: - State Object
 
-typealias MxMailboxSOResult = Result<MxMailboxSO, MxSOError>
+typealias MxMailboxSOResult = Result<MxMailboxSO, MxErrorSO>
 
 struct MxMailboxSO: MxStateObjectProtocol {
     
@@ -22,14 +22,12 @@ struct MxMailboxSO: MxStateObjectProtocol {
     var email: String
     var name: String
     var connected: Bool
-    var providerId: MxObjectId
     
-    init( id: MxObjectId, email: String, name: String, connected: Bool, providerId: MxObjectId){
+    init( id: MxObjectId, email: String, name: String, connected: Bool){
         self.id = id
         self.email = email
         self.name = name
         self.connected = connected
-        self.providerId = providerId
     }
     
 }
@@ -40,20 +38,11 @@ extension MxMailboxSO: MxInitWithModel {
             id: model.id
             , email: model.email
             , name: model.name
-            , connected: model.connected
-            , providerId: model.providerId)
+            , connected: model.connected)
     }
 }
 
-//func toSO( mailbox mailbox: Result<MxMailboxModel, MxStackError> ) -> MxMailboxSOResult {
-//    switch mailbox {
-//    case let .Success(model):
-//        return Result.Success( MxMailboxSO(model: model))
-//    case let .Failure( error):
-//        return Result.Failure( errorSO(error: error))
-//    }
-//}
-//
+
 
 
 

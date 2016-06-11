@@ -30,6 +30,12 @@ enum MxError: MxExceptionProtocol {
     //    case UnexpectedParameter( operationName: String, message: String, rootError: ErrorType?)
 }
 
+enum MxStateError: MxExceptionProtocol {
+    
+    case BaseError( object: Any?, message: String, rootError: ErrorType)
+    
+}
+
 
 // MARK: - Stack Error
 

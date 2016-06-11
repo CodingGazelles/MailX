@@ -9,13 +9,14 @@
 import Foundation
 
 import ReSwift
+import BrightFutures
 
 
 
-class MxStoreManager {
+class MxStateManager {
     
-    private static let appStore = MxStoreManager()
-    static func defaultStore() -> MxStoreManager {
+    private static let appStore = MxStateManager()
+    static func defaultStore() -> MxStateManager {
         return appStore
     }
     
@@ -30,25 +31,49 @@ class MxStoreManager {
         }
     }
     
-    func dispatch(action: Action) -> Any {
-        MxLog.debug("Dispatching action: \(action)")
-        return store.dispatch(action)
-    }
     
-    func dispatch(mxActionCreator: (state: MxAppState) -> MxAction?) -> Any {
-        MxLog.debug("Dispatching action creator: \(mxActionCreator)")
+    func dispatch(action: Action) -> Future<Any,MxStateError> {
         
-        let reActionCreator = {
-            (state: MxAppState, store: Store<MxAppState>) -> Action? in
+        MxLog.debug("Dispatching action: \(action)")
+        
+        let promise = Promise<Any, MxStateError>()
+        
+        Queue.main.context {
             
-            let _state = state
-            let _action = mxActionCreator(state: _state)
+            let result = self.store.dispatch(action)
+            promise.success(result)
             
-            return _action as? Action
         }
         
-        return store.dispatch(reActionCreator)
+        return promise.future
     }
+    
+    
+    func dispatch(mxActionCreator: (state: MxAppState) -> MxAction?) -> Future<Any, MxStateError> {
+        
+        MxLog.debug("Dispatching action creator: \(mxActionCreator)")
+        
+        let promise = Promise<Any, MxStateError>()
+        
+        Queue.main.context {
+            
+            let reActionCreator = {
+                (state: MxAppState, store: Store<MxAppState>) -> Action? in
+                
+                let _state = state
+                let _action = mxActionCreator(state: _state)
+                
+                return _action as? Action
+            }
+            
+            let result = self.store.dispatch(reActionCreator)
+            promise.success( result)
+            
+        }
+        
+        return promise.future
+    }
+    
     
     func initState() {
         MxLog.info("Initializing state")

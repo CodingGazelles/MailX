@@ -14,21 +14,25 @@ import RealmSwift
 
 
 
-final class MxLabelModel: Object, MxDBOProtocol, MxModelObjectProtocol {
+final class MxLabelModel: Object, MxModelObjectProtocol {
     
     // properties
     dynamic var internalId: String = ""
     dynamic var remoteId: String = ""
     dynamic var code: String = ""
     dynamic var name: String = ""
-    dynamic var ownerType: String = ""
+    dynamic var ownerType: String = MxLabelOwnerType.UNDEFINED.rawValue
     
     // relationships
-    let messages = LinkingObjects(fromType: MxMessageModel.self, property: "label")
+    let messages = LinkingObjects(fromType: MxMessageModel.self, property: "labels")
     dynamic var mailbox: MxMailboxModel?
     
     override static func indexedProperties() -> [String] {
         return ["internalId", "remoteId"]
+    }
+    
+    override static func primaryKey() -> String? {
+        return "internalId"
     }
     
 }
@@ -221,4 +225,5 @@ final class MxLabelModel: Object, MxDBOProtocol, MxModelObjectProtocol {
 enum MxLabelOwnerType: String {
     case SYSTEM = "SYSTEM"
     case USER = "USER"
+    case UNDEFINED = "UNDEFINED"
 }

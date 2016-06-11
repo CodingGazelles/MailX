@@ -20,7 +20,7 @@ class MxNetworkLevel: MxStackLevelProtocol {
         fatalError("Func not implemented")
     }
     
-    func getAllObjects<T: MxModelObjectProtocol>() -> Future<[Result<T,MxStackError>],MxStackError> {
+    func getAllObjects<T: MxModelObjectProtocol>() -> Future<[T],MxStackError> {
         fatalError("Func not implemented")
     }
     

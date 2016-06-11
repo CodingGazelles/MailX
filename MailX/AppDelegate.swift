@@ -19,7 +19,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         return MxSyncManager.defaultManager()
     }()
     
-    lazy var stateManager = MxStoreManager.defaultStore()
+    lazy var stateManager = MxStateManager.defaultStore()
     
     
     func applicationDidFinishLaunching(aNotification: NSNotification) {
@@ -63,7 +63,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         dispatch_async( queue, {
             
             MxLog.info("Starting syncronization")
-            self.syncManager.startSynchronization()
+//            self.syncManager.startSynchronization()
         })
         
     }

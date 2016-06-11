@@ -10,7 +10,7 @@ import Foundation
 
 
 
-struct MxSOError: MxStateObjectProtocol, MxExceptionProtocol {
+struct MxErrorSO: MxStateObjectProtocol, MxExceptionProtocol {
     
     var id: MxObjectId
     var message: String
@@ -25,14 +25,14 @@ struct MxSOError: MxStateObjectProtocol, MxExceptionProtocol {
     }
 }
 
-extension MxSOError {
+extension MxErrorSO {
     init( error: MxStackError){
         self.init(id: MxObjectId(), message: error.description)
     }
 }
 
-func errorSO( error error: MxStackError) -> MxSOError {
-    return MxSOError(error: error)
+func errorSO( error error: MxStackError) -> MxErrorSO {
+    return MxErrorSO(error: error)
 }
 
 

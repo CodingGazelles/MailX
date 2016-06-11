@@ -25,7 +25,7 @@ class MxSyncManager {
     
     // MARK: - Private properties
     
-    private let store = MxStoreManager.defaultStore()
+    private let store = MxStateManager.defaultStore()
     private let stack = MxStackManager.sharedInstance()
     
     
@@ -60,20 +60,17 @@ class MxSyncManager {
         
         MxLog.debug("Connecting to remote mailboxes")
         
-        let _: Future<[Result<MxMailboxModel,MxStackError>],MxStackError> = stack.getAllObjects()
+        let _: Future<[MxMailboxModel],MxStackError> = stack.getAllObjects()
             
-            .onSuccess(Queue.main.context) { results in
+            .onSuccess { results in
                 
                 let _ = results
-                    .filter{ $0.value != nil }
-                    .map{
+                    .map{ (mailbox: MxMailboxModel) -> MxMailboxModel in
                         
-                        let mailbox = $0.value
-                        proxy = MxMailboxProxy( mailbox: mailbox!)
+                        MxLog.debug("Connecting to remote mailbox \(mailbox.email)")
                         
-                        MxLog.debug("Connecting to remote mailbox \(mailbox!.email)")
-                        
-                        mailbox!.proxy.connect()
+                        mailbox.proxy = MxMailboxProxy( mailbox: mailbox)
+                        mailbox.proxy.connect()
 
                         return mailbox
                         
@@ -81,7 +78,7 @@ class MxSyncManager {
                 
             }
             
-            .onFailure(Queue.main.context) { error in
+            .onFailure { error in
                 
                 MxLog.error("Error while loading all mailboxes")
                 
@@ -104,24 +101,21 @@ class MxSyncManager {
         
         MxLog.debug("Updating all mailboxes ")
         
-        let _: Future<[Result<MxMailboxModel,MxStackError>],MxStackError> = stack.getAllObjects()
+        let _: Future<[MxMailboxModel],MxStackError> = stack.getAllObjects()
             
-            .onSuccess(Queue.main.context) { results in
+            .onSuccess { results in
                 
                 let _ = results
-                    .filter{ $0.value != nil }
-                    .map{
+                    .map{ (mailbox: MxMailboxModel) -> MxMailboxModel in
                         
-                        let mailbox = $0.value
-                        self.runFullUpdate(mailbox: mailbox!)
-                        
+                        self.runFullUpdate(mailbox: mailbox)
                         return mailbox
 
                 }
                 
             }
             
-            .onFailure(Queue.main.context) { error in
+            .onFailure { error in
                 
                 MxLog.error("Error while loading all mailboxes")
                 
@@ -143,8 +137,7 @@ class MxSyncManager {
         MxLog.debug("Executing full update of mailbox \(mailbox.email)")
         
         emptyLocalData(mailbox: mailbox)
-        
-        fetchRemoteData(mailbox: mailbox)
+//        fetchRemoteData(mailbox: mailbox)
         
     }
     
@@ -153,8 +146,7 @@ class MxSyncManager {
         
         MxLog.debug("Executing full delete of local data of mailbox: \(mailbox.email)")
         
-        let mailboxDbo = mailbox.dbo
-        let labels = mailboxDbo!.labels
+        let labels = mailbox.labels
         
         MxLog.debug("Deleting messages of mailbox: \(mailbox.email)")
         
@@ -162,17 +154,22 @@ class MxSyncManager {
             
             for message in label.messages {
                 
-                switch message.delete() {
-                case .Success:
-                    
-                    MxLog.debug("Message deleted: \(label)")
-                    
-                case let .Failure(error):
-                    
-                    let error = MxSyncError.UnableToRealizeDBOperation(rootError: error)
-                    MxStoreManager.defaultManager().dispatch( MxAddErrorsAction( errors: [MxSOError( error: error )]))
-                    
+                let _: Future<MxMessageModel,MxStackError> = stack.removeObject(id: message.id)
+                
+                    .onSuccess { value in
+                        
+                        let desc = message.description
+                        MxLog.debug("Message deleted: \(desc)")
+                        
                 }
+                
+                    .onFailure { error in
+                        
+                        let error = MxSyncError.UnableToRealizeDBOperation(rootError: error)
+                        self.store.dispatch( MxAddErrorsAction( errors: [MxErrorSO( error: error )]))
+                        
+                }
+                
             }
         }
         
@@ -180,55 +177,42 @@ class MxSyncManager {
         
         for label in labels {
             
-            switch label.delete() {
-            case .Success:
+            let _: Future<MxLabelModel,MxStackError> = stack.removeObject(id: label.id)
                 
-                MxLog.debug("Label deleted: \(label)")
+                .onSuccess { value in
+                    
+                    let desc = label.description
+                    MxLog.debug("Label deleted: \(desc)")
+                    
+                }
                 
-            case let .Failure(error):
-                
-                let error = MxSyncError.UnableToRealizeDBOperation(rootError: error)
-                MxStoreManager.defaultManager().dispatch( MxAddErrorsAction( errors: [MxSOError( error: error )]))
-                
+                .onFailure { error in
+                    
+                    let error = MxSyncError.UnableToRealizeDBOperation(rootError: error)
+                    self.store.dispatch( MxAddErrorsAction( errors: [MxErrorSO( error: error )]))
+                    
             }
+            
         }
         
     }
+//    
+//    private func fetchRemoteData( mailbox mailbox: MxMailboxModel){
+//        
+//        MxLog.debug("Executing full fetch of remote data of mailbox: \(mailbox.email)")
+//        
+//        MxLog.debug("Fetching labels of mailbox \(mailbox.email)")
+//        
+//        for mailbox in MxSyncManager.allMailboxes() {
+//            mailbox.proxy.fetchLabels()
+//        }
+//        
+//        
+//
+//        
+//    }
     
-    private func fetchRemoteData( mailbox mailbox: MxMailboxModel){
-        
-        MxLog.debug("Executing full fetch of remote data of mailbox: \(mailbox.email)")
-        
-        MxLog.debug("Fetching labels of mailbox \(mailbox.email)")
-        
-        for mailbox in MxSyncManager.allMailboxes() {
-            mailbox.proxy.fetchLabels()
-        }
-        
-        
 
-        
-    }
-    
-    func remoteDataHasArrived( mailbox mailbox: MxMailboxModel, payload: [MxModelObjectProtocol], error: MxProxyError?){
-        
-        MxLog.info("\(#function): receiving remote data from mailbox \(mailbox.email)")
-        
-        switch payload.dynamicType {
-        case is [MxLabelModel]:
-            
-            MxLog.debug(payload.debugDescription)
-            
-        case is [MxMessageModel]:
-            
-            MxLog.debug(payload.debugDescription)
-            
-        default:
-            
-            MxLog.error("Unidentified payload: \(payload.debugDescription)")
-            
-        }
-    }
     
     
 }

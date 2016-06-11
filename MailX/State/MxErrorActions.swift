@@ -11,5 +11,5 @@ import Foundation
 
 
 struct MxAddErrorsAction: MxAction {
-    var errors: [MxSOError]
+    var errors: [MxErrorSO]
 }

@@ -181,12 +181,13 @@ class MxGMailBridge : NSObject, MxMailboxBridge {
                 
             for response in labelsResponse.labels as! [GTLGmailLabel] {
                 
-                let label = MxLabelModel(
-                    id: MxObjectId( internalId: MxInternalId(), remoteId: MxRemoteId(value: response.identifier))
-                    , code: response.name
-                    , name: ""
-                    , ownerType: MxLabelOwnerType.SYSTEM
-                    , mailboxId: mailbox.id)
+                var label = MxLabelModel()
+                label.id = MxObjectId( internalId: MxInternalId(), remoteId: MxRemoteId(value: response.identifier))
+                
+                label.code = response.name
+                label.name = ""
+                label.ownerType = MxLabelOwnerType.SYSTEM.rawValue
+                label.mailbox = mailbox
                     
                 labels.append(label)
                 
@@ -245,9 +246,8 @@ class MxGMailBridge : NSObject, MxMailboxBridge {
                     
                     MxLog.debug("Message:\(response)")
                     
-                    let message = MxMessageModel(
-                        id: MxObjectId( internalId: MxInternalId(), remoteId: MxRemoteId( value: response.identifier))
-                        , value: "")
+                    var message = MxMessageModel()
+                    message.id = MxObjectId( internalId: MxInternalId(), remoteId: MxRemoteId( value: response.identifier))
                     
                     messages.append( message)
                     

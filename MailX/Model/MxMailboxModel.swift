@@ -14,7 +14,7 @@ import RealmSwift
 
 
 
-final class MxMailboxModel: Object, MxDBOProtocol, MxModelObjectProtocol {
+final class MxMailboxModel: Object, MxModelObjectProtocol {
     
     // properties
     dynamic var internalId: String = ""
@@ -33,6 +33,10 @@ final class MxMailboxModel: Object, MxDBOProtocol, MxModelObjectProtocol {
     
     override static func ignoredProperties() -> [String] {
         return ["connected", "proxy"]
+    }
+    
+    override static func primaryKey() -> String? {
+        return "internalId"
     }
     
     var connected: Bool = false
