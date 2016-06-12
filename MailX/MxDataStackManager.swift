@@ -13,10 +13,10 @@ import BrightFutures
 
 
 
-class MxStackManager {
+class MxDataStackManager {
     
-    private static let stack = MxStackManager()
-    static func sharedInstance() -> MxStackManager {
+    private static let stack = MxDataStackManager()
+    static func sharedInstance() -> MxDataStackManager {
         return stack
     }
     
@@ -25,7 +25,7 @@ class MxStackManager {
     init() {
         levels.append(MxMemoryLevel())
         levels.append(MxDBLevel())
-        levels.append(MxNetworkLevel())
+//        levels.append(MxNetworkLevel())
     }
     
     
@@ -116,7 +116,7 @@ class MxStackManager {
     
     func getAllObjects<T: MxModelObjectProtocol>() -> Future<[T],MxStackError> {
         
-        MxLog.debug("Getting in stack all object \(T.self)")
+        MxLog.debug("Getting in stack all objects \(T.self)")
         
         let promise = Promise<[T], MxStackError>()
         

@@ -19,7 +19,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         return MxSyncManager.defaultManager()
     }()
     
-    lazy var stateManager = MxStateManager.defaultStore()
+    lazy var stateManager = MxUIStateManager.defaultStore()
     
     
     func applicationDidFinishLaunching(aNotification: NSNotification) {
@@ -29,7 +29,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         MxLog.enable()
         
         
-        //
         MxLog.info("*** App launching ***")
         
         
@@ -58,13 +57,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         stateManager.initState()
         
         
-        // Init local db and connections to providers
-        let queue: dispatch_queue_t = dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)
-        dispatch_async( queue, {
-            
-            MxLog.info("Starting syncronization")
-//            self.syncManager.startSynchronization()
-        })
+        // Init connections to mailboxes
+        self.syncManager.connectMailboxes()
+        
+        
+//      MxLog.info("Starting synchronization")
+//      self.syncManager.startSynchronization()
+        
         
     }
     

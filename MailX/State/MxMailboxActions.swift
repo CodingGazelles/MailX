@@ -24,8 +24,8 @@ func dispatchSetMailboxesAction() {
     MxLog.debug("Dispatching SetMailboxesAction")
     
     
-    let store = MxStateManager.defaultStore()
-    let stack = MxStackManager.sharedInstance()
+    let store = MxUIStateManager.defaultStore()
+    let stack = MxDataStackManager.sharedInstance()
     
     
     store.dispatch( MxStartLoadingAction())

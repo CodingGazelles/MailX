@@ -12,7 +12,7 @@ import Foundation
 
 class MxDBInitializer {
     
-    private static let stack = MxStackManager.sharedInstance()
+    private static let stack = MxDataStackManager.sharedInstance()
     
     static func insertDefaultProviders(){
         

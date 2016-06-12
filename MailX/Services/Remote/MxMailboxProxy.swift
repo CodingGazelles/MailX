@@ -8,56 +8,63 @@
 
 import Foundation
 
+import BrightFutures
+
 
 
 class MxMailboxProxy {
     
-    lazy private var syncManager = { () -> MxSyncManager in
-        return MxSyncManager.defaultManager()
-    }()
-    
-    private var bridge: MxMailboxBridge
-    private var isConnected = false
+    private var adapter: MxMailboxAdapter
     private var operationsQueue: NSOperationQueue
     private var mailbox: MxMailboxModel
+    private var connectPromise: Promise<Any, MxProxyError>!
     
     
     init( mailbox: MxMailboxModel){
         
         self.mailbox = mailbox
         
-        let bridge = MxBridgeFactory.gmailBridge( mailbox: mailbox)
-        self.bridge = bridge
+        let adapter = MxAdapterFactory.gmailAdapter( mailbox: mailbox)
+        self.adapter = adapter
         
         operationsQueue = NSOperationQueue()
-        operationsQueue.name = mailbox.id.remoteId.value
+        operationsQueue.name = mailbox.email
         operationsQueue.maxConcurrentOperationCount = 1
     }
     
     
-    // MARK: - Connect bridge
+    // MARK: - Connect adapter
     
-    func connect() {
+    func connect() -> Future<Any, MxProxyError> {
         
-        MxLog.debug("\(#function) creating connection operation to mailbox: \(mailbox.email)")
+        MxLog.debug("Adding connection command to operation queue for mailbox: \(mailbox.email)")
         
-        let ticket = MxConnectionOperation( bridge: bridge, completionHandler: bridgeDidConnect)
-        operationsQueue.addOperation( ticket)
+        connectPromise = Promise<Any, MxProxyError>()
+        
+        ImmediateExecutionContext {
+            
+            let ticket = MxConnectionCommand( adapter: self.adapter, callback: self.adapterDidConnect)
+            self.operationsQueue.addOperation( ticket)
+
+        }
+        
+        return connectPromise.future
     }
     
-    func bridgeDidConnect(error error: MxBridgeError?){
+    func adapterDidConnect(error error: MxAdapterError?){
         if( error == nil) {
             
             MxLog.debug("Proxy is connected to mailbox: \(mailbox.email)")
             
-            isConnected = true
-            mailbox.connected = true
+            connectPromise.success(true)
             
         } else {
             
-            MxLog.error("Unable to connect to mailbox \(mailbox.email)", error: error)
+            MxLog.error("Unable to connect adapter to mailbox \(mailbox.email)", error: error)
             
-            fatalError( MxProxyError.BridgeReturnedError(rootError: error!).debugDescription)
+            let proxyError = MxProxyError.AdapterDidNotConnect(rootError: error!)
+            connectPromise.failure( proxyError)
+            
         }
     }
     
@@ -66,20 +73,20 @@ class MxMailboxProxy {
     
     func fetchLabels() {
         
-        MxLog.verbose("\(#function) creating fetch labels operation to mailbox: \(bridge.mailbox)")
+        MxLog.verbose("\(#function) creating fetch labels operation to mailbox: \(adapter.mailbox)")
         
-        let ticket = MxFetchLabelsOperation( bridge: bridge, completionHandler: bridgeDidFetchLabels)
+        let ticket = MxFetchLabelsCommand( adapter: adapter, callback: adapterDidFetchLabels)
         operationsQueue.addOperation(ticket)
     }
     
-    func bridgeDidFetchLabels(labels labels: [MxLabelModel]?, error: MxBridgeError?) {
+    func adapterDidFetchLabels(labels labels: [MxLabelModel]?, error: MxAdapterError?) {
         
         MxLog.debug("\(#function): receiving response from mailbox: \(mailbox.email) labels=\(labels), error=\(error)")
         
 //        syncManager.remoteDataHasArrived(
 //            mailbox: mailbox
 //            , payload: labels!
-//            , error: error != nil ? MxProxyError.BridgeReturnedError(rootError: error!) : nil)
+//            , error: error != nil ? MxProxyError.adapterReturnedError(rootError: error!) : nil)
         
         
         MxLog.verbose("...")
@@ -91,13 +98,13 @@ class MxMailboxProxy {
     func fetchMessagesInLabel( labelId labelId: MxObjectId) {
         MxLog.debug("Processing \(#function). Args: labelId: \(labelId)")
         
-        MxLog.verbose("Creating fetch messages ticket to mailbox: \(bridge.mailbox)")
+        MxLog.verbose("Creating fetch messages ticket to mailbox: \(adapter.mailbox)")
         
-        let ticket = MxFetchMessagesInLabelOperation( labelId: labelId, bridge: bridge, completionHandler: bridgeDidFetchMessagesInLabel)
+        let ticket = MxFetchMessagesCommand( labelId: labelId, adapter: adapter, callback: adapterDidFetchMessagesInLabel)
         operationsQueue.addOperation(ticket)
     }
     
-    func bridgeDidFetchMessagesInLabel( messages messages: [MxMessageModel]?, error: MxBridgeError?) {
+    func adapterDidFetchMessagesInLabel( messages messages: [MxMessageModel]?, error: MxAdapterError?) {
         MxLog.verbose("... Processing. Args: messages=\(messages), error=\(error)")
         
         

@@ -13,14 +13,14 @@ import GTMOAuth2
 
 
 
-class MxGMailBridge : NSObject, MxMailboxBridge {
+class MxGMailAdapter : NSObject, MxMailboxAdapter {
     
     var mailbox: MxMailboxModel
     private var service: GTLServiceGmail
     
-    private var connectCompletionHandler: MxConnectCompletionHandler?
-    private var fetchLabelsCompletionHandler: MxFetchLabelsCompletionHandler?
-    private var fetchMessagesInLabelCompletionHandler: MxFetchMessagesInLabelCompletionHandler?
+    private var connectCallback: MxConnectCallback?
+    private var fetchLabelsCallback: MxFetchLabelsCallback?
+    private var fetchMessagesCallback: MxFetchMessagesCallback?
     
     
     // For Google APIs, the scope strings are available
@@ -55,17 +55,17 @@ class MxGMailBridge : NSObject, MxMailboxBridge {
     //MARK: - Login
     
     // Ensures that the Gmail API service is authorized
-    func connect( completionHandler completionHandler: MxConnectCompletionHandler){
+    func connect( callback callback: MxConnectCallback){
         
         MxLog.debug("\(#function): sending connection request to mailbox \(mailbox.email)")
         
-        self.connectCompletionHandler = completionHandler
+        self.connectCallback = callback
         
         service.authorizer =
             GTMOAuth2WindowController.authForGoogleFromKeychainForName(
                 kKeychainItemName
-                , clientID:MxGMailBridge.kClientID
-                , clientSecret:MxGMailBridge.kClientSecret)
+                , clientID:MxGMailAdapter.kClientID
+                , clientSecret:MxGMailAdapter.kClientSecret)
     
         if (service.authorizer != nil || !service.authorizer.canAuthorize!){
     
@@ -74,9 +74,9 @@ class MxGMailBridge : NSObject, MxMailboxBridge {
     
             // Display the authentication sheet
             let authController = GTMOAuth2WindowController.controllerWithScope(
-                MxGMailBridge.scopes.joinWithSeparator(" ")
-                , clientID:MxGMailBridge.kClientID
-                , clientSecret:MxGMailBridge.kClientSecret
+                MxGMailAdapter.scopes.joinWithSeparator(" ")
+                , clientID:MxGMailAdapter.kClientID
+                , clientSecret:MxGMailAdapter.kClientSecret
                 , keychainItemName:kKeychainItemName
                 , resourceBundle:nil)
     
@@ -84,7 +84,7 @@ class MxGMailBridge : NSObject, MxMailboxBridge {
                 authController.signInSheetModalForWindow(
                     nil
                     , delegate:self
-                    , finishedSelector: #selector(MxGMailBridge.authenticationController(_:finishedWithAuth:error:)))
+                    , finishedSelector: #selector(MxGMailAdapter.authenticationController(_:finishedWithAuth:error:)))
                 }
     
         } else {
@@ -92,7 +92,7 @@ class MxGMailBridge : NSObject, MxMailboxBridge {
             MxLog.info("Already authenticated with to mailbox \(mailbox.email)");
     
             // re emit the notification (just in case)
-            connectCompletionHandler!( error: nil)
+            connectCallback!( error: nil)
         }
     }
     
@@ -128,7 +128,7 @@ class MxGMailBridge : NSObject, MxMailboxBridge {
                 service.authorizer = nil
     
                 // emit notification
-                connectCompletionHandler!( error: MxBridgeError.ProviderReturnedConnectionError(rootError: error!))
+                connectCallback!( error: MxBridgeError.ProviderReturnedConnectionError(rootError: error!))
     
             } else {
                 // Authentication succeeded
@@ -140,21 +140,21 @@ class MxGMailBridge : NSObject, MxMailboxBridge {
                 service.authorizer = authResult
     
                 // emit notification
-                connectCompletionHandler!(error: nil)
+                connectCallback!(error: nil)
             }
     }
     
     
     //MARK: - Fetch Labels
     
-    func sendFetchLabelsRequest( completionHandler completionHandler: MxFetchLabelsCompletionHandler) {
+    func sendFetchLabelsRequest( callback callback: MxFetchLabelsCallback) {
         MxLog.debug("Processing \(#function)")
         
-        self.fetchLabelsCompletionHandler = completionHandler
+        self.fetchLabelsCallback = callback
     
         let query = GTLQueryGmail.queryForUsersLabelsList()
         
-        service.executeQuery( query, delegate:self, didFinishSelector: #selector(MxGMailBridge.parseLabelsWithTicket(_:finishedWithObject:error:)))
+        service.executeQuery( query, delegate:self, didFinishSelector: #selector(MxGMailAdapter.parseLabelsWithTicket(_:finishedWithObject:error:)))
     }
     
     func parseLabelsWithTicket(
@@ -169,7 +169,7 @@ class MxGMailBridge : NSObject, MxMailboxBridge {
             MxLog.error("Fetching labels failed...")
             MxLog.error(error.localizedDescription)
             
-            fetchLabelsCompletionHandler!( labels: nil, error: MxBridgeError.ProviderReturnedFetchError(rootError: error))
+            fetchLabelsCallback!( labels: nil, error: MxBridgeError.ProviderReturnedFetchError(rootError: error))
             
             return
         }
@@ -197,17 +197,17 @@ class MxGMailBridge : NSObject, MxMailboxBridge {
             MxLog.verbose( "No label found.")
         }
             
-        fetchLabelsCompletionHandler!( labels: labels, error: nil)
+        fetchLabelsCallback!( labels: labels, error: nil)
     }
     
     
     //MARK: - Fetch remote messages
     
-    func sendFetchMessagesInLabelRequest(labelId labelId: MxObjectId, completionHandler: MxFetchMessagesInLabelCompletionHandler) {
+    func sendFetchMessagesInLabelRequest(labelId labelId: MxObjectId, callback: MxFetchMessagesCallback) {
         
         MxLog.debug("Processing \(#function)")
         
-        self.fetchMessagesInLabelCompletionHandler = completionHandler
+        self.fetchMessagesInLabelCallback = callback
         
         let query = GTLQueryGmail.queryForUsersMessagesList()
         query.labelIds = [labelId.remoteId.value]
@@ -216,7 +216,7 @@ class MxGMailBridge : NSObject, MxMailboxBridge {
         
         service.executeQuery( query
             , delegate:self
-            , didFinishSelector:#selector(MxGMailBridge.parseMessagesListWithTicket(_:finishedWithObject:error:)))
+            , didFinishSelector:#selector(MxGMailAdapter.parseMessagesListWithTicket(_:finishedWithObject:error:)))
         
     }
     
@@ -231,7 +231,7 @@ class MxGMailBridge : NSObject, MxMailboxBridge {
                 MxLog.error("Fetching messages in label failed...")
                 MxLog.error(error.localizedDescription)
                 
-                fetchMessagesInLabelCompletionHandler!( messages: nil, error: MxBridgeError.ProviderReturnedConnectionError(rootError: error))
+                fetchMessagesCallback!( messages: nil, error: MxBridgeError.ProviderReturnedConnectionError(rootError: error))
                 
                 return
             }
@@ -256,7 +256,7 @@ class MxGMailBridge : NSObject, MxMailboxBridge {
                 MxLog.verbose( "No message found.")
             }
             
-            fetchMessagesInLabelCompletionHandler!( messages: messages, error: nil)
+            fetchMessagesCallback!( messages: messages, error: nil)
     }
     
     

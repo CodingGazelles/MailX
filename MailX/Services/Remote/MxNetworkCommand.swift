@@ -10,9 +10,9 @@ import Foundation
 
 
 
-class MxSyncOperation : NSOperation {
+class MxNetworkCommand : NSOperation {
     
-    var bridge: MxMailboxBridge
+    var adapter: MxMailboxAdapter
     
     enum State {
         case Ready, Executing, Finished, Cancelled
@@ -61,8 +61,8 @@ class MxSyncOperation : NSOperation {
         return true
     }
     
-    init( bridge: MxMailboxBridge) {
-        self.bridge = bridge
+    init( adapter: MxMailboxAdapter) {
+        self.adapter = adapter
     }
     
     override func start() {

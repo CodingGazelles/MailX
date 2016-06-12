@@ -35,8 +35,8 @@ func dispatchSetLabelsAction() {
     
     MxLog.debug("Processing MxSetLabelsAction")
     
-    let store = MxStateManager.defaultStore()
-    let stack = MxStackManager.sharedInstance()
+    let store = MxUIStateManager.defaultStore()
+    let stack = MxDataStackManager.sharedInstance()
     
     store.dispatch( MxStartLoadingAction())
     
@@ -65,7 +65,7 @@ func dispatchSetLabelsAction() {
                 
                 store.dispatch( MxStopLoadingAction())
                 
-        }
+            }
         
             .onSuccess( Queue.main.context) { results in
                 
@@ -79,7 +79,7 @@ func dispatchSetLabelsAction() {
                 
                 store.dispatch(action)
                 
-        }
+            }
         
             .onFailure( Queue.main.context) { error in
                 

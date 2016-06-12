@@ -16,7 +16,7 @@ class MxLabelsViewController: NSViewController {
     
     let kLabelViewIdentifier = "LabelView"
     
-    let state = MxStateManager.defaultStore()
+    let state = MxUIStateManager.defaultStore()
     
     // IBOutlets
     @IBOutlet weak var tableView: NSTableView!

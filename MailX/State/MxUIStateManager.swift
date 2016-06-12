@@ -13,10 +13,10 @@ import BrightFutures
 
 
 
-class MxStateManager {
+class MxUIStateManager {
     
-    private static let appStore = MxStateManager()
-    static func defaultStore() -> MxStateManager {
+    private static let appStore = MxUIStateManager()
+    static func defaultStore() -> MxUIStateManager {
         return appStore
     }
     

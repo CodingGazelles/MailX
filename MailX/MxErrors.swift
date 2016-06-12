@@ -70,23 +70,39 @@ enum MxDBError: MxExceptionProtocol {
 }
 
 
+// MARK: - Network error
+
+enum MxNetworkError: MxExceptionProtocol {
+    
+    case OperationNotSupported( object: Any?, message: String, rootError: ErrorType?)
+    
+    case FetchError( object: Any?, typeName: String, message: String, rootError: ErrorType?)
+    case InsertError( object: Any?, typeName: String, message: String, rootError: ErrorType?)
+    case UpdateError( object: Any?, typeName: String, message: String, rootError: ErrorType?)
+    case DeleteError( object: Any?, typeName: String, message: String, rootError: ErrorType?)
+    
+    case UndexpectedError( object: Any?, message: String, rootError: MxExceptionProtocol?)
+}
+
+
 // MARK: - Proxy error
 
 enum MxProxyError: MxExceptionProtocol {
-    case BridgeReturnedError( rootError: MxBridgeError)
+    case AdapterDidNotConnect( rootError: MxAdapterError)
+    case AdapterReturnedError( rootError: MxAdapterError)
 }
 
 
 // MARK: - Network operation error
 
-enum MxRemoteOperationError: MxExceptionProtocol {
+enum MxCommandError: MxExceptionProtocol {
 
 }
 
 
-// MARK: - Bridge error
+// MARK: - Adapter error
 
-enum MxBridgeError: MxExceptionProtocol {
+enum MxAdapterError: MxExceptionProtocol {
     case ProviderReturnedConnectionError( rootError: ErrorType)
     case ProviderReturnedFetchError( rootError: ErrorType)
 }
