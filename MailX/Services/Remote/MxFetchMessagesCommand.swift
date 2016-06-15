@@ -10,15 +10,15 @@ import Foundation
 
 
 
-typealias MxFetchMessagesCallback = (messages: [MxMessageModel]?, error: MxBridgeError?) -> Void
+typealias MxFetchMessagesCallback = (messages: [MxMessage]?, error: MxAdapterError?) -> Void
 
 
 class MxFetchMessagesCommand : MxNetworkCommand {
     
     var callback: MxFetchMessagesCallback
-    var labelId: MxObjectId
+    var labelId: MxRemoteId
     
-    init( labelId: MxObjectId, adapter: MxMailboxAdapter, callback: MxFetchMessagesCallback) {
+    init( labelId: MxRemoteId, adapter: MxMailboxAdapter, callback: MxFetchMessagesCallback) {
         
         self.callback = callback
         self.labelId = labelId
@@ -30,11 +30,11 @@ class MxFetchMessagesCommand : MxNetworkCommand {
         
         MxLog.debug("\(#function) fetch messages ticket sending request to mailbox: \(adapter.mailbox.email)")
         
-        adapter.sendFetchMessagesRequest( labelId: labelId, callback: proxyDidFetchMessagesInLabel)
+        adapter.sendFetchMessagesRequest( labelId: labelId, callback: adapterDidFetchMessages)
         
     }
     
-    func proxyDidFetchMessagesInLabel( messages messages: [MxMessageModel]?, error: MxBridgeError?) {
+    func adapterDidFetchMessages( messages messages: [MxMessage]?, error: MxAdapterError?) {
         
         MxLog.debug("\(#function) fetch messages ticket received response of mailbox: \(adapter.mailbox.email)")
         

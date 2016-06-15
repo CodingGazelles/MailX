@@ -15,36 +15,26 @@ import Pipes
 
 // MARK: - State Object
 
-struct MxLabelSO: MxStateObjectProtocol {
+struct MxLabelSO: MxStateObjectProtocol, MxCoreLabelProtocol {
     
-    var id: MxObjectId
-    var code: String
-    var name: String
-    var ownerType: String
-    
-    init?( id: MxObjectId, code: String, name: String, ownerType: String){
-        
-        guard MxLabelOwnerType(rawValue: ownerType) != nil else {
-            return nil
-        }
-        
-        self.id = id
-        self.code = code
-        self.name = name
-        self.ownerType = ownerType
-    }
+    var internalId: MxInternalId?
+    var remoteId: MxRemoteId?
+    var code: String?
+    var name: String?
+    var ownerType: MxLabelOwnerType = MxLabelOwnerType.UNDEFINED
     
 }
 
-extension MxLabelSO: MxInitWithModel {
-    init( model: MxLabelModel){
-        self.init(
-            id: model.id
-            , code: model.code
-            , name: model.name
-            , ownerType: model.ownerType)!
-    }
-}
+//extension MxLabelSO: MxInitWithModel {
+//    init( model: MxLabel){
+//        self.init(
+//            internalId: model.internalId,
+//            remoteId: model.remoteId,
+//            code: model.code,
+//            name: model.name,
+//            ownerType: model.ownerType)
+//    }
+//}
 
 
 

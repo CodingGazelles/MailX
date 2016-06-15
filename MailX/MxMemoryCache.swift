@@ -15,9 +15,9 @@ class MxMemoryBaseCache {}
 class MxMemoryCache<ObjectType: MxModelObjectProtocol>: MxMemoryBaseCache, MxCacheProtocol {
     
     
-    private var _cache = [MxObjectId:ObjectType]()
+    private var _cache = [MxInternalId:ObjectType]()
     
-    func getObject(key key: MxObjectId) -> ObjectType? {
+    func getObject(key key: MxInternalId) -> ObjectType? {
         return _cache[key]
     }
     
@@ -27,11 +27,11 @@ class MxMemoryCache<ObjectType: MxModelObjectProtocol>: MxMemoryBaseCache, MxCac
         }
     }
     
-    func setObject(object object: ObjectType, key: MxObjectId) {
+    func setObject(object object: ObjectType, key: MxInternalId) {
         _cache[key] = object
     }
     
-    func removeObject(key key: MxObjectId) -> ObjectType? {
+    func removeObject(key key: MxInternalId) -> ObjectType? {
         return _cache.removeValueForKey(key)
     }
     

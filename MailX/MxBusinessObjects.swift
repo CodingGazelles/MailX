@@ -10,103 +10,47 @@ import Foundation
 
 
 
-// MARK: - Business object
+// MARK: - Business Objects
 
-protocol MxBusinessObjectProtocol: Loggable {
-    
-    var id: MxObjectId { get set }
-    var typeName: String { get }
-    var hashValue: Int { get }
-
+protocol MxCoreBusinessProtocol: class {
+    var remoteId: MxRemoteId? { get set }
 }
 
-extension MxBusinessObjectProtocol {
+protocol MxCoreProviderProtocol: MxCoreBusinessProtocol {
     
-    var typeName: String {
-        return "\(Self.self)"
-    }
+    var code: String? { get set }
+    var name: String? { get set }
+//    var mailboxes: NSSet { get }
     
-    var hashValue: Int {
-        return id.hashValue
-    }
 }
 
-func ==<BO: MxBusinessObjectProtocol>(lhs: BO, rhs: BO) -> Bool{
-    return lhs.id == rhs.id
+protocol MxCoreMailboxProtocol: MxCoreBusinessProtocol {
+    
+    var email: String? { get set }
+    var name: String? { get set }
+//    var messages: NSSet { get }
+//    var labels: NSSet { get }
+    
 }
 
-
-// MARK: - MxID
-
-struct MxObjectId: Hashable, Equatable, Loggable {
+protocol MxCoreLabelProtocol: MxCoreBusinessProtocol {
     
-    var internalId: MxInternalId
-    var remoteId: MxRemoteId
+    var code: String? { get set }
+    var name: String? { get set }
+    var ownerType: MxLabelOwnerType { get set }
+//    var mailbox: MxMailboxProtocol? { get set }
+//    var messages: NSSet { get }
     
-    init() {
-        self.init( internalId: MxInternalId(), remoteId: MxRemoteId(value: nil))
-    }
-    
-    init( internalId: MxInternalId, remoteId: MxRemoteId) {
-        self.internalId = internalId
-        self.remoteId = remoteId
-    }
-    
-    var hashValue: Int {
-        return (internalId.value + remoteId.value).hashValue
-    }
 }
 
-func ==(lhs: MxObjectId, rhs: MxObjectId) -> Bool{
-    return lhs.internalId == rhs.internalId && lhs.remoteId == rhs.remoteId
+protocol MxCoreMessageProtocol: MxCoreBusinessProtocol {
 }
 
 
-// MARK: - MxInternalId
-
-struct MxInternalId: Hashable, Equatable {
-    
-    var value: String
-    
-    init(){
-        self.value = NSUUID().UUIDString
-    }
-    
-    init( value: String) {
-        self.value = value
-    }
-    
-    var hashValue: Int {
-        return value.hashValue
-    }
+protocol MxInitWithCoreBusinessProtocol {
+    associatedtype CoreBO: MxCoreBusinessProtocol
+    init(bo: CoreBO)
 }
-
-func ==(lhs: MxInternalId, rhs: MxInternalId) -> Bool{
-    return lhs.value == rhs.value
-}
-
-
-// MARK: - MxRemoteId
-
-struct MxRemoteId: Hashable, Equatable {
-    
-    var value: String
-    
-    init( value: String?) {
-        self.value = value ?? ""
-    }
-
-    var hashValue: Int {
-        return value.hashValue
-    }
-}
-
-func ==(lhs: MxRemoteId, rhs: MxRemoteId) -> Bool{
-    return lhs.hashValue == rhs.hashValue
-}
-
-
-
 
 
 

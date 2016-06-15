@@ -76,7 +76,7 @@ struct MxLabelsState: MxStateType {
             return allLabels
         default:
             return allLabels
-                |> filter(){ self.defaultLabels.contains($0.code)}
+                |> filter(){ self.defaultLabels.contains($0.code!)}
         }
     }
     

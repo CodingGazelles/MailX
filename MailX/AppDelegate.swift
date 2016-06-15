@@ -20,6 +20,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }()
     
     lazy var stateManager = MxUIStateManager.defaultStore()
+    lazy var dataStack = MxDataStackManager.defaultStack()
     
     
     func applicationDidFinishLaunching(aNotification: NSNotification) {
@@ -33,37 +34,38 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         
         // Init DB
-        if MxUserPreferences.sharedPreferences().firstExecution {
-            
-            MxLog.info("Initializing DB")
-            
-            MxDBInitializer.insertDefaultProviders()
-            
-//            #if DEBUG
-            
-            MxDBInitializer.insertTestMailbox()
-            
-//            #endif
-            
-            
-            MxUserPreferences.sharedPreferences().firstExecution = false
-            
-        } else {
-            MxLog.debug("DB already initialized")
-        }
+        MxLog.info("Connecting to DB")
         
-        
-        // Init AppState
-        stateManager.initState()
-        
-        
-        // Init connections to mailboxes
-        self.syncManager.connectMailboxes()
-        
-        
-//      MxLog.info("Starting synchronization")
-//      self.syncManager.startSynchronization()
-        
+        dataStack.startDBStack()
+            .onSuccess { _ in
+                
+                if MxUserPreferences.sharedPreferences().firstExecution {
+                    
+                    MxDBInitializer.insertDefaultProviders()
+                    
+                    //            #if DEBUG
+                    MxDBInitializer.insertTestMailbox()
+                    //            #endif
+                    
+                    
+                    MxUserPreferences.sharedPreferences().firstExecution = false
+                    
+                } else {
+                    MxLog.debug("DB already initialized")
+                }
+                
+                
+                // Init AppState
+                self.stateManager.initState()
+                
+                
+                // Init connections to mailboxes
+                self.syncManager.connectMailboxes()
+                
+            }
+            .onFailure { error in
+                MxLog.error( "Failed to initiate connection to DB", error: error)
+            }
         
     }
     

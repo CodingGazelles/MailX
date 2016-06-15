@@ -10,7 +10,7 @@ import Foundation
 
 
 
-typealias MxFetchLabelsCallback = (labels: [MxLabelModel]?, error: MxBridgeError?) -> Void
+typealias MxFetchLabelsCallback = (labels: [MxLabel]?, error: MxAdapterError?) -> Void
 
 class MxFetchLabelsCommand : MxNetworkCommand {
     
@@ -27,11 +27,11 @@ class MxFetchLabelsCommand : MxNetworkCommand {
     override func main() {
         
         MxLog.debug("\(#function) fetch labels ticket sending request to mailbox: \(adapter.mailbox.email)")
-        adapter.sendFetchLabelsRequest( callback: bridgeDidFetchLabels)
+        adapter.sendFetchLabelsRequest( callback: adapterDidFetchLabels)
         
     }
     
-    func bridgeDidFetchLabels( labels labels: [MxLabelModel]?, error: MxBridgeError?) {
+    func adapterDidFetchLabels( labels labels: [MxLabel]?, error: MxAdapterError?) {
         
         MxLog.debug("\(#function) fetch labels ticket received response of mailbox: \(adapter.mailbox.email)")
         state = .Finished

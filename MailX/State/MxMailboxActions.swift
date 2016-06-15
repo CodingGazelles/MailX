@@ -25,13 +25,13 @@ func dispatchSetMailboxesAction() {
     
     
     let store = MxUIStateManager.defaultStore()
-    let stack = MxDataStackManager.sharedInstance()
+    let stack = MxDataStackManager.defaultStack()
     
     
     store.dispatch( MxStartLoadingAction())
     
     
-    let _: Future<[MxMailboxModel],MxStackError> = stack.getAllObjects()
+    let _: Future<[MxMailbox],MxStackError> = stack.getAllObjects()
         
         .andThen() {_ in
             

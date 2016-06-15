@@ -8,7 +8,7 @@
 
 import Foundation
 
-import RealmSwift
+//import RealmSwift
 import Result
 import Pipes
 import BrightFutures
@@ -31,15 +31,8 @@ class MxDBLevel: MxStackLevelProtocol {
     //        let _storage = RealmDefaultStorage(configuration: configuration)
     //        return _storage
     //    }()
-    
-    lazy var realm = try! Realm()
-    
-    
-    func getObject<T: MxModelObjectProtocol>( id id: MxObjectId) -> Future<T,MxStackError> {
-        fatalError("Func not implemented")
-    }
 
-    func getObject<T: MxModelObjectProtocol where T: Object>( id id: MxObjectId) -> Future<T,MxStackError> {
+    func getObject<T: MxModelObjectProtocol>( id id: MxInternalId) -> Future<T,MxStackError> {
         
         MxLog.debug("Searching in DB for object \(T.self) with \(id)")
         
@@ -91,10 +84,6 @@ class MxDBLevel: MxStackLevelProtocol {
     
     
     func getAllObjects<T: MxModelObjectProtocol>() -> Future<[T],MxStackError> {
-        fatalError("Func not implemented")
-    }
-    
-    func getAllObjects<T: MxModelObjectProtocol where T: Object>() -> Future<[T],MxStackError> {
         
         MxLog.debug("Searching in DB for all objects \(T.self) in DB")
         
@@ -182,7 +171,7 @@ class MxDBLevel: MxStackLevelProtocol {
         return promise.future
     }
     
-    func removeObject<T: MxModelObjectProtocol>(id id: MxObjectId) -> Future<T,MxStackError> {
+    func removeObject<T: MxModelObjectProtocol>(id id: MxInternalId) -> Future<T,MxStackError> {
         
         fatalError("Func not implemented")
         

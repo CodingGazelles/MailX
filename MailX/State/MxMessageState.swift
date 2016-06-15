@@ -10,19 +10,18 @@ import Foundation
 
 
 
-struct MxMessageSO: MxStateObjectProtocol {
+struct MxMessageSO: MxStateObjectProtocol, MxCoreMessageProtocol {
     
-    var id: MxObjectId
-    
-    init(id: MxObjectId){
-        self.id = id
-    }
+    var internalId: MxInternalId?
+    var remoteId: MxRemoteId?
     
 }
 
 extension MxMessageSO: MxInitWithModel {
-    init( model: MxMessageModel){
-        self.init(id: model.id)
+    init( model: MxMessage){
+        self.init(
+            internalId: model.internalId,
+            remoteId: model.remoteId)
     }
 }
 

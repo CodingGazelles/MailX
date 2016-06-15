@@ -90,5 +90,9 @@
 		<string>UNREAD</string>
 		<string>STARRED</string>
 	</array>
+	<key>ModelName</key>
+	<string>MxModel</string>
+	<key>ModelExtension</key>
+	<string>momd</string>
 </dict>
 </plist>

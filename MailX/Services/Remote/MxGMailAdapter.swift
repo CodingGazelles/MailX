@@ -15,7 +15,7 @@ import GTMOAuth2
 
 class MxGMailAdapter : NSObject, MxMailboxAdapter {
     
-    var mailbox: MxMailboxModel
+    var mailbox: MxMailbox
     private var service: GTLServiceGmail
     
     private var connectCallback: MxConnectCallback?
@@ -39,7 +39,7 @@ class MxGMailAdapter : NSObject, MxMailboxAdapter {
     var kKeychainItemName = "Hexmail.Gmail Access Token.."
     
     
-    init( mailbox: MxMailboxModel){
+    init( mailbox: MxMailbox){
         MxLog.debug("Processing \(#function) with: \(mailbox)")
         
         self.mailbox = mailbox;
@@ -128,7 +128,7 @@ class MxGMailAdapter : NSObject, MxMailboxAdapter {
                 service.authorizer = nil
     
                 // emit notification
-                connectCallback!( error: MxBridgeError.ProviderReturnedConnectionError(rootError: error!))
+                connectCallback!( error: MxAdapterError.ProviderReturnedConnectionError(rootError: error!))
     
             } else {
                 // Authentication succeeded
@@ -169,25 +169,25 @@ class MxGMailAdapter : NSObject, MxMailboxAdapter {
             MxLog.error("Fetching labels failed...")
             MxLog.error(error.localizedDescription)
             
-            fetchLabelsCallback!( labels: nil, error: MxBridgeError.ProviderReturnedFetchError(rootError: error))
+            fetchLabelsCallback!( labels: nil, error: MxAdapterError.ProviderReturnedFetchError(rootError: error))
             
             return
         }
         
-        var labels = [MxLabelModel]()
+        var labels = [MxLabel]()
             
         if !labelsResponse.labels.isEmpty {
             MxLog.debug("Parsing labels...")
                 
             for response in labelsResponse.labels as! [GTLGmailLabel] {
                 
-                var label = MxLabelModel()
-                label.id = MxObjectId( internalId: MxInternalId(), remoteId: MxRemoteId(value: response.identifier))
+                var label = MxLabel()
+                label.remoteId = MxRemoteId(value: response.identifier)
                 
                 label.code = response.name
                 label.name = ""
-                label.ownerType = MxLabelOwnerType.SYSTEM.rawValue
-                label.mailbox = mailbox
+                label.ownerType = MxLabelOwnerType.SYSTEM
+                label.mailbox_ = mailbox
                     
                 labels.append(label)
                 
@@ -203,14 +203,14 @@ class MxGMailAdapter : NSObject, MxMailboxAdapter {
     
     //MARK: - Fetch remote messages
     
-    func sendFetchMessagesInLabelRequest(labelId labelId: MxObjectId, callback: MxFetchMessagesCallback) {
+    func sendFetchMessagesRequest(labelId labelId: MxRemoteId, callback: MxFetchMessagesCallback) {
         
         MxLog.debug("Processing \(#function)")
         
-        self.fetchMessagesInLabelCallback = callback
+        self.fetchMessagesCallback = callback
         
         let query = GTLQueryGmail.queryForUsersMessagesList()
-        query.labelIds = [labelId.remoteId.value]
+        query.labelIds = [labelId.value]
         
         //    [query setLabelIds: labelsArray];
         
@@ -231,12 +231,12 @@ class MxGMailAdapter : NSObject, MxMailboxAdapter {
                 MxLog.error("Fetching messages in label failed...")
                 MxLog.error(error.localizedDescription)
                 
-                fetchMessagesCallback!( messages: nil, error: MxBridgeError.ProviderReturnedConnectionError(rootError: error))
+                fetchMessagesCallback!( messages: nil, error: MxAdapterError.ProviderReturnedConnectionError(rootError: error))
                 
                 return
             }
             
-            var messages = [MxMessageModel]()
+            var messages = [MxMessage]()
             
             if ( !messagesResponse.messages.isEmpty){
                 
@@ -246,8 +246,8 @@ class MxGMailAdapter : NSObject, MxMailboxAdapter {
                     
                     MxLog.debug("Message:\(response)")
                     
-                    var message = MxMessageModel()
-                    message.id = MxObjectId( internalId: MxInternalId(), remoteId: MxRemoteId( value: response.identifier))
+                    var message = MxMessage()
+                    message.remoteId = MxRemoteId( response.identifier)
                     
                     messages.append( message)
                     

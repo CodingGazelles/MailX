@@ -27,11 +27,11 @@ class MxConnectionCommand : MxNetworkCommand {
     override func main() {
         
         MxLog.debug("\(#function) connection ticket sending request to mailbox: \(adapter.mailbox.email)")
-        adapter.connect( callback: bridgeDidConnect)
+        adapter.connect( callback: adapterDidConnect)
         
     }
     
-    func bridgeDidConnect( error error: MxAdapterError?) {
+    func adapterDidConnect( error error: MxAdapterError?) {
         
         MxLog.debug("\(#function) connection operation received response of mailbox: \(adapter.mailbox.email)")
         state = .Finished

@@ -13,6 +13,8 @@ import BrightFutures
 
 
 
+//FIXME: - Availbale only for MxMailbox or MxProvider
+
 enum MxStatckLevel: Int {
     case Memory=0
     case DB=1
@@ -21,25 +23,21 @@ enum MxStatckLevel: Int {
 
 protocol MxStackLevelProtocol {
     
-    
-    func getObject<T: MxModelObjectProtocol>( id id: MxObjectId) -> Future<T,MxStackError>
-    
+    func getObject<T: MxModelObjectProtocol>( id id: MxInternalId) -> Future<T,MxStackError>
     func getAllObjects<T: MxModelObjectProtocol>() -> Future<[T],MxStackError>
-    
     func setObject<T: MxModelObjectProtocol>(object object: T) -> Future<T,MxStackError>
-    
-    func removeObject<T: MxModelObjectProtocol>(id id: MxObjectId) -> Future<T,MxStackError>
+    func removeObject<T: MxModelObjectProtocol>(id id: MxInternalId) -> Future<T,MxStackError>
     
 }
 
 protocol MxCacheProtocol {
     
-    associatedtype ObjectType: MxBusinessObjectProtocol
+    associatedtype ObjectType: MxSystemObjectProtocol
     
-    func getObject( key key: MxObjectId) -> ObjectType?
+    func getObject( key key: MxInternalId) -> ObjectType?
     func getAllObjects() -> [ObjectType]
-    func setObject( object object: ObjectType, key: MxObjectId)
-    func removeObject( key key: MxObjectId) -> ObjectType?
+    func setObject( object object: ObjectType, key: MxInternalId)
+    func removeObject( key key: MxInternalId) -> ObjectType?
     
 }
 

@@ -16,11 +16,13 @@ class MxMailboxProxy {
     
     private var adapter: MxMailboxAdapter
     private var operationsQueue: NSOperationQueue
-    private var mailbox: MxMailboxModel
+    private var mailbox: MxMailbox
+    
     private var connectPromise: Promise<Any, MxProxyError>!
+    private var fetchLabelsPromise: Promise<[MxLabel], MxProxyError>!
     
     
-    init( mailbox: MxMailboxModel){
+    init( mailbox: MxMailbox){
         
         self.mailbox = mailbox
         
@@ -52,9 +54,12 @@ class MxMailboxProxy {
     }
     
     func adapterDidConnect(error error: MxAdapterError?){
+        
+        MxLog.debug("Received response from connect command \(mailbox.email), error=\(error)")
+        
         if( error == nil) {
             
-            MxLog.debug("Proxy is connected to mailbox: \(mailbox.email)")
+            MxLog.debug("Proxy did connect to mailbox: \(mailbox.email)")
             
             connectPromise.success(true)
             
@@ -71,40 +76,56 @@ class MxMailboxProxy {
     
     // MARK: - Fetch labels
     
-    func fetchLabels() {
+    func fetchLabels() -> Future<[MxLabel], MxProxyError>{
         
-        MxLog.verbose("\(#function) creating fetch labels operation to mailbox: \(adapter.mailbox)")
+        MxLog.debug("Adding fetch labels command to operation queue for mailbox: \(mailbox.email)")
         
-        let ticket = MxFetchLabelsCommand( adapter: adapter, callback: adapterDidFetchLabels)
-        operationsQueue.addOperation(ticket)
+        fetchLabelsPromise = Promise<[MxLabel], MxProxyError>()
+        
+        ImmediateExecutionContext {
+            
+            let ticket = MxFetchLabelsCommand( adapter: self.adapter, callback: self.adapterDidFetchLabels)
+            self.operationsQueue.addOperation(ticket)
+            
+        }
+        
+        return fetchLabelsPromise.future
     }
     
-    func adapterDidFetchLabels(labels labels: [MxLabelModel]?, error: MxAdapterError?) {
+    func adapterDidFetchLabels(labels labels: [MxLabel]?, error: MxAdapterError?) {
         
-        MxLog.debug("\(#function): receiving response from mailbox: \(mailbox.email) labels=\(labels), error=\(error)")
+        MxLog.debug("Received response from fetchLabels command \(mailbox.email) labels=\(labels), error=\(error)")
         
-//        syncManager.remoteDataHasArrived(
-//            mailbox: mailbox
-//            , payload: labels!
-//            , error: error != nil ? MxProxyError.adapterReturnedError(rootError: error!) : nil)
+        if error == nil {
+            
+            MxLog.debug("Proxy did fetch labels of mailbox: \(mailbox.email)")
+            
+            fetchLabelsPromise.success(labels!)
+            
+        } else {
+            
+            MxLog.error("Unable to fetchLabels of mailbox \(mailbox.email)", error: error)
+            
+            let proxyError = MxProxyError.AdapterDidNotFetchLabels(rootError: error!)
+            fetchLabelsPromise.failure( proxyError)
+            
+        }
         
-        
-        MxLog.verbose("...")
     }
     
     
     // MARK: - Fetch messages
     
-    func fetchMessagesInLabel( labelId labelId: MxObjectId) {
+    func fetchMessagesInLabel( labelId labelId: MxRemoteId) {
         MxLog.debug("Processing \(#function). Args: labelId: \(labelId)")
         
-        MxLog.verbose("Creating fetch messages ticket to mailbox: \(adapter.mailbox)")
+        MxLog.debug("Creating fetch messages ticket to mailbox: \(adapter.mailbox)")
         
         let ticket = MxFetchMessagesCommand( labelId: labelId, adapter: adapter, callback: adapterDidFetchMessagesInLabel)
         operationsQueue.addOperation(ticket)
     }
     
-    func adapterDidFetchMessagesInLabel( messages messages: [MxMessageModel]?, error: MxAdapterError?) {
+    func adapterDidFetchMessagesInLabel( messages messages: [MxMessage]?, error: MxAdapterError?) {
         MxLog.verbose("... Processing. Args: messages=\(messages), error=\(error)")
         
         
@@ -119,7 +140,7 @@ class MxMailboxProxy {
     Push local alterations to remote mailbox
     */
     
-    func pushTickets( mailboxId mailboxId: MxObjectId){
-    
-    }
+//    func pushTickets( mailboxId mailboxId: MxObjectId){
+//    
+//    }
 }

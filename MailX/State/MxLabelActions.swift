@@ -36,7 +36,7 @@ func dispatchSetLabelsAction() {
     MxLog.debug("Processing MxSetLabelsAction")
     
     let store = MxUIStateManager.defaultStore()
-    let stack = MxDataStackManager.sharedInstance()
+    let stack = MxDataStackManager.defaultStack()
     
     store.dispatch( MxStartLoadingAction())
     
@@ -46,10 +46,11 @@ func dispatchSetLabelsAction() {
         let systemLabels = MxAppProperties.defaultProperties().systemLabels()
         let defaultLabels = MxAppProperties.defaultProperties().defaultLabels()
             .map{ MxLabelSO(
-                id: MxObjectId()
-                , code: $0
-                , name: systemLabels.labelName( labelCode: $0)
-                , ownerType: MxLabelOwnerType.SYSTEM.rawValue)!}
+                internalId: nil,
+                remoteId: nil,
+                code: $0,
+                name: systemLabels.labelName( labelCode: $0),
+                ownerType: MxLabelOwnerType.SYSTEM)}
         
         let action = MxSetLabelsAction( labels: defaultLabels, errors: [MxErrorSO]())
         
@@ -59,7 +60,7 @@ func dispatchSetLabelsAction() {
         
     case .One(let selectedMailbox):
         
-        let _: Future<[MxLabelModel],MxStackError> = stack.getAllObjects()
+        let _: Future<MxMailbox,MxStackError> = stack.getObject( id: selectedMailbox.internalId!)
         
             .andThen( context: Queue.main.context) {_ in
                 
@@ -67,10 +68,9 @@ func dispatchSetLabelsAction() {
                 
             }
         
-            .onSuccess( Queue.main.context) { results in
+            .onSuccess( Queue.main.context) { result in
                 
-                let labels = results
-                    .filter{ $0.mailbox?.id == selectedMailbox.id }
+                let labels = Set<MxLabel>(result.labels_!.allObjects as! [MxLabel])
                     .map{ MxLabelSO( model: $0) }
                 
                 let action = MxSetLabelsAction( labels: labels, errors: [MxErrorSO]())

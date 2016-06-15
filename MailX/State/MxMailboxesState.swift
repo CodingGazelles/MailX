@@ -14,31 +14,26 @@ import Result
 
 // MARK: - State Object
 
-typealias MxMailboxSOResult = Result<MxMailboxSO, MxErrorSO>
+//typealias MxMailboxSOResult = Result<MxMailboxSO, MxErrorSO>
 
-struct MxMailboxSO: MxStateObjectProtocol {
+struct MxMailboxSO: MxStateObjectProtocol, MxCoreMailboxProtocol {
     
-    var id: MxObjectId
-    var email: String
-    var name: String
-    var connected: Bool
-    
-    init( id: MxObjectId, email: String, name: String, connected: Bool){
-        self.id = id
-        self.email = email
-        self.name = name
-        self.connected = connected
-    }
+    var internalId: MxInternalId?
+    var remoteId: MxRemoteId?
+    var email: String?
+    var name: String?
+    var connected: Bool = false
     
 }
 
 extension MxMailboxSO: MxInitWithModel {
-    init( model: MxMailboxModel){
+    init( model: MxMailbox){
         self.init(
-            id: model.id
-            , email: model.email
-            , name: model.name
-            , connected: model.connected)
+            internalId: model.internalId,
+            remoteId: model.remoteId,
+            email: model.email,
+            name: model.name,
+            connected: model.connected)
     }
 }
 

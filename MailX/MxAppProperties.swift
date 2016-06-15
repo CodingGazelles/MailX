@@ -29,6 +29,10 @@ class MxAppProperties {
     static let k_Label_Name = "Name"
     static let k_Label_Code = "Code"
     
+    static let kPFE_Model_Name = "ModelName"
+    static let kPFE_Model_Extension = "ModelExtension"
+    
+    
     // Dictionary of properties
     private var _rootDictionary = [String:AnyObject]()
     
@@ -72,6 +76,20 @@ class MxAppProperties {
             return [String:[String:AnyObject]]()
         }
         return result as! [String:[String:AnyObject]]
+    }
+    
+    func modelName() -> String {
+        guard let result = _rootDictionary[MxAppProperties.kPFE_Model_Name] else {
+            return ""
+        }
+        return result as! String
+    }
+    
+    func modelExtension() -> String {
+        guard let result = _rootDictionary[MxAppProperties.kPFE_Model_Extension] else {
+            return ""
+        }
+        return result as! String
     }
     
 //    func provider( providerCode providerCode: String) -> [String:AnyObject] {

@@ -10,25 +10,23 @@ import Foundation
 
 
 
-struct MxProviderSO: MxStateObjectProtocol {
+struct MxProviderSO: MxStateObjectProtocol, MxManagedObject, MxCoreProviderProtocol {
     
-    var id: MxObjectId
-    var code: String
-    var name: String
-    
-    init( id: MxObjectId, code: String, name: String){
-        self.id = id
-        self.code = code
-        self.name = name
-    }
+    var internalId: MxInternalId?
+    var remoteId: MxRemoteId?
+    var code: String?
+    var name: String?
     
 }
 
-extension MxProviderSO: MxInitWithModel {
-    init( model: MxProviderModel){
-        self.init( id: model.id, code: model.code, name: model.name)
-    }
-}
+//extension MxProviderSO: MxInitWithModel {
+//    init( model: MxProvider){
+//        self.init( internalId: model.internalId,
+//                   remoteId: model.remoteId,
+//                   code: model.code,
+//                   name: model.name)
+//    }
+//}
 
 
 

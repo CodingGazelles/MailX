@@ -12,7 +12,7 @@ import Foundation
 
 class MxDBInitializer {
     
-    private static let stack = MxDataStackManager.sharedInstance()
+    private static let stack = MxDataStackManager.defaultStack()
     
     static func insertDefaultProviders(){
         
@@ -28,8 +28,8 @@ class MxDBInitializer {
         
         for providerCode in providers.keys {
             
-            var provider = MxProviderModel()
-            provider.id = MxObjectId()
+            let provider = MxProvider()
+            provider.internalId = MxInternalId()
             provider.code = providerCode
             provider.name = ""
             
@@ -58,8 +58,8 @@ class MxDBInitializer {
         let appProperties = MxAppProperties.defaultProperties()
         let providers = appProperties.providers()
         
-        var mailbox = MxMailboxModel()
-        mailbox.id = MxObjectId()
+        var mailbox = MxMailbox()
+        mailbox.internalId = MxInternalId()
         mailbox.email = email
         mailbox.name = name
         mailbox.connected = false
@@ -74,7 +74,7 @@ class MxDBInitializer {
 //            
 //            let labelName = appProperties.systemLabels().labelName( labelCode: labelCode)
 //            
-//            var label = MxLabelModel()
+//            var label = MxLabel()
 //            label.id = MxObjectId()
 //            label.code = labelCode
 //            label.name = labelName

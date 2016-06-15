@@ -1,5 +1,5 @@
 //
-//  MxSyncManager.swift
+//  MxNetworkManager.swift
 //  Hexmail
 //
 //  Created by Tancrède on 4/2/16.
@@ -26,14 +26,13 @@ class MxSyncManager {
     // MARK: - Private properties
     
     private let state = MxUIStateManager.defaultStore()
-    private let stack = MxDataStackManager.sharedInstance()
+    private let stack = MxDataStackManager.defaultStack()
     
     
     // MARK: - Shared instance
     
     private static let sharedInstance = { () -> MxSyncManager in
-        let syncManager = MxSyncManager()
-        return syncManager
+        return MxSyncManager()
     }()
     
     static func defaultManager() -> MxSyncManager {
@@ -48,24 +47,26 @@ class MxSyncManager {
         
         MxLog.debug("Connecting to mailboxes")
         
-        let _: Future<[MxMailboxModel],MxStackError> = stack.getAllObjects()
+        let _: Future<[MxMailbox],MxStackError> = stack.getAllObjects()
             
             .onSuccess { results in
                 
                 let _ = results
-                    .map{ (mailbox: MxMailboxModel) -> MxMailboxModel in
+                    .map{ (mailbox: MxMailbox) -> MxMailbox in
                         
                         MxLog.debug("Connecting to mailbox \(mailbox.email)")
                         
                         mailbox.proxy = MxMailboxProxy( mailbox: mailbox)
                         
                         mailbox.proxy.connect()
+                            
                             .onSuccess { _ in
                                 
                                 mailbox.connected = true
                                 MxLog.info("Mailbox is connected \(mailbox)")
                                 
                             }
+                            
                             .onFailure { error in
                                 
                                 MxLog.error("Error occurred while connecting to mailbox \(mailbox.email)", error: error)
@@ -107,12 +108,12 @@ class MxSyncManager {
         
         MxLog.debug("Refresh all mailboxes ")
         
-        let _: Future<[MxMailboxModel],MxStackError> = stack.getAllObjects()
+        let _: Future<[MxMailbox],MxStackError> = stack.getAllObjects()
             
             .onSuccess { results in
                 
                 let _ = results
-                    .map{ (mailbox: MxMailboxModel) -> MxMailboxModel in
+                    .map{ (mailbox: MxMailbox) -> MxMailbox in
                         
                         self.refreshMailbox( mailbox: mailbox)
                         
@@ -138,7 +139,7 @@ class MxSyncManager {
     }
     
     
-    func refreshMailbox( mailbox mailbox: MxMailboxModel) {
+    func refreshMailbox( mailbox mailbox: MxMailbox) {
         
         MxLog.debug("Refreshing mailbox \(mailbox.email)")
         
@@ -146,13 +147,17 @@ class MxSyncManager {
             
             .onSuccess { _ in
                 
+                MxLog.debug("Refreshing labels successfull \(mailbox.email)")
+                
                 dispatchSetLabelsAction()
                 
-                refreshMessagesOfMailbox(mailbox: mailbox)
+                self.refreshMessagesOfMailbox(mailbox: mailbox)
                     
-                    .onSuccess {
+                    .onSuccess { _ in
                         
+                        MxLog.debug("Refreshing messages successfull \(mailbox.email)")
                         
+                        dispatchSetMessagesAction()
                     
                     }
                     
@@ -186,7 +191,7 @@ class MxSyncManager {
     }
     
     
-    func refreshLabelsOfMailbox( mailbox mailbox: MxMailboxModel) -> Future<MxMailboxModel, MxNetworkError> {
+    func refreshLabelsOfMailbox( mailbox mailbox: MxMailbox) -> Future<MxMailbox, MxNetworkError> {
         
         MxLog.debug("Refreshing labels of mailbox \(mailbox.email)")
         
@@ -196,15 +201,28 @@ class MxSyncManager {
             .onSuccess { values in
                 
                 // 2 Compare with local labels
-                compare fetched values with local mailbox.labels
+                let operations: [Operation<MxLabel>] = arrayDiff(
+                    modelObjects: Array( mailbox.labels),
+                    remoteObjects: values as! [MxLabel])
                 
                 
                 // 3 Update, remove or add labels in local db
+                for operation in operations {
+                    
+                    switch operation.type {
+                        
+                    case .Delete:
+                    case .Insert:
+                    case .Noop:
+                        
+                    }
+                    
+                }
                 
                 
                 // 4 loop mailbox.labels to fetch messages
                 
-                for label in mailbox.labels {
+                for label in mailbox.labels_ {
                     
                 }
                 
@@ -220,15 +238,48 @@ class MxSyncManager {
     }
     
     
-    func fetchLabelsOfMailbox( mailbox mailbox: MxMailboxModel) -> Future<[MxLabelModel], MxNetworkError> {
+    func fetchLabelsOfMailbox( mailbox mailbox: MxMailbox) -> Future<[MxCoreLabelProtocol], MxNetworkError> {
         
         MxLog.debug("Fetching labels of mailbox \(mailbox.email)")
         
-        let promise = Promise<[MxLabelModel], MxNetworkError>()
+        let promise = Promise<[MxCoreLabelProtocol], MxNetworkError>()
         
         Queue.global.context {
             
-            
+            if mailbox.connected {
+                
+                mailbox.proxy.fetchLabels()
+                
+                    .onSuccess { values in
+                    
+                        MxLog.debug("Did fetch labels of mailbox: \(mailbox.email)")
+                        
+                        promise.success( values)
+                        
+                    }
+                    
+                    .onFailure { error in
+                        
+                        MxLog.error("Error occurred while fetching labels of mailbox \(mailbox.email)", error: error)
+                        
+                        let networkError = MxNetworkError.FetchError(
+                            message: "Error occurred while fetching labels of mailbox \(mailbox.email)",
+                            rootError: error)
+                
+                        promise.failure( networkError)
+                        
+                    }
+                
+            } else {
+                
+                MxLog.error("Mailbox is not connected \(mailbox.email)", error: nil)
+                
+                let networkError = MxNetworkError.ConnectError(
+                    message: "Mailbox is not connected \(mailbox.email)",
+                    rootError: nil)
+                
+                promise.failure( networkError)
+            }
             
         }
         
@@ -237,7 +288,7 @@ class MxSyncManager {
     }
     
     
-    func refreshMessagesOfMailbox( mailbox mailbox: MxMailboxModel) -> Future<[MxMessageModel], MxNetworkError> {
+    func refreshMessagesOfMailbox( mailbox mailbox: MxMailbox) -> Future<[MxMessage], MxNetworkError> {
         
         // 1 Fetch messages
         
@@ -248,11 +299,11 @@ class MxSyncManager {
     }
     
     
-    func fetchMessagesOfMailbox( mailbox mailbox: MxMailboxModel) -> Future<[MxMessageModel], MxNetworkError> {
+    func fetchMessagesOfMailbox( mailbox mailbox: MxMailbox) -> Future<[MxMessage], MxNetworkError> {
         
         MxLog.debug("Refreshing messages of mailbox \(mailbox.email)")
         
-        let promise = Promise<[MxMessageModel], MxNetworkError>()
+        let promise = Promise<[MxMessage], MxNetworkError>()
         
         Queue.global.context {
             
@@ -273,7 +324,7 @@ class MxSyncManager {
     //    }
     //
     //
-    //    private func runFullUpdate(mailbox mailbox: MxMailboxModel){
+    //    private func runFullUpdate(mailbox mailbox: MxMailbox){
     //
     //        MxLog.debug("Executing full update of mailbox \(mailbox.email)")
     //
@@ -283,7 +334,7 @@ class MxSyncManager {
     //    }
     
     
-    //    private func emptyLocalData( mailbox mailbox: MxMailboxModel) {
+    //    private func emptyLocalData( mailbox mailbox: MxMailbox) {
     //
     //        MxLog.debug("Executing full delete of local data of mailbox: \(mailbox.email)")
     //
@@ -295,7 +346,7 @@ class MxSyncManager {
     //
     //            for message in label.messages {
     //
-    //                let _: Future<MxMessageModel,MxStackError> = stack.removeObject(id: message.id)
+    //                let _: Future<MxMessage,MxStackError> = stack.removeObject(id: message.id)
     //
     //                    .onSuccess { value in
     //
@@ -318,7 +369,7 @@ class MxSyncManager {
     //
     //        for label in labels {
     //
-    //            let _: Future<MxLabelModel,MxStackError> = stack.removeObject(id: label.id)
+    //            let _: Future<MxLabel,MxStackError> = stack.removeObject(id: label.id)
     //
     //                .onSuccess { value in
     //
@@ -338,13 +389,13 @@ class MxSyncManager {
     //
     //    }
     //
-    //    private func fetchRemoteData( mailbox mailbox: MxMailboxModel){
+    //    private func fetchRemoteData( mailbox mailbox: MxMailbox){
     //        
     //        MxLog.debug("Executing full fetch of remote data of mailbox: \(mailbox.email)")
     //        
     //        MxLog.debug("Fetching labels of mailbox \(mailbox.email)")
     //        
-    //        for mailbox in MxSyncManager.allMailboxes() {
+    //        for mailbox in MxNetworkManager.allMailboxes() {
     //            mailbox.proxy.fetchLabels()
     //        }
     //        

@@ -18,13 +18,11 @@ class MxMemoryLevel: MxStackLevelProtocol {
     private var _caches: [String:MxMemoryBaseCache]
     
     init() {
-        self._caches = ["\(MxProviderModel.self)"   :   MxMemoryCache<MxProviderModel>()    ,
-                        "\(MxMailboxModel.self)"    :   MxMemoryCache<MxMailboxModel>()     ,
-                        "\(MxLabelModel.self)"      :   MxMemoryCache<MxLabelModel>()       ,
-                        "\(MxMessageModel.self)"    :   MxMemoryCache<MxMessageModel>()     ]
+        self._caches = ["\(MxProvider.self)"   :   MxMemoryCache<MxProvider>()    ,
+                        "\(MxMailbox.self)"    :   MxMemoryCache<MxMailbox>()     ]
     }
     
-    func getObject<T: MxModelObjectProtocol>( id id: MxObjectId) -> Future<T,MxStackError> {
+    func getObject<T: MxModelObjectProtocol>( id id: MxInternalId) -> Future<T,MxStackError> {
         
         MxLog.debug("Searching in memory cache for object \(T.self) with \(id)")
         
@@ -90,7 +88,8 @@ class MxMemoryLevel: MxStackLevelProtocol {
         ImmediateExecutionContext {
         
             let cache: MxMemoryCache<T> = self.cache()
-            cache.setObject(object: object, key: object.id)
+            if object.internalId == nil { object.internalId = MxInternalId() }
+            cache.setObject(object: object, key: object.internalId!)
             
             MxLog.debug("Set in memory cache succeeded \(object)")
             
@@ -102,7 +101,7 @@ class MxMemoryLevel: MxStackLevelProtocol {
     }
     
 
-    func removeObject<T: MxModelObjectProtocol>( id id: MxObjectId) -> Future<T,MxStackError> {
+    func removeObject<T: MxModelObjectProtocol>( id id: MxInternalId) -> Future<T,MxStackError> {
         
         MxLog.debug("Removing in memory cache object \(T.self) with \(id)")
         
