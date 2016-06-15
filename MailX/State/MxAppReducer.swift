@@ -17,19 +17,31 @@ struct MxAppReducer: Reducer {
     func handleAction( action: Action, state: MxAppState?) -> MxAppState {
         var state = state ?? MxAppState()
         
+        guard action is MxAction else {
+            
+            let error = MxStateError.UnknownAction(action: nil, message: "Reducer received an unidentified action. Unable to treat it. \(action)")
+            
+            MxLog.error( "Reducer received an unidentified action. Unable to treat it. \(action)", error: error)
+            
+            state.errorsState.errors.appendContentsOf( [MxErrorSO( error: error)])
+            
+            return state
+        }
         
-        switch action {
+        let mxAction = action as! MxAction
+        
+        switch mxAction {
         
         // MARK: StateActions
             
         case _ as MxSetStateAction:
-            state = (action as! MxSetStateAction).state
+            state = (mxAction as! MxSetStateAction).state
         
             
         // MARK: Mailbox Actions
             
         case _ as MxSetMailboxesAction:
-            state.mailboxesState.allMailboxes = (action as! MxSetMailboxesAction).mailboxes
+            state.mailboxesState.allMailboxes = (mxAction as! MxSetMailboxesAction).mailboxes
             
         // MARK: LabelsActions
             
@@ -40,29 +52,31 @@ struct MxAppReducer: Reducer {
             state.labelsState.labelDisplay = MxLabelsState.MxLabelDisplay.Defaults
             
         case _ as MxSetLabelsAction:
-            state.labelsState.allLabels = (action as! MxSetLabelsAction).labels
+            state.labelsState.allLabels = (mxAction as! MxSetLabelsAction).labels
             state.labelsState.defaultLabels = state.propertiesState.labelShortListCodes
             
             
         // MARK: PropertiesActions
             
         case _ as MxSetPropertiesAction:
-            state.propertiesState = (action as! MxSetPropertiesAction).properties
+            state.propertiesState = (mxAction as! MxSetPropertiesAction).properties
             
             
         // MARK: ErrorsActions
             
         case _ as MxAddErrorsAction:
-            state.errorsState.errors.appendContentsOf( (action as! MxAddErrorsAction).errors)
+            state.errorsState.errors.appendContentsOf( (mxAction as! MxAddErrorsAction).errors)
             
             
         // MARK: Unknown actions
             
         default:
-            let message = "Reducer received an unidentified action. Unable to treat it. action: \(action)"
             
-            MxLog.error( message)
-            state.errorsState.errors.appendContentsOf( [MxErrorSO( error: message)])
+            let error = MxStateError.UnknownAction(action: mxAction, message: "Reducer received an unidentified action. Unable to treat it.")
+            
+            MxLog.error( "Reducer received an unidentified action. Unable to treat it.", error: error)
+            
+            state.errorsState.errors.appendContentsOf( [MxErrorSO( error: error)])
             
         }
         

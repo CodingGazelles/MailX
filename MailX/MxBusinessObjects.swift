@@ -12,11 +12,25 @@ import Foundation
 
 // MARK: - Business Objects
 
-protocol MxCoreBusinessProtocol: class {
+protocol MxBusinessObjectProtocol: Loggable, Hashable, Equatable {
+    var internalId: MxInternalId? { get set }
     var remoteId: MxRemoteId? { get set }
 }
 
-protocol MxCoreProviderProtocol: MxCoreBusinessProtocol {
+extension MxBusinessObjectProtocol {
+    var hashValue: Int {
+        return remoteId?.hashValue ?? "".hashValue
+    }
+}
+
+func ==<T: MxBusinessObjectProtocol>(lhs: T, rhs: T) -> Bool{
+    return lhs.remoteId?.value == rhs.remoteId?.value
+}
+
+
+// MARK: - Provider
+
+protocol MxProviderProtocol: MxBusinessObjectProtocol {
     
     var code: String? { get set }
     var name: String? { get set }
@@ -24,7 +38,10 @@ protocol MxCoreProviderProtocol: MxCoreBusinessProtocol {
     
 }
 
-protocol MxCoreMailboxProtocol: MxCoreBusinessProtocol {
+
+// MARK: - Mailbox
+
+protocol MxMailboxProtocol: MxBusinessObjectProtocol {
     
     var email: String? { get set }
     var name: String? { get set }
@@ -33,7 +50,10 @@ protocol MxCoreMailboxProtocol: MxCoreBusinessProtocol {
     
 }
 
-protocol MxCoreLabelProtocol: MxCoreBusinessProtocol {
+
+// MARK: - Label
+
+protocol MxLabelProtocol: MxBusinessObjectProtocol {
     
     var code: String? { get set }
     var name: String? { get set }
@@ -43,14 +63,13 @@ protocol MxCoreLabelProtocol: MxCoreBusinessProtocol {
     
 }
 
-protocol MxCoreMessageProtocol: MxCoreBusinessProtocol {
+
+// MARK: - Message
+
+protocol MxMessageProtocol: MxBusinessObjectProtocol {
 }
 
 
-protocol MxInitWithCoreBusinessProtocol {
-    associatedtype CoreBO: MxCoreBusinessProtocol
-    init(bo: CoreBO)
-}
 
 
 

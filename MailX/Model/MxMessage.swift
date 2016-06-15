@@ -10,25 +10,27 @@ import Foundation
 import CoreData
 
 
-class MxMessage: NSManagedObject, MxModelObjectProtocol, MxCoreMessageProtocol {
+class MxMessage: MxBaseManagedObject, MxMessageProtocol {
 
 // Insert code here to add functionality to your managed object subclass
     
-    var internalId: MxInternalId? {
+    static let modelName = "MxMessage"
+    
+    override var internalId: MxInternalId? {
         get {
-            return internal_id != nil ? MxInternalId(value: internal_id!) : nil
+            return internalId_ != nil ? MxInternalId(value: internalId_!) : nil
         }
         set {
-            self.internal_id = newValue?.value
+            self.internalId_ = newValue?.value
         }
     }
     
-    var remoteId: MxRemoteId? {
+    override var remoteId: MxRemoteId? {
         get {
-            return remote_id != nil ? MxRemoteId(value: remote_id) : nil
+            return remoteId_ != nil ? MxRemoteId(value: remoteId_) : nil
         }
         set {
-            self.remote_id = newValue?.value
+            self.remoteId_ = newValue?.value
         }
     }
     

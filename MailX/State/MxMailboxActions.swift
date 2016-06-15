@@ -28,38 +28,33 @@ func dispatchSetMailboxesAction() {
     let stack = MxDataStackManager.defaultStack()
     
     
-    store.dispatch( MxStartLoadingAction())
+    switch stack.getAllMailboxes() {
+        
+    case let .Success( results):
+        
+        let mailboxes = results
+            .map{ MxMailboxSO(
+                internalId: $0.internalId,
+                remoteId:  $0.remoteId,
+                email: $0.email,
+                name: $0.name,
+                connected: $0.connected) }
+        
+        let action = MxSetMailboxesAction(mailboxes: mailboxes, errors: [MxErrorSO]())
+        
+        MxLog.debug("Dispatching action: \(action)")
+        
+        store.dispatch(action)
     
-    
-    let _: Future<[MxMailbox],MxStackError> = stack.getAllObjects()
         
-        .andThen() {_ in
-            
-            store.dispatch( MxStopLoadingAction())
-            
-        }
+    case let .Failure( error):
         
-        .onSuccess(){ results in
-            
-            let mailboxes = results
-                .map{ MxMailboxSO(model: $0 ) }
-            
-            let action = MxSetMailboxesAction(mailboxes: mailboxes, errors: [MxErrorSO]())
-            
-            MxLog.debug("Dispatching action: \(action)")
-            
-            store.dispatch(action)
-            
-        }
+        let action = MxAddErrorsAction(errors: [MxErrorSO(error: error)])
         
-        .onFailure() { error in
-            
-            let action = MxAddErrorsAction(errors: [MxErrorSO(error: error)])
-            
-            MxLog.debug("Dispatching action: \(action)")
-            
-            store.dispatch(action)
-            
+        MxLog.debug("Dispatching action: \(action)")
+        
+        store.dispatch(action)
+        
     }
     
     

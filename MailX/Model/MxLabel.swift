@@ -11,34 +11,54 @@ import CoreData
 
 
 
-class MxLabel: NSManagedObject, MxModelObjectProtocol, MxCoreLabelProtocol {
+class MxLabel: MxBaseManagedObject, MxLabelProtocol {
 
 // Insert code here to add functionality to your managed object subclass
     
-    var internalId: MxInternalId? {
+    static let modelName = "MxLabel"
+    
+    override var internalId: MxInternalId? {
         get {
-            return internal_id != nil ? MxInternalId(value: internal_id!) : nil
+            return internalId_ != nil ? MxInternalId(value: internalId_!) : nil
         }
         set {
-            self.internal_id = newValue?.value
+            self.internalId_ = newValue?.value
         }
     }
     
-    var remoteId: MxRemoteId? {
+    override var remoteId: MxRemoteId? {
         get {
-            return remote_id != nil ? MxRemoteId(value: remote_id) : nil
+            return remoteId_ != nil ? MxRemoteId(value: remoteId_) : nil
         }
         set {
-            self.remote_id = newValue?.value
+            self.remoteId_ = newValue?.value
+        }
+    }
+    
+    var name: String? {
+        get {
+            return name_
+        }
+        set {
+            self.name_ = newValue
+        }
+    }
+    
+    var code: String? {
+        get {
+            return code_
+        }
+        set {
+            self.code_ = newValue
         }
     }
     
     var ownerType: MxLabelOwnerType {
         get {
-            return MxLabelOwnerType(rawValue: owner_type ?? MxLabelOwnerType.UNDEFINED.rawValue)!
+            return MxLabelOwnerType(rawValue: ownerType_ ?? MxLabelOwnerType.UNDEFINED.rawValue)!
         }
         set {
-            self.owner_type = newValue.rawValue
+            self.ownerType_ = newValue.rawValue
         }
     }
     

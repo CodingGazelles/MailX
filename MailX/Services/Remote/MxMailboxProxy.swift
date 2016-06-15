@@ -18,8 +18,8 @@ class MxMailboxProxy {
     private var operationsQueue: NSOperationQueue
     private var mailbox: MxMailbox
     
-    private var connectPromise: Promise<Any, MxProxyError>!
-    private var fetchLabelsPromise: Promise<[MxLabel], MxProxyError>!
+    private var connectPromise: Promise<Void, MxProxyError>!
+    private var fetchLabelsPromise: Promise<[MxLabelRemote], MxProxyError>!
     
     
     init( mailbox: MxMailbox){
@@ -37,11 +37,11 @@ class MxMailboxProxy {
     
     // MARK: - Connect adapter
     
-    func connect() -> Future<Any, MxProxyError> {
+    func connect() -> Future<Void, MxProxyError> {
         
         MxLog.debug("Adding connection command to operation queue for mailbox: \(mailbox.email)")
         
-        connectPromise = Promise<Any, MxProxyError>()
+        connectPromise = Promise<Void, MxProxyError>()
         
         ImmediateExecutionContext {
             
@@ -61,7 +61,7 @@ class MxMailboxProxy {
             
             MxLog.debug("Proxy did connect to mailbox: \(mailbox.email)")
             
-            connectPromise.success(true)
+            connectPromise.success()
             
         } else {
             
@@ -76,11 +76,11 @@ class MxMailboxProxy {
     
     // MARK: - Fetch labels
     
-    func fetchLabels() -> Future<[MxLabel], MxProxyError>{
+    func fetchLabels() -> Future<[MxLabelRemote], MxProxyError>{
         
         MxLog.debug("Adding fetch labels command to operation queue for mailbox: \(mailbox.email)")
         
-        fetchLabelsPromise = Promise<[MxLabel], MxProxyError>()
+        fetchLabelsPromise = Promise<[MxLabelRemote], MxProxyError>()
         
         ImmediateExecutionContext {
             
@@ -92,7 +92,7 @@ class MxMailboxProxy {
         return fetchLabelsPromise.future
     }
     
-    func adapterDidFetchLabels(labels labels: [MxLabel]?, error: MxAdapterError?) {
+    func adapterDidFetchLabels(labels labels: [MxLabelRemote]?, error: MxAdapterError?) {
         
         MxLog.debug("Received response from fetchLabels command \(mailbox.email) labels=\(labels), error=\(error)")
         

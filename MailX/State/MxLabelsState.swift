@@ -15,7 +15,7 @@ import Pipes
 
 // MARK: - State Object
 
-struct MxLabelSO: MxStateObjectProtocol, MxCoreLabelProtocol {
+struct MxLabelSO: MxStateObjectProtocol, MxLabelProtocol {
     
     var internalId: MxInternalId?
     var remoteId: MxRemoteId?

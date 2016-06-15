@@ -16,8 +16,8 @@
 		DF2E224D1CFC8BAC00F303F5 /* Result.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = DF2E22441CFC8BAC00F303F5 /* Result.framework.dSYM */; };
 		DF2FFBA41CFCB29A001DF44F /* MailXStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DF4F05E51CF9D8B500123CA3 /* MailXStoryboard.storyboard */; };
 		DF6881B91D0F962500F74BF0 /* MxLabelRemote.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6881B81D0F962500F74BF0 /* MxLabelRemote.swift */; };
-		DF6881BC1D105C2700F74BF0 /* MxManagedObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6881BB1D105C2700F74BF0 /* MxManagedObjects.swift */; };
 		DF6881BE1D105C5300F74BF0 /* MxSystemObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6881BD1D105C5300F74BF0 /* MxSystemObjects.swift */; };
+		DF7F25CD1D11E30900D612FC /* MxBaseObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7F25CC1D11E30900D612FC /* MxBaseObject.swift */; };
 		DF98B55E1CF9222500DAC34F /* Pipes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF98B55B1CF9222500DAC34F /* Pipes.framework */; };
 		DF98B55F1CF9222500DAC34F /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF98B55C1CF9222500DAC34F /* Result.framework */; };
 		DF98B5621CF9222E00DAC34F /* Pipes.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DF98B55B1CF9222500DAC34F /* Pipes.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -156,8 +156,8 @@
 		DF2E22441CFC8BAC00F303F5 /* Result.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = Result.framework.dSYM; path = ../Carthage/Build/Mac/Result.framework.dSYM; sourceTree = "<group>"; };
 		DF4F05E51CF9D8B500123CA3 /* MailXStoryboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = MailXStoryboard.storyboard; path = Views/MailXStoryboard.storyboard; sourceTree = "<group>"; };
 		DF6881B81D0F962500F74BF0 /* MxLabelRemote.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MxLabelRemote.swift; sourceTree = "<group>"; };
-		DF6881BB1D105C2700F74BF0 /* MxManagedObjects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MxManagedObjects.swift; sourceTree = "<group>"; };
 		DF6881BD1D105C5300F74BF0 /* MxSystemObjects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MxSystemObjects.swift; sourceTree = "<group>"; };
+		DF7F25CC1D11E30900D612FC /* MxBaseObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MxBaseObject.swift; sourceTree = "<group>"; };
 		DF98B55B1CF9222500DAC34F /* Pipes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Pipes.framework; sourceTree = "<group>"; };
 		DF98B55C1CF9222500DAC34F /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Result.framework; sourceTree = "<group>"; };
 		DFA313021CF0C02600500607 /* MxErrorActions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxErrorActions.swift; path = State/MxErrorActions.swift; sourceTree = "<group>"; };
@@ -344,8 +344,8 @@
 			isa = PBXGroup;
 			children = (
 				DFA313071CF1290900500607 /* MxBusinessObjects.swift */,
-				DF6881BB1D105C2700F74BF0 /* MxManagedObjects.swift */,
 				DF6881BD1D105C5300F74BF0 /* MxSystemObjects.swift */,
+				DF7F25CC1D11E30900D612FC /* MxBaseObject.swift */,
 				DF241EFA1D0502B600C61196 /* MxErrors.swift */,
 				DFE26F171CEE99E200FB401A /* UI */,
 				DFB84EA71CEAABF30088090D /* ModelObjects */,
@@ -772,6 +772,7 @@
 				DFE26F371CEFA3EE00FB401A /* MxMailboxActions.swift in Sources */,
 				DFFCE6441D0F2AB300154FEE /* MxMessage+CoreDataProperties.swift in Sources */,
 				DFB84EC81CEAB0DD0088090D /* MxGMailAdapter.swift in Sources */,
+				DF7F25CD1D11E30900D612FC /* MxBaseObject.swift in Sources */,
 				DFFCE6431D0F2AB300154FEE /* MxLabel.swift in Sources */,
 				DFE26F081CEC097000FB401A /* MxMessageState.swift in Sources */,
 				DFA313051CF0C0D200500607 /* MxErrorsState.swift in Sources */,
@@ -805,7 +806,6 @@
 				DFFCE6391D0F234F00154FEE /* MxProvider.swift in Sources */,
 				DFE26F0A1CEC09A900FB401A /* MxLabelsState.swift in Sources */,
 				DFE26F1B1CEF46C000FB401A /* MxAppProperties.swift in Sources */,
-				DF6881BC1D105C2700F74BF0 /* MxManagedObjects.swift in Sources */,
 				DFFCE6451D0F2AB300154FEE /* MxMessage.swift in Sources */,
 				DFE26F311CEF7CB400FB401A /* MxStateArchiver.swift in Sources */,
 				DFB84E7D1CEAA8580088090D /* MxLogs.swift in Sources */,

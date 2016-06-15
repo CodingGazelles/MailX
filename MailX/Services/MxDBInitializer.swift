@@ -28,14 +28,14 @@ class MxDBInitializer {
         
         for providerCode in providers.keys {
             
-            let provider = MxProvider()
-            provider.internalId = MxInternalId()
-            provider.code = providerCode
-            provider.name = ""
+            let name = providers[providerCode]![MxAppProperties.k_Provider_Name] as! String
             
-            MxLog.debug("Inserting \(provider)")
+            let result = stack.createProvider(
+                internalId: MxInternalId( value: "GMAIL"),
+                code: providerCode,
+                name: name)
             
-            stack.setObject(object: provider)
+            MxLog.debug("Inserting \(result.value )")
             
         }
         
@@ -53,20 +53,14 @@ class MxDBInitializer {
         
         let email = "mailxtest10@gmail.com"
         let name = "TestMailbox"
-        let providerCode = "GMAIL"
         
-        let appProperties = MxAppProperties.defaultProperties()
-        let providers = appProperties.providers()
+        let result = stack.createMailbox(
+            internalId: MxInternalId( value: "TEST_MAILBOX"),
+            remoteId: MxRemoteId(value: "TEST_MAILBOX" ),
+            email: email,
+            name: name)
         
-        var mailbox = MxMailbox()
-        mailbox.internalId = MxInternalId()
-        mailbox.email = email
-        mailbox.name = name
-        mailbox.connected = false
-        
-        MxLog.debug("Inserting \(mailbox)")
-        
-        stack.setObject(object: mailbox)
+        MxLog.debug("Inserting \(result.value )")
         
 //        let labels = (providers[providerCode]![MxAppProperties.k_Provider_Labels] as! [String:String]).keys
 //        

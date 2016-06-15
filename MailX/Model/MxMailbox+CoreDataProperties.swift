@@ -2,7 +2,7 @@
 //  MxMailbox+CoreDataProperties.swift
 //  MailX
 //
-//  Created by Tancrède on 6/13/16.
+//  Created by Tancrède on 6/15/16.
 //  Copyright © 2016 rxdesign. All rights reserved.
 //
 //  Choose "Create NSManagedObject Subclass…" from the Core Data editor menu
@@ -14,12 +14,12 @@ import CoreData
 
 extension MxMailbox {
 
-    @NSManaged var internal_id: String?
-    @NSManaged var remote_id: String?
-    @NSManaged var email: String?
-    @NSManaged var name: String?
-    @NSManaged var provider_: MxProvider?
+    @NSManaged var email_: String?
+    @NSManaged var internalId_: String?
+    @NSManaged var name_: String?
+    @NSManaged var remoteId_: String?
     @NSManaged var labels_: NSSet?
     @NSManaged var messages_: NSSet?
+    @NSManaged var provider_: MxProvider?
 
 }

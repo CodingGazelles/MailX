@@ -31,10 +31,11 @@ enum MxError: MxExceptionProtocol {
 }
 
 enum MxStateError: MxExceptionProtocol {
-    
-    case BaseError( object: Any?, message: String, rootError: ErrorType)
-    
+//    case BaseError( object: Any?, message: String, rootError: ErrorType)
+    case UnknownAction( action: MxAction?, message: String)
 }
+
+enum MxNoError: ErrorType {}
 
 
 // MARK: - Stack Error
@@ -58,28 +59,32 @@ enum MxStackError: MxExceptionProtocol {
 
 // MARK: - DB Error
 
-enum MxDBError: MxExceptionProtocol {
+//enum MxDBError: MxExceptionProtocol {
+//
+//    case FetchError( object: Any?, typeName: String, message: String, rootError: ErrorType?)
+//    case InsertError( object: Any?, typeName: String, message: String, rootError: ErrorType?)
+//    case UpdateError( object: Any?, typeName: String, message: String, rootError: ErrorType?)
+//    case DeleteError( object: Any?, typeName: String, message: String, rootError: ErrorType?)
+//    
+//    case UndexpectedError( object: Any?, message: String, rootError: MxExceptionProtocol?)
+//}
 
-    case FetchError( object: Any?, typeName: String, message: String, rootError: ErrorType?)
-    case InsertError( object: Any?, typeName: String, message: String, rootError: ErrorType?)
-    case UpdateError( object: Any?, typeName: String, message: String, rootError: ErrorType?)
-    case DeleteError( object: Any?, typeName: String, message: String, rootError: ErrorType?)
-    
+
+// MARK: - Sync Error
+
+
+enum MxSyncError: MxExceptionProtocol {
+    case OperationFailed( message: String, rootError: ErrorType?)
+    case NetworkError( error: MxNetworkError, message: String, rootError: ErrorType?)
     case UndexpectedError( object: Any?, message: String, rootError: MxExceptionProtocol?)
 }
 
-
-// MARK: - Network error
-
-enum MxNetworkError: MxExceptionProtocol {
-    
-    case ConnectError( message: String, rootError: ErrorType?)
-    case FetchError( message: String, rootError: ErrorType?)
-    case InsertError( message: String, rootError: ErrorType?)
-    case UpdateError( message: String, rootError: ErrorType?)
-    case DeleteError( message: String, rootError: ErrorType?)
-    
-    case UndexpectedError( object: Any?, message: String, rootError: MxExceptionProtocol?)
+enum MxNetworkError {
+    case ConnectError
+    case FetchError
+    case InsertError
+    case UpdateError
+    case DeleteError
 }
 
 
@@ -105,5 +110,10 @@ enum MxAdapterError: MxExceptionProtocol {
     case ProviderReturnedConnectionError( rootError: ErrorType)
     case ProviderReturnedFetchError( rootError: ErrorType)
 }
+
+
+
+
+
 
 

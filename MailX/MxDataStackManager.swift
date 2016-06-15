@@ -26,6 +26,8 @@ class MxDataStackManager {
         return sharedInstance
     }
     
+    private var moc: NSManagedObjectContext!
+    
     
 //    private var levels = [MxStackLevelProtocol]()
     
@@ -34,11 +36,11 @@ class MxDataStackManager {
 //        levels.append(MxDBLevel())
     }
     
-    func startDBStack() -> Future<NSManagedObjectContext, MxStackError> {
+    func startDBStack() -> Future<Void, MxStackError> {
         
         MxLog.debug("Connecting to DB")
         
-        let promise = Promise<NSManagedObjectContext, MxStackError>()
+        let promise = Promise<Void, MxStackError>()
         
         Queue.global.context {
             
@@ -55,6 +57,7 @@ class MxDataStackManager {
                 
                 promise.failure(error)
                 
+                return
             }
             
             guard let mom = NSManagedObjectModel(contentsOfURL: modelURL) else {
@@ -67,6 +70,7 @@ class MxDataStackManager {
                 
                 promise.failure(error)
                 
+                return
             }
             
             let psc = NSPersistentStoreCoordinator(managedObjectModel: mom)
@@ -83,6 +87,13 @@ class MxDataStackManager {
             
             do {
                 try psc.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: storeURL, options: nil)
+                
+                MxLog.info( "DB connected")
+                
+                self.moc = managedObjectContext
+                
+                promise.success()
+                
             } catch {
                 
                 let stackError = MxStackError.SetupFailed(
@@ -98,6 +109,163 @@ class MxDataStackManager {
         }
         
         return promise.future
+        
+    }
+    
+    func getAllMailboxes() -> Result<[MxMailbox], MxStackError> {
+        
+        MxLog.debug("Fetching all mailboxes")
+        
+        let fetch = NSFetchRequest(entityName: MxMailbox.modelName)
+        
+        do {
+            let mailboxes = try moc.executeFetchRequest(fetch) as! [MxMailbox]
+            
+            MxLog.debug( "Found \(mailboxes.count) mailbox(es): \(mailboxes.map{ $0.email } )")
+            
+            return .Success( mailboxes)
+            
+        } catch {
+            
+            let stackError = MxStackError.SetupFailed(
+                message: "Failed to fetch mailboxes",
+                rootError: error)
+            
+            MxLog.error("Failed to fetch mailboxes", error: stackError)
+            
+            return .Failure( stackError)
+            
+        }
+        
+    }
+    
+    func getMailbox( mailboxId mailboxId: MxInternalId) -> Result<MxMailbox, MxStackError> {
+        
+        MxLog.debug("Fetching mailbox \(mailboxId)")
+        
+        switch getAllMailboxes() {
+        
+        case let .Success( results):
+            
+            let result = results.filter { mailbox -> Bool in
+                    mailbox.internalId == mailboxId
+            }
+            
+            guard result.count > 0 else {
+                
+                let stackError = MxStackError.SetupFailed(
+                    message: "Fetch of mailbox returned no result \(mailboxId)",
+                    rootError: nil)
+                
+                MxLog.error("Fetch of mailbox returned no result \(mailboxId)", error: stackError)
+                
+                return .Failure( stackError)
+                
+            }
+            
+            guard !(result.count > 1) else {
+                
+                let stackError = MxStackError.SetupFailed(
+                    message: "Fetch of mailbox returned \(result.count) results \(mailboxId)",
+                    rootError: nil)
+                
+                MxLog.error("Fetch of mailbox returned \(result.count) results \(mailboxId)", error: stackError)
+                
+                return .Failure( stackError)
+                
+            }
+            
+            return .Success( result[0])
+            
+            
+        case let .Failure( error):
+            
+            let stackError = MxStackError.SetupFailed(
+                message: "Failed to fetch mailbox \(mailboxId)",
+                rootError: error)
+            
+            MxLog.error("Failed to fetch mailbox \(mailboxId)", error: stackError)
+            
+            return .Failure( stackError)
+            
+        }
+        
+    }
+    
+    func createProvider( internalId internalId: MxInternalId,
+                                    code: String,
+                                    name: String) -> Result<MxProvider, MxNoError> {
+        
+        let provider = NSEntityDescription.insertNewObjectForEntityForName(MxProvider.modelName, inManagedObjectContext: self.moc) as! MxProvider
+        
+        provider.internalId = internalId
+        provider.code = code
+        provider.name = name
+        
+        return .Success( provider)
+        
+    }
+    
+    func createMailbox( internalId internalId: MxInternalId,
+                                   remoteId: MxRemoteId,
+                                   email: String,
+                                   name: String) -> Result<MxMailbox, MxNoError> {
+        
+        let mailbox = NSEntityDescription.insertNewObjectForEntityForName(MxMailbox.modelName, inManagedObjectContext: self.moc) as! MxMailbox
+        
+        mailbox.internalId = internalId
+        mailbox.remoteId = remoteId
+        mailbox.email = email
+        mailbox.name = name
+        mailbox.connected = false
+        
+        return .Success( mailbox)
+        
+    }
+    
+    func createLabel( internalId internalId: MxInternalId,
+                                 remoteId: MxRemoteId,
+                                 code: String,
+                                 name: String,
+                                 ownerType: MxLabelOwnerType) -> Result<MxLabel, MxNoError> {
+        
+        let label = NSEntityDescription.insertNewObjectForEntityForName(MxLabel.modelName, inManagedObjectContext: self.moc) as! MxLabel
+        
+        label.internalId = internalId
+        label.remoteId = remoteId
+        label.code = code
+        label.name = name
+        label.ownerType = ownerType
+        
+        return .Success( label)
+        
+    }
+    
+    func removeObject( object object: MxBaseManagedObject ) -> Result<Void, MxStackError> {
+        
+        moc.deleteObject(object)
+        return .Success()
+        
+    }
+    
+    func saveContext() -> Result< Void, MxStackError> {
+        
+        do {
+            
+            try moc.save()
+            return .Success()
+            
+        } catch {
+            
+            let stackError = MxStackError.SetupFailed(
+                message: "Failed to save context",
+                rootError: error)
+            
+            MxLog.error("Failed to save context", error: stackError)
+            
+            return .Failure( stackError)
+            
+        }
         
     }
     

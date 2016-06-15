@@ -10,7 +10,7 @@ import Foundation
 
 
 
-typealias MxFetchLabelsCallback = (labels: [MxLabel]?, error: MxAdapterError?) -> Void
+typealias MxFetchLabelsCallback = (labels: [MxLabelRemote]?, error: MxAdapterError?) -> Void
 
 class MxFetchLabelsCommand : MxNetworkCommand {
     
@@ -31,7 +31,7 @@ class MxFetchLabelsCommand : MxNetworkCommand {
         
     }
     
-    func adapterDidFetchLabels( labels labels: [MxLabel]?, error: MxAdapterError?) {
+    func adapterDidFetchLabels( labels labels: [MxLabelRemote]?, error: MxAdapterError?) {
         
         MxLog.debug("\(#function) fetch labels ticket received response of mailbox: \(adapter.mailbox.email)")
         state = .Finished

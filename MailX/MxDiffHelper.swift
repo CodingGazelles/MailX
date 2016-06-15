@@ -31,12 +31,12 @@ enum OperationType {
 }
 
 /// Operation describes an operation (insertion, deletion, or noop) of elements.
-struct Operation<V: MxCoreBusinessProtocol> {
+struct Operation {
     let type: OperationType
-    let remoteIds: [V]
+    let objects: [MxImplementBusinessObject]
     
     var elementsString: String {
-        return remoteIds
+        return objects
             .map { e in "\(e)" }
             .joinWithSeparator("")
     }
@@ -55,13 +55,12 @@ struct Operation<V: MxCoreBusinessProtocol> {
     }
 }
 
-func arrayDiff<T: MxCoreBusinessProtocol>
-    (modelObjects modelObjects: [T], remoteObjects:[T]) -> [Operation<T>] {
+func arrayDiff(managedObjects managedObjects: [MxBaseManagedObject], remoteObjects:[MxBaseRemoteOject]) -> [Operation] {
     
     // Create map of indices for every element
     var beforeIndices = [MxRemoteId: [Int]]()
     
-    for (index, elem) in modelObjects.enumerate() {
+    for (index, elem) in managedObjects.enumerate() {
         var indices = beforeIndices.indexForKey(elem.remoteId!) != nil ? beforeIndices[elem.remoteId!]! : [Int]()
         indices.append(index)
         beforeIndices[elem.remoteId!] = indices
@@ -101,32 +100,32 @@ func arrayDiff<T: MxCoreBusinessProtocol>
         overlay = _overlay
     }
     
-    var operations = [Operation<T>]()
+    var operations = [Operation]()
     
     if maxOverlayLength == 0 {
         
         // No overlay; remove before and add after elements
-        if modelObjects.count > 0 {
-            operations.append(Operation(type: .Delete, remoteIds: modelObjects.map{ $0 }))
+        if managedObjects.count > 0 {
+            operations.append(Operation(type: .Delete, objects: managedObjects))
         }
-        if modelObjects.count > 0 {
-            operations.append(Operation(type: .Insert, remoteIds: remoteObjects.map{ $0 }))
+        if managedObjects.count > 0 {
+            operations.append(Operation(type: .Insert, objects: remoteObjects))
         }
         
     } else {
         
         // Recursive call with elements before overlay
-        operations += arrayDiff( modelObjects: Array( modelObjects[0..<beforeStart ]),
+        operations += arrayDiff( managedObjects: Array( managedObjects[0..<beforeStart ]),
                                     remoteObjects: Array( remoteObjects[0..<afterStart]))
         
         // Noop for longest overlay
         operations.append(
             Operation(
                 type: .Noop,
-                remoteIds: Array( remoteObjects[afterStart..<afterStart+maxOverlayLength].map{ $0 } )))
+                objects: Array( remoteObjects[afterStart..<afterStart+maxOverlayLength].map{ $0 } )))
         
         // Recursive call with elements after overlay
-        operations += arrayDiff( modelObjects: Array(modelObjects[beforeStart+maxOverlayLength..<modelObjects.count]),
+        operations += arrayDiff( managedObjects: Array(managedObjects[beforeStart+maxOverlayLength..<managedObjects.count]),
                                     remoteObjects: Array(remoteObjects[afterStart+maxOverlayLength..<remoteObjects.count]))
         
     }

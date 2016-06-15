@@ -10,7 +10,7 @@ import Foundation
 
 
 
-struct MxProviderSO: MxStateObjectProtocol, MxManagedObject, MxCoreProviderProtocol {
+struct MxProviderSO: MxStateObjectProtocol, MxManagedObject, MxProviderProtocol {
     
     var internalId: MxInternalId?
     var remoteId: MxRemoteId?

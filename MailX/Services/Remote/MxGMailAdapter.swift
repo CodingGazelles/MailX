@@ -44,7 +44,7 @@ class MxGMailAdapter : NSObject, MxMailboxAdapter {
         
         self.mailbox = mailbox;
         
-        self.kKeychainItemName = self.kKeychainItemName + mailbox.name
+        self.kKeychainItemName = self.kKeychainItemName + mailbox.name!
         
         // Initialize the Gmail API service & load existing credentials from the keychain if available.
         let service = GTLServiceGmail()
@@ -162,39 +162,39 @@ class MxGMailAdapter : NSObject, MxMailboxAdapter {
         , finishedWithObject labelsResponse: GTLGmailListLabelsResponse
         , error: NSError?){
         
-        MxLog.debug("Processing \(#function)")
+        MxLog.debug("Received fetch label response from GMAIL")
         
-        if let error = error {
+        guard error == nil else {
             
-            MxLog.error("Fetching labels failed...")
-            MxLog.error(error.localizedDescription)
+            let adapterError = MxAdapterError.ProviderReturnedFetchError(rootError: error!)
             
-            fetchLabelsCallback!( labels: nil, error: MxAdapterError.ProviderReturnedFetchError(rootError: error))
+            MxLog.error("Fetching labels failed", error: adapterError)
+            
+            fetchLabelsCallback!( labels: nil, error: MxAdapterError.ProviderReturnedFetchError(rootError: adapterError))
             
             return
         }
         
-        var labels = [MxLabel]()
+        var labels = [MxLabelRemote]()
             
         if !labelsResponse.labels.isEmpty {
-            MxLog.debug("Parsing labels...")
+            MxLog.debug("Parsing labels")
                 
             for response in labelsResponse.labels as! [GTLGmailLabel] {
                 
-                var label = MxLabel()
-                label.remoteId = MxRemoteId(value: response.identifier)
+                let label = MxLabelRemote()
                 
+                label.remoteId = MxRemoteId(value: response.identifier)
                 label.code = response.name
                 label.name = ""
                 label.ownerType = MxLabelOwnerType.SYSTEM
-                label.mailbox_ = mailbox
                     
                 labels.append(label)
                 
-                MxLog.debug("Parsing labels... label: \(label)")
+                MxLog.debug("Parsed label \(label)")
             }
         } else {
-            MxLog.verbose( "No label found.")
+            MxLog.debug( "No label found.")
         }
             
         fetchLabelsCallback!( labels: labels, error: nil)
@@ -246,8 +246,8 @@ class MxGMailAdapter : NSObject, MxMailboxAdapter {
                     
                     MxLog.debug("Message:\(response)")
                     
-                    var message = MxMessage()
-                    message.remoteId = MxRemoteId( response.identifier)
+                    let message = MxMessage()
+                    message.remoteId = MxRemoteId( value: response.identifier)
                     
                     messages.append( message)
                     

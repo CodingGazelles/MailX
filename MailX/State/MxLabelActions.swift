@@ -60,35 +60,31 @@ func dispatchSetLabelsAction() {
         
     case .One(let selectedMailbox):
         
-        let _: Future<MxMailbox,MxStackError> = stack.getObject( id: selectedMailbox.internalId!)
-        
-            .andThen( context: Queue.main.context) {_ in
-                
-                store.dispatch( MxStopLoadingAction())
-                
-            }
-        
-            .onSuccess( Queue.main.context) { result in
-                
-                let labels = Set<MxLabel>(result.labels_!.allObjects as! [MxLabel])
-                    .map{ MxLabelSO( model: $0) }
-                
-                let action = MxSetLabelsAction( labels: labels, errors: [MxErrorSO]())
-                
-                MxLog.debug("Dispatching action: \(action)")
-                
-                store.dispatch(action)
-                
-            }
-        
-            .onFailure( Queue.main.context) { error in
-                
-                let action = MxAddErrorsAction(errors: [MxErrorSO(error: error)])
-                
-                MxLog.debug("Dispatching action: \(action)")
-                
-                store.dispatch(action)
-                
+        switch stack.getMailbox(mailboxId: selectedMailbox.internalId!) {
+        case let .Success( result):
+            
+            let labels = Set<MxLabel>(result.labels_!.allObjects as! [MxLabel])
+                .map{ MxLabelSO(
+                    internalId: $0.internalId,
+                    remoteId: $0.remoteId,
+                    code: $0.code,
+                    name: $0.name,
+                    ownerType: $0.ownerType) }
+            
+            let action = MxSetLabelsAction( labels: labels, errors: [MxErrorSO]())
+            
+            MxLog.debug("Dispatching action: \(action)")
+            
+            store.dispatch(action)
+            
+        case let .Failure( error):
+            
+            let action = MxAddErrorsAction(errors: [MxErrorSO(error: error)])
+            
+            MxLog.debug("Dispatching action: \(action)")
+            
+            store.dispatch(action)
+            
         }
         
         

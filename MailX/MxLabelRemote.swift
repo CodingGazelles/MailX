@@ -11,12 +11,10 @@ import Foundation
 
 
 
-class MxBaseRemoteOject: MxRemoteObjectProtocol {
-    var remoteId: MxRemoteId?
-}
 
 
-class MxLabelRemote: MxBaseRemoteOject, MxCoreLabelProtocol {
+
+class MxLabelRemote: MxBaseRemoteOject, MxLabelProtocol {
     
     var code: String?
     var name: String?

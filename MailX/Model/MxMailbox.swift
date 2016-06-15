@@ -10,29 +10,49 @@ import Foundation
 import CoreData
 
 
-class MxMailbox: NSManagedObject, MxModelObjectProtocol, MxCoreMailboxProtocol {
+class MxMailbox: MxBaseManagedObject, MxMailboxProtocol {
 
 // Insert code here to add functionality to your managed object subclass
+    
+    static let modelName = "MxMailbox"
     
     var connected: Bool = false
     var proxy: MxMailboxProxy!
     
     
-    var internalId: MxInternalId? {
+    override var internalId: MxInternalId? {
         get {
-            return internal_id != nil ? MxInternalId(value: internal_id!) : nil
+            return internalId_ != nil ? MxInternalId(value: internalId_!) : nil
         }
         set {
-            self.internal_id = newValue?.value
+            self.internalId_ = newValue?.value
         }
     }
     
-    var remoteId: MxRemoteId? {
+    override var remoteId: MxRemoteId? {
         get {
-            return remote_id != nil ? MxRemoteId(value: remote_id) : nil
+            return remoteId_ != nil ? MxRemoteId(value: remoteId_) : nil
         }
         set {
-            self.remote_id = newValue?.value
+            self.remoteId_ = newValue?.value
+        }
+    }
+    
+    var email: String? {
+        get {
+            return email_
+        }
+        set {
+            self.email_ = newValue
+        }
+    }
+    
+    var name: String? {
+        get {
+            return name_
+        }
+        set {
+            self.name_ = newValue
         }
     }
     
@@ -41,7 +61,12 @@ class MxMailbox: NSManagedObject, MxModelObjectProtocol, MxCoreMailboxProtocol {
 //    }
 //    
     var labels: Set<MxLabel> {
-        return (labels_ ?? Set<MxLabel>()) as! Set<MxLabel>
+        get {
+            return (labels_ ?? Set<MxLabel>()) as! Set<MxLabel>
+        }
+        set {
+            labels_ = newValue
+        }
     }
     
 }
