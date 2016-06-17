@@ -18,6 +18,7 @@
 		DF6881B91D0F962500F74BF0 /* MxLabelRemote.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6881B81D0F962500F74BF0 /* MxLabelRemote.swift */; };
 		DF6881BE1D105C5300F74BF0 /* MxSystemObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6881BD1D105C5300F74BF0 /* MxSystemObjects.swift */; };
 		DF7F25CD1D11E30900D612FC /* MxBaseObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7F25CC1D11E30900D612FC /* MxBaseObject.swift */; };
+		DF7F25CF1D137D4200D612FC /* Codes in Resources */ = {isa = PBXBuildFile; fileRef = DF7F25CE1D137D4200D612FC /* Codes */; };
 		DF98B55E1CF9222500DAC34F /* Pipes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF98B55B1CF9222500DAC34F /* Pipes.framework */; };
 		DF98B55F1CF9222500DAC34F /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF98B55C1CF9222500DAC34F /* Result.framework */; };
 		DF98B5621CF9222E00DAC34F /* Pipes.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DF98B55B1CF9222500DAC34F /* Pipes.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -158,6 +159,7 @@
 		DF6881B81D0F962500F74BF0 /* MxLabelRemote.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MxLabelRemote.swift; sourceTree = "<group>"; };
 		DF6881BD1D105C5300F74BF0 /* MxSystemObjects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MxSystemObjects.swift; sourceTree = "<group>"; };
 		DF7F25CC1D11E30900D612FC /* MxBaseObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MxBaseObject.swift; sourceTree = "<group>"; };
+		DF7F25CE1D137D4200D612FC /* Codes */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Codes; sourceTree = "<group>"; };
 		DF98B55B1CF9222500DAC34F /* Pipes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Pipes.framework; sourceTree = "<group>"; };
 		DF98B55C1CF9222500DAC34F /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Result.framework; sourceTree = "<group>"; };
 		DFA313021CF0C02600500607 /* MxErrorActions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxErrorActions.swift; path = State/MxErrorActions.swift; sourceTree = "<group>"; };
@@ -319,6 +321,7 @@
 		DFB84E2F1CEAA72D0088090D = {
 			isa = PBXGroup;
 			children = (
+				DF7F25CE1D137D4200D612FC /* Codes */,
 				DFB84EE81CEAB5E50088090D /* .gitignore */,
 				DFB84E9B1CEAAA8B0088090D /* Carthage */,
 				DFB84E3A1CEAA72E0088090D /* MailX */,
@@ -685,6 +688,7 @@
 				DF241EFE1D05C02600C61196 /* BrightFutures.framework.dSYM in Resources */,
 				DFB84E401CEAA72E0088090D /* Assets.xcassets in Resources */,
 				DFB84EA61CEAAB8A0088090D /* Properties.plist in Resources */,
+				DF7F25CF1D137D4200D612FC /* Codes in Resources */,
 				DF2FFBA41CFCB29A001DF44F /* MailXStoryboard.storyboard in Resources */,
 				DFD44AB61D010796001DF6F5 /* CleanroomASL.framework.dSYM in Resources */,
 				DFB84F241CEB515F0088090D /* GTMOAuth2Window.xib in Resources */,
@@ -946,7 +950,7 @@
 				);
 				INFOPLIST_FILE = MailX/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = cool.dog12.MailX;
+				PRODUCT_BUNDLE_IDENTIFIER = cool.dog16.MailX;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "MailX-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -967,7 +971,7 @@
 				);
 				INFOPLIST_FILE = MailX/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = cool.dog12.MailX;
+				PRODUCT_BUNDLE_IDENTIFIER = cool.dog16.MailX;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "MailX-Bridging-Header.h";
 			};

@@ -31,6 +31,9 @@ class MxDataStackManager {
     
 //    private var levels = [MxStackLevelProtocol]()
     
+    
+    // MARK: - Init stack
+    
     private init() {
 //        levels.append(MxMemoryLevel())
 //        levels.append(MxDBLevel())
@@ -112,6 +115,9 @@ class MxDataStackManager {
         
     }
     
+    
+    // MARK: - Get objects
+    
     func getAllMailboxes() -> Result<[MxMailbox], MxStackError> {
         
         MxLog.debug("Fetching all mailboxes")
@@ -192,6 +198,9 @@ class MxDataStackManager {
         
     }
     
+    
+    // MARK: - Create objects
+    
     func createProvider( internalId internalId: MxInternalId,
                                     code: String,
                                     name: String) -> Result<MxProvider, MxNoError> {
@@ -209,7 +218,8 @@ class MxDataStackManager {
     func createMailbox( internalId internalId: MxInternalId,
                                    remoteId: MxRemoteId,
                                    email: String,
-                                   name: String) -> Result<MxMailbox, MxNoError> {
+                                   name: String,
+                                   provider: MxProvider) -> Result<MxMailbox, MxNoError> {
         
         let mailbox = NSEntityDescription.insertNewObjectForEntityForName(MxMailbox.modelName, inManagedObjectContext: self.moc) as! MxMailbox
         
@@ -218,6 +228,7 @@ class MxDataStackManager {
         mailbox.email = email
         mailbox.name = name
         mailbox.connected = false
+        mailbox.provider = provider
         
         return .Success( mailbox)
         
@@ -227,7 +238,8 @@ class MxDataStackManager {
                                  remoteId: MxRemoteId,
                                  code: String,
                                  name: String,
-                                 ownerType: MxLabelOwnerType) -> Result<MxLabel, MxNoError> {
+                                 ownerType: MxLabelOwnerType,
+                                 mailbox: MxMailbox) -> Result<MxLabel, MxNoError> {
         
         let label = NSEntityDescription.insertNewObjectForEntityForName(MxLabel.modelName, inManagedObjectContext: self.moc) as! MxLabel
         
@@ -236,10 +248,14 @@ class MxDataStackManager {
         label.code = code
         label.name = name
         label.ownerType = ownerType
+        label.mailbox = mailbox
         
         return .Success( label)
         
     }
+    
+    
+    // MARK: - Remove objects
     
     func removeObject( object object: MxBaseManagedObject ) -> Result<Void, MxStackError> {
         
@@ -247,6 +263,9 @@ class MxDataStackManager {
         return .Success()
         
     }
+    
+    
+    // MARK: - Commit
     
     func saveContext() -> Result< Void, MxStackError> {
         

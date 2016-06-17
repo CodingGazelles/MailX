@@ -62,6 +62,17 @@ class MxLabel: MxBaseManagedObject, MxLabelProtocol {
         }
     }
     
+    var mailbox: MxMailbox? {
+        get {
+            return mailbox_
+        }
+        set {
+            self.mailbox_ = newValue
+        }
+    }
+    
+    
+    
 //    var mailbox: MxMailboxProtocol? {
 //        get {
 //            return mailbox_ != nil ? (mailbox_ as! MxMailboxProtocol) : nil

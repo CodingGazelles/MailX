@@ -75,6 +75,7 @@ enum MxStackError: MxExceptionProtocol {
 
 enum MxSyncError: MxExceptionProtocol {
     case OperationFailed( message: String, rootError: ErrorType?)
+    case BatchOperationFailed( message: String, rootErrors: [ErrorType]?)
     case NetworkError( error: MxNetworkError, message: String, rootError: ErrorType?)
     case UndexpectedError( object: Any?, message: String, rootError: MxExceptionProtocol?)
 }

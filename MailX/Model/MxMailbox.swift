@@ -56,16 +56,21 @@ class MxMailbox: MxBaseManagedObject, MxMailboxProtocol {
         }
     }
     
-//    var messages: NSSet {
-//        return messages_ ?? NSSet()
-//    }
-//    
+    var provider: MxProvider? {
+        get {
+            return provider_
+        }
+        set {
+            self.provider_ = newValue
+        }
+    }
+    
     var labels: Set<MxLabel> {
         get {
             return (labels_ ?? Set<MxLabel>()) as! Set<MxLabel>
         }
         set {
-            labels_ = newValue
+            self.labels_ = newValue
         }
     }
     

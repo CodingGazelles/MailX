@@ -8,45 +8,67 @@
 
 import Foundation
 
+import Result
+
 
 
 class MxDBInitializer {
     
     private static let stack = MxDataStackManager.defaultStack()
     
-    static func insertDefaultProviders(){
+    static func insertDefaultProviders() -> Result<[MxProvider], MxStackError> {
         
         guard MxUserPreferences.sharedPreferences().defaultProvidersInserted == false else {
+            
+            let error = MxStackError.InsertFailed(
+                object: nil,
+                typeName: "MxProvider" ,
+                message: "Defaults providers already inserted",
+                rootError: nil)
+            
             MxLog.debug("Defaults providers already inserted")
-            return
+            
+            return .Failure( error)
         }
         
         MxLog.debug("Inserting defaults providers")
         
         let appProperties = MxAppProperties.defaultProperties()
         let providers = appProperties.providers()
+        var results = [MxProvider]()
         
         for providerCode in providers.keys {
             
             let name = providers[providerCode]![MxAppProperties.k_Provider_Name] as! String
             
             let result = stack.createProvider(
-                internalId: MxInternalId( value: "GMAIL"),
+                internalId: MxInternalId( value: providerCode),
                 code: providerCode,
                 name: name)
             
             MxLog.debug("Inserting \(result.value )")
+            results.append(result.value!)
             
         }
         
         MxUserPreferences.sharedPreferences().defaultProvidersInserted = true
+        
+        return .Success(results)
     }
     
-    static func insertTestMailbox(){
+    static func insertTestMailbox( provider provider: MxProvider) -> Result<MxMailbox, MxStackError> {
         
         guard MxUserPreferences.sharedPreferences().testMailboxInserted == false else {
+            
+            let error = MxStackError.InsertFailed(
+                object: nil,
+                typeName: "MxMailbox" ,
+                message: "Test mailbox already inserted",
+                rootError: nil)
+            
             MxLog.debug("Test mailbox already inserted")
-            return
+            
+            return .Failure(error)
         }
         
         MxLog.debug("Inserting default mailboxes")
@@ -58,7 +80,8 @@ class MxDBInitializer {
             internalId: MxInternalId( value: "TEST_MAILBOX"),
             remoteId: MxRemoteId(value: "TEST_MAILBOX" ),
             email: email,
-            name: name)
+            name: name,
+            provider: provider)
         
         MxLog.debug("Inserting \(result.value )")
         
@@ -81,5 +104,7 @@ class MxDBInitializer {
 //        }
         
         MxUserPreferences.sharedPreferences().testMailboxInserted = true
+        
+        return .Success(result.value!)
     }
 }
