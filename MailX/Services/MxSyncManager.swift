@@ -159,7 +159,7 @@ class MxSyncManager {
                 .onSuccess { values in
                     
                     // 2 Compare with local labels
-                    let operations: [Operation] = arrayDiff(
+                    let operations: [ObjectSyncOperation] = diffMROArrays(
                         managedObjects: Array( mailbox.labels),
                         remoteObjects: values)
                     

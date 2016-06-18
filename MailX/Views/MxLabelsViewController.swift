@@ -16,7 +16,7 @@ class MxLabelsViewController: NSViewController {
     
     let kLabelViewIdentifier = "LabelView"
     
-    let state = MxUIStateManager.defaultStore()
+    let state = MxUIStateManager.defaultState()
     
     // IBOutlets
     @IBOutlet weak var tableView: NSTableView!
@@ -46,7 +46,9 @@ extension MxLabelsViewController: StoreSubscriber {
     override func viewWillAppear() {
         super.viewWillAppear()
         
-        state.store.subscribe(self)
+        state.store.subscribe(self) {
+            
+        }
     }
     
     override func viewWillDisappear() {
@@ -58,8 +60,8 @@ extension MxLabelsViewController: StoreSubscriber {
     func newState(state: MxAppState) {
         MxLog.debug("New State received by MxLabelsViewController: \(state)")
         
-        labels = state.labelsState.visibleLabels()
-        showAllLabels = state.labelsState.showAllLabels()
+        labels = state.mailboxList[state.selectedMailbox?]?.labelsState.visibleLabels()
+        showAllLabels = state.mailboxList[state.selectedMailbox?]?.labelsState.showAllLabels()
         showAllLabelsButton.state = showAllLabels ? NSOnState : NSOffState
         
         tableView.reloadData()

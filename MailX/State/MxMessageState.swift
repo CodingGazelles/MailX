@@ -15,21 +15,19 @@ struct MxMessageSO: MxStateObjectProtocol, MxMessageProtocol {
     var internalId: MxInternalId?
     var remoteId: MxRemoteId?
     
+    init(){}
+    
+    init( internalId: MxInternalId, remoteId: MxRemoteId){
+        self.internalId = internalId
+        self.remoteId = remoteId
+    }
+    
+    init( model: MxMessage){
+        self.internalId = model.internalId
+        self.remoteId = model.remoteId
+    }
+    
 }
 
-//extension MxMessageSO: MxInitWithModel {
-//    init( model: MxMessage){
-//        self.init(
-//            internalId: model.internalId,
-//            remoteId: model.remoteId)
-//    }
-//}
 
-
-
-//extension MxMessageSO: MxMessageRow {}
-//
-//protocol MxMessageRow: MxStateObjectProtocol {
-//    var id: String { get set }
-//}
 

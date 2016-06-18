@@ -19,10 +19,9 @@ protocol MxStateType : ReSwift.StateType, Loggable {}
 
 struct MxAppState: MxStateType {
     
-    var mailboxesState = MxMailboxesState()
-    var providersState = MxProvidersState()
-    var labelsState = MxLabelsState()
-    var messagesState = MxMessageState()
+    var mailboxList = [MxMailboxSO:MxMailboxState]()
+    var selectedMailbox: MxMailboxSO?
+    
     var propertiesState = MxPropertiesState()
     var errorsState = MxErrorsState()
     
@@ -31,32 +30,21 @@ struct MxAppState: MxStateType {
     
 }
 
-struct MxProvidersState: MxStateType {
-    var providers = [MxProviderSO]()
-}
+//struct MxProvidersState: MxStateType {
+//    var providers = [MxProviderSO]()
+//}
 
-struct MxMailboxesState: MxStateType {
+struct MxMailboxState: MxStateType {
     
-    var allMailboxes = [MxMailboxSO]()
-    var mailboxSelection = MxMailboxSelection.None
+    var mailbox = MxMailboxSO()
+    var labelsState = MxLabelsState()
+    var messagesState = MxMessageState()
     
-    enum MxMailboxSelection {
-        case All
-        case One(MxMailboxSO)
-        case None
+//    var statusState = MxMailboxStatusState() TODO
+    
+    func refreshMailbox() {
+        
     }
-    
-    func selectedMailbox() -> [MxMailboxSO]{
-        switch mailboxSelection {
-        case .All:
-            return allMailboxes
-        case .None:
-            return []
-        case .One(let selectedMailbox):
-            return [selectedMailbox]
-        }
-    }
-    
 }
 
 struct MxLabelsState: MxStateType {

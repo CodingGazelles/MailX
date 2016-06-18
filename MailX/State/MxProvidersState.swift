@@ -17,16 +17,23 @@ struct MxProviderSO: MxStateObjectProtocol, MxManagedObject, MxProviderProtocol 
     var code: String?
     var name: String?
     
+    init(){}
+    
+    init( internalId: MxInternalId, remoteId: MxRemoteId, code: String?, name: String?){
+        self.internalId = internalId
+        self.remoteId = remoteId
+        self.code = code
+        self.name = name
+    }
+    
+    init( model: MxProvider){
+        self.internalId = model.internalId
+        self.remoteId = model.remoteId
+        self.code = model.code
+        self.name = model.name
+    }
 }
 
-//extension MxProviderSO: MxInitWithModel {
-//    init( model: MxProvider){
-//        self.init( internalId: model.internalId,
-//                   remoteId: model.remoteId,
-//                   code: model.code,
-//                   name: model.name)
-//    }
-//}
 
 
 

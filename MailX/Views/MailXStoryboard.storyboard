@@ -645,7 +645,7 @@
                 <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="MailX" customModuleProvider="target"/>
                 <customObject id="Ady-hI-5gd" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="75" y="0.0"/>
+            <point key="canvasLocation" x="-529" y="-492"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="gdL-vb-vX9">
@@ -657,12 +657,52 @@
                         <rect key="screenRect" x="0.0" y="0.0" width="1280" height="777"/>
                     </window>
                     <connections>
-                        <segue destination="SNZ-uq-u2S" kind="relationship" relationship="window.shadowedContentViewController" id="a7i-Cg-smm"/>
+                        <segue destination="gf2-bU-xim" kind="relationship" relationship="window.shadowedContentViewController" id="o2U-Zk-rvZ"/>
                     </connections>
                 </windowController>
                 <customObject id="0HH-Qf-iq6" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="99" y="244"/>
+            <point key="canvasLocation" x="-519" y="232"/>
+        </scene>
+        <!--Mx Mailbox Tab View Item Controller-->
+        <scene sceneID="9o6-hk-W59">
+            <objects>
+                <viewController id="npq-gu-N93" customClass="MxMailboxTabViewItemController" customModule="MailX" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" id="pWm-lS-4Yy">
+                        <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <containerView misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bbi-Kw-ZdM">
+                                <rect key="frame" x="0.0" y="46" width="450" height="254"/>
+                                <connections>
+                                    <segue destination="SNZ-uq-u2S" kind="embed" id="Hx0-WR-V1Q"/>
+                                </connections>
+                            </containerView>
+                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="p4l-Mc-Upx">
+                                <rect key="frame" x="195" y="14" width="61" height="25"/>
+                                <buttonCell key="cell" type="roundTextured" title="Refresh" bezelStyle="texturedRounded" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="7tQ-Uo-0fl">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="refreshMailboxButtonTapped:" target="npq-gu-N93" id="krG-ZP-Ede"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="bbi-Kw-ZdM" secondAttribute="trailing" id="KSG-1Q-49g"/>
+                            <constraint firstItem="bbi-Kw-ZdM" firstAttribute="top" secondItem="pWm-lS-4Yy" secondAttribute="top" id="f1g-iN-8ZW"/>
+                            <constraint firstAttribute="bottom" secondItem="bbi-Kw-ZdM" secondAttribute="bottom" constant="10" id="fs4-c6-hp3"/>
+                            <constraint firstItem="bbi-Kw-ZdM" firstAttribute="leading" secondItem="pWm-lS-4Yy" secondAttribute="leading" id="na8-t6-5fc"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="refreshMailboxButton" destination="p4l-Mc-Upx" id="C3y-Sb-umE"/>
+                    </connections>
+                </viewController>
+                <customObject id="wPz-vL-nkM" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1059" y="-224"/>
         </scene>
         <!--Split View Controller-->
         <scene sceneID="SfU-PK-eNs">
@@ -683,7 +723,58 @@
                 </splitViewController>
                 <customObject id="JZ9-qL-GTd" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="101" y="769"/>
+            <point key="canvasLocation" x="1675" y="-307"/>
+        </scene>
+        <!--Mx Mailbox Tab View Controller-->
+        <scene sceneID="av3-1t-Vak">
+            <objects>
+                <tabViewController selectedTabViewItemIndex="0" id="gf2-bU-xim" customClass="MxMailboxTabViewController" customModule="MailX" customModuleProvider="target" sceneMemberID="viewController">
+                    <tabViewItems>
+                        <tabViewItem id="mfK-Eg-hSk"/>
+                        <tabViewItem id="cfm-Bu-Dbz"/>
+                        <tabViewItem id="bu2-c9-yfq"/>
+                    </tabViewItems>
+                    <tabView key="tabView" type="noTabsNoBorder" id="gdM-EB-s34">
+                        <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <font key="font" metaFont="message"/>
+                        <tabViewItems/>
+                    </tabView>
+                    <connections>
+                        <segue destination="npq-gu-N93" kind="relationship" relationship="tabItems" id="baC-JT-tDI"/>
+                        <segue destination="bbm-n8-Kn1" kind="relationship" relationship="tabItems" id="toG-R3-GeM"/>
+                        <segue destination="H8P-sm-xY8" kind="relationship" relationship="tabItems" id="Dd8-hF-Hp3"/>
+                    </connections>
+                </tabViewController>
+                <customObject id="Hiy-yJ-s19" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="281" y="-173"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="T14-RJ-Jbe">
+            <objects>
+                <viewController id="bbm-n8-Kn1" sceneMemberID="viewController">
+                    <view key="view" id="N1o-p0-D1j">
+                        <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </view>
+                </viewController>
+                <customObject id="Hb7-hu-NlD" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="266" y="323"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="Uxe-A8-b1W">
+            <objects>
+                <viewController id="H8P-sm-xY8" sceneMemberID="viewController">
+                    <view key="view" id="3gc-5b-7uH">
+                        <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </view>
+                </viewController>
+                <customObject id="BiI-Ca-gvV" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="756" y="267"/>
         </scene>
         <!--Mx Labels View Controller-->
         <scene sceneID="FIc-Cd-MVX">
@@ -693,14 +784,14 @@
                         <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <scrollView fixedFrame="YES" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0lB-SA-Uq1">
+                            <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0lB-SA-Uq1">
                                 <rect key="frame" x="0.0" y="29" width="450" height="271"/>
-                                <clipView key="contentView" ambiguous="YES" id="RcW-U3-Rh9">
+                                <clipView key="contentView" id="RcW-U3-Rh9">
                                     <rect key="frame" x="1" y="0.0" width="448" height="270"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" headerView="S6g-ey-b0E" viewBased="YES" id="TOW-kH-F2t">
-                                            <rect key="frame" x="0.0" y="0.0" width="448" height="247"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="449" height="247"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <size key="intercellSpacing" width="3" height="2"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -723,8 +814,11 @@
                                                             <rect key="frame" x="1" y="1" width="445" height="17"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
-                                                                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fK6-kc-NKb">
+                                                                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="fK6-kc-NKb">
                                                                     <rect key="frame" x="0.0" y="0.0" width="100" height="17"/>
+                                                                    <constraints>
+                                                                        <constraint firstAttribute="width" constant="96" id="hh0-3T-Ley"/>
+                                                                    </constraints>
                                                                     <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="ISS-Zx-fAh">
                                                                         <font key="font" metaFont="system"/>
                                                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -732,6 +826,10 @@
                                                                     </textFieldCell>
                                                                 </textField>
                                                             </subviews>
+                                                            <constraints>
+                                                                <constraint firstItem="fK6-kc-NKb" firstAttribute="leading" secondItem="X8E-Jn-HXl" secondAttribute="leading" constant="2" id="Xsg-wt-lGY"/>
+                                                                <constraint firstItem="fK6-kc-NKb" firstAttribute="centerY" secondItem="X8E-Jn-HXl" secondAttribute="centerY" id="c4h-yv-DPV"/>
+                                                            </constraints>
                                                             <connections>
                                                                 <outlet property="textField" destination="fK6-kc-NKb" id="rp7-xq-2UT"/>
                                                             </connections>
@@ -756,11 +854,11 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                                 <tableHeaderView key="headerView" id="S6g-ey-b0E">
-                                    <rect key="frame" x="0.0" y="0.0" width="448" height="23"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="449" height="23"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableHeaderView>
                             </scrollView>
-                            <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="h7b-SZ-oeH">
+                            <button translatesAutoresizingMaskIntoConstraints="NO" id="h7b-SZ-oeH">
                                 <rect key="frame" x="163" y="5" width="124" height="18"/>
                                 <buttonCell key="cell" type="check" title="Show all labels" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="PMX-ww-uMm">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -771,6 +869,15 @@
                                 </connections>
                             </button>
                         </subviews>
+                        <constraints>
+                            <constraint firstItem="0lB-SA-Uq1" firstAttribute="top" secondItem="I2Z-qM-2w3" secondAttribute="top" id="4ub-xW-2Lo"/>
+                            <constraint firstItem="0lB-SA-Uq1" firstAttribute="leading" secondItem="I2Z-qM-2w3" secondAttribute="leading" id="JY4-rV-Zkv"/>
+                            <constraint firstItem="h7b-SZ-oeH" firstAttribute="leading" secondItem="I2Z-qM-2w3" secondAttribute="leading" constant="165" id="MAH-gB-bpU"/>
+                            <constraint firstAttribute="trailing" secondItem="0lB-SA-Uq1" secondAttribute="trailing" id="Qch-ya-soZ"/>
+                            <constraint firstAttribute="trailing" secondItem="h7b-SZ-oeH" secondAttribute="trailing" constant="165" id="VBp-wE-hex"/>
+                            <constraint firstAttribute="bottom" secondItem="h7b-SZ-oeH" secondAttribute="bottom" constant="7" id="aMr-Un-ipo"/>
+                            <constraint firstItem="h7b-SZ-oeH" firstAttribute="top" secondItem="0lB-SA-Uq1" secondAttribute="bottom" constant="8" symbolic="YES" id="pLy-5l-9ZO"/>
+                        </constraints>
                     </view>
                     <connections>
                         <outlet property="showAllLabelsButton" destination="h7b-SZ-oeH" id="gbH-r4-7sF"/>
@@ -780,20 +887,20 @@
                 <customObject id="N5V-px-RsX" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
                 <userDefaultsController representsSharedInstance="YES" id="rrh-Ow-k9j"/>
             </objects>
-            <point key="canvasLocation" x="911" y="429"/>
+            <point key="canvasLocation" x="2263" y="-587"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="uZX-WO-Pcw">
             <objects>
+                <customObject id="hHp-gB-xjv" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
                 <viewController id="bre-Bp-9Ef" sceneMemberID="viewController">
                     <view key="view" id="fFf-o9-uJG">
                         <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </view>
                 </viewController>
-                <customObject id="hHp-gB-xjv" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="911" y="787"/>
+            <point key="canvasLocation" x="1795" y="483"/>
         </scene>
     </scenes>
 </document>

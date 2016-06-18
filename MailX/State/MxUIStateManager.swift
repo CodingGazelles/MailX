@@ -15,9 +15,9 @@ import BrightFutures
 
 class MxUIStateManager {
     
-    private static let appStore = MxUIStateManager()
-    static func defaultStore() -> MxUIStateManager {
-        return appStore
+    private static let appState = MxUIStateManager()
+    static func defaultState() -> MxUIStateManager {
+        return appState
     }
     
     typealias MxActionCreator = (mxState: MxAppState) -> MxAction?
@@ -86,16 +86,8 @@ class MxUIStateManager {
         } else {
             
             dispatch( MxSetPropertiesAction(properties: MxPropertiesState.readDefaultProperties()))
-            
-            MxLog.verbose("Dispatching loadMailboxes")
-            
-            dispatchSetMailboxesAction()
-            
-            MxLog.verbose("Dispatching setLabelsActionCreator")
-            
-            dispatchSetLabelsAction()
-            
-//            dispatch( loadAllMessages)
+            dispatchSetMailboxListAction()
+            dispatchRefreshAllMailboxesAction()
             
         }
     }

@@ -31,7 +31,7 @@ enum OperationType {
 }
 
 /// Operation describes an operation (insertion, deletion, or noop) of elements.
-struct Operation {
+struct ObjectSyncOperation {
     let type: OperationType
     let objects: [MxImplementBusinessObject]
     
@@ -55,7 +55,7 @@ struct Operation {
     }
 }
 
-func arrayDiff(managedObjects managedObjects: [MxBaseManagedObject], remoteObjects:[MxBaseRemoteOject]) -> [Operation] {
+func diffMROArrays(managedObjects managedObjects: [MxBaseManagedObject], remoteObjects:[MxBaseRemoteOject]) -> [ObjectSyncOperation] {
     
     // Create map of indices for every element
     var beforeIndices = [MxRemoteId: [Int]]()
@@ -100,32 +100,32 @@ func arrayDiff(managedObjects managedObjects: [MxBaseManagedObject], remoteObjec
         overlay = _overlay
     }
     
-    var operations = [Operation]()
+    var operations = [ObjectSyncOperation]()
     
     if maxOverlayLength == 0 {
         
         // No overlay; remove before and add after elements
         if managedObjects.count > 0 {
-            operations.append(Operation(type: .Delete, objects: managedObjects))
+            operations.append(ObjectSyncOperation(type: .Delete, objects: managedObjects))
         }
         if managedObjects.count > 0 {
-            operations.append(Operation(type: .Insert, objects: remoteObjects))
+            operations.append(ObjectSyncOperation(type: .Insert, objects: remoteObjects))
         }
         
     } else {
         
         // Recursive call with elements before overlay
-        operations += arrayDiff( managedObjects: Array( managedObjects[0..<beforeStart ]),
+        operations += diffMROArrays( managedObjects: Array( managedObjects[0..<beforeStart ]),
                                     remoteObjects: Array( remoteObjects[0..<afterStart]))
         
         // Noop for longest overlay
         operations.append(
-            Operation(
+            ObjectSyncOperation(
                 type: .Noop,
                 objects: Array( remoteObjects[afterStart..<afterStart+maxOverlayLength].map{ $0 } )))
         
         // Recursive call with elements after overlay
-        operations += arrayDiff( managedObjects: Array(managedObjects[beforeStart+maxOverlayLength..<managedObjects.count]),
+        operations += diffMROArrays( managedObjects: Array(managedObjects[beforeStart+maxOverlayLength..<managedObjects.count]),
                                     remoteObjects: Array(remoteObjects[afterStart+maxOverlayLength..<remoteObjects.count]))
         
     }

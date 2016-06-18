@@ -1,5 +1,5 @@
 //
-//  MxLabelState.swift
+//  MxMailboxProtocol.swift
 //  MailX
 //
 //  Created by Tancrède on 5/17/16.
@@ -12,33 +12,36 @@ import Foundation
 
 // MARK: - State Object
 
-struct MxLabelSO: MxStateObjectProtocol, MxLabelProtocol {
+struct MxMailboxSO: MxStateObjectProtocol, MxMailboxProtocol {
     
     var internalId: MxInternalId?
     var remoteId: MxRemoteId?
-    var code: String?
+    var email: String?
     var name: String?
-    var ownerType: MxLabelOwnerType = MxLabelOwnerType.UNDEFINED
+    var connected: Bool = false
     
     init(){}
     
-    init( internalId: MxInternalId?, remoteId: MxRemoteId?, code: String?, name: String?, ownerType: MxLabelOwnerType){
+    init( internalId: MxInternalId, remoteId: MxRemoteId, email: String?, name: String?, connected: Bool){
         self.internalId = internalId
         self.remoteId = remoteId
-        self.code = code
+        self.email = email
         self.name = name
-        self.ownerType = ownerType
+        self.connected = connected
     }
     
-    init( model: MxLabel){
+    
+    init( model: MxMailbox){
         self.internalId = model.internalId
         self.remoteId = model.remoteId
-        self.code = model.code
+        self.email = model.email
         self.name = model.name
-        self.ownerType = model.ownerType
+        self.connected = model.connected
     }
     
 }
+
+
 
 
 

@@ -56,7 +56,10 @@ protocol MxSystemObjectProtocol/*: Loggable, Hashable, Equatable*/ {}
 
 // MARK: - UI State objects
 
-protocol MxStateObjectProtocol: MxSystemObjectProtocol {}
+protocol MxStateObjectProtocol: MxSystemObjectProtocol {
+    associatedtype M: MxModelObjectProtocol
+    init( model: M)
+}
 
 
 // MARK: - Model objects
