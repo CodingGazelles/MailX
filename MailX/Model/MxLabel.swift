@@ -11,6 +11,8 @@ import CoreData
 
 
 
+// MARK: - MxLabel
+
 class MxLabel: MxBaseManagedObject, MxLabelProtocol {
 
 // Insert code here to add functionality to your managed object subclass
@@ -44,12 +46,12 @@ class MxLabel: MxBaseManagedObject, MxLabelProtocol {
         }
     }
     
-    var code: String? {
+    var code: MxLabelCode {
         get {
-            return code_
+            return MxLabelCode(string: code_)
         }
         set {
-            self.code_ = newValue
+            self.code_ = newValue.toString()
         }
     }
     
@@ -71,25 +73,6 @@ class MxLabel: MxBaseManagedObject, MxLabelProtocol {
         }
     }
     
-    
-    
-//    var mailbox: MxMailboxProtocol? {
-//        get {
-//            return mailbox_ != nil ? (mailbox_ as! MxMailboxProtocol) : nil
-//        }
-//        set {
-//            self.mailbox_ = newValue != nil ? (newValue as! MxMailbox) : nil
-//        }
-//    }
-//    
-//    var messages: NSSet {
-//        return messages_ ?? NSSet()
-//    }
-    
 }
 
-enum MxLabelOwnerType: String {
-    case SYSTEM = "SYSTEM"
-    case USER = "USER"
-    case UNDEFINED = "UNDEFINED"
-}
+

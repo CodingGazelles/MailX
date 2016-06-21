@@ -71,6 +71,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     
                     
                     // Connect and refresh mailboxes
+                    // Connect and refresh mailboxes
                     switch self.dataStack.getAllMailboxes() {
                         
                     case let .Success( mailboxes):
@@ -81,23 +82,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                                 
                                 .onSuccess {
                                     
-                                    self.syncManager.refreshMailbox(mailbox: mailbox)
-                                        
-                                        .onSuccess {
-                                            
-                                            dispatchRefreshMailboxAction( mailbox: MxMailboxSO( model: mailbox))
-                                            
-                                        }
-                                        
-                                        .onFailure { error in
-                                            
-                                            MxLog.error( "Failed to refresh mailbox \(mailbox.email)", error: error)
-                                            
-                                            let action = MxAddErrorsAction(errors: [MxErrorSO(error: error)])
-                                            
-                                            self.uiState.dispatch(action)
-                                            
-                                    }
+                                    dispatchRefreshMailboxStateAction(mailboxId: mailbox.internalId!, from: .Remote)
+                                    
                                 }
                                 
                                 .onFailure { error in
@@ -105,7 +91,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                                     MxLog.error( "Failed to connect to mailbox \(mailbox.email)", error: error)
                                     
                                     let action = MxAddErrorsAction(errors: [MxErrorSO(error: error)])
-                                    
                                     self.uiState.dispatch(action)
                                     
                             }
@@ -117,7 +102,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                         MxLog.error( "Failed to load mailboxes", error: error)
                         
                         let action = MxAddErrorsAction(errors: [MxErrorSO(error: error)])
-                        
                         self.uiState.dispatch(action)
                         
                     }
@@ -129,8 +113,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     MxLog.error( "Failed to initiate connection to DB", error: error)
                     
                     let action = MxAddErrorsAction(errors: [MxErrorSO(error: error)])
-                    
                     self.uiState.dispatch(action)
+                    
             }
         }
     }

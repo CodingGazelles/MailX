@@ -11,6 +11,11 @@ import CoreData
 
 
 
+enum MxProviderCode: String {
+    case GMAIL = "GMAIL"
+    case YAHOO = "YAHOO"
+}
+
 class MxProvider: MxBaseManagedObject, MxProviderProtocol {
 
 // Insert code here to add functionality to your managed object subclass

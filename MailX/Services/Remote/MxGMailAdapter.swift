@@ -20,7 +20,7 @@ class MxGMailAdapter : NSObject, MxMailboxAdapter {
     
     private var connectCallback: MxConnectCallback?
     private var fetchLabelsCallback: MxFetchLabelsCallback?
-    private var fetchMessagesCallback: MxFetchMessagesCallback?
+    private var fetchMessagesCallback: MxFetchMessageListCallback?
     
     
     // For Google APIs, the scope strings are available
@@ -36,14 +36,12 @@ class MxGMailAdapter : NSObject, MxMailboxAdapter {
     
     // The application and service name to use for saving the auth tokens
     // to the keychain
-    var kKeychainItemName = "Hexmail.Gmail Access Token.."
+    var kKeychainItemName = "MailX.Gmail Access Token.."
     
     
     init( mailbox: MxMailbox){
-        MxLog.debug("Processing \(#function) with: \(mailbox)")
         
         self.mailbox = mailbox;
-        
         self.kKeychainItemName = self.kKeychainItemName + mailbox.name!
         
         // Initialize the Gmail API service & load existing credentials from the keychain if available.
@@ -57,7 +55,7 @@ class MxGMailAdapter : NSObject, MxMailboxAdapter {
     // Ensures that the Gmail API service is authorized
     func connect( callback callback: MxConnectCallback){
         
-        MxLog.debug("\(#function): sending connection request to mailbox \(mailbox.email)")
+        MxLog.debug("Sending connection request to mailbox \(mailbox.email)")
         
         self.connectCallback = callback
         
@@ -67,7 +65,7 @@ class MxGMailAdapter : NSObject, MxMailboxAdapter {
                 , clientID:MxGMailAdapter.kClientID
                 , clientSecret:MxGMailAdapter.kClientSecret)
     
-        if (service.authorizer != nil || !service.authorizer.canAuthorize!){
+        if (service.authorizer != nil || !service.authorizer.canAuthorize!) {
     
             // Sign in
             MxLog.debug("Authenticating in progress")
@@ -79,6 +77,8 @@ class MxGMailAdapter : NSObject, MxMailboxAdapter {
                 , clientSecret:MxGMailAdapter.kClientSecret
                 , keychainItemName:kKeychainItemName
                 , resourceBundle:nil)
+            
+            (authController as! GTMOAuth2WindowController).shouldPersistUser = true
     
             dispatch_async(dispatch_get_main_queue()) {
                 authController.signInSheetModalForWindow(
@@ -103,14 +103,14 @@ class MxGMailAdapter : NSObject, MxMailboxAdapter {
         , finishedWithAuth authResult: GTMOAuth2Authentication
         , error: NSError?) {
         
-        MxLog.debug("\(#function): receiving connection request from mailbox \(mailbox.email)")
+        MxLog.debug("Receiving connection response from mailbox \(mailbox.email)")
     
             if (error != nil) {
                 // Authentication failed (perhaps the user denied access, or closed the
                 // window before granting access)
     
                 var errorStr = error!.localizedDescription
-                let responseData = error!.userInfo["data"] // kGTMHTTPFetcherStatusDataKey
+                let responseData = error!.userInfo["data"] ?? "" // kGTMHTTPFetcherStatusDataKey
                 
                 if (responseData!.length() > 0) {
                     // Show the body of the server's authentication failure response
@@ -148,13 +148,17 @@ class MxGMailAdapter : NSObject, MxMailboxAdapter {
     //MARK: - Fetch Labels
     
     func sendFetchLabelsRequest( callback callback: MxFetchLabelsCallback) {
-        MxLog.debug("Processing \(#function)")
+        
+        MxLog.debug("Sending fetch labels request to mailbox \(mailbox.email)")
         
         self.fetchLabelsCallback = callback
     
         let query = GTLQueryGmail.queryForUsersLabelsList()
         
-        service.executeQuery( query, delegate:self, didFinishSelector: #selector(MxGMailAdapter.parseLabelsWithTicket(_:finishedWithObject:error:)))
+        service.executeQuery(
+            query,
+            delegate:self,
+            didFinishSelector: #selector(MxGMailAdapter.parseLabelsWithTicket(_:finishedWithObject:error:)))
     }
     
     func parseLabelsWithTicket(
@@ -162,7 +166,7 @@ class MxGMailAdapter : NSObject, MxMailboxAdapter {
         , finishedWithObject labelsResponse: GTLGmailListLabelsResponse
         , error: NSError?){
         
-        MxLog.debug("Received fetch label response from GMAIL")
+        MxLog.debug("Received fetch labels response from \(mailbox.email)")
         
         guard error == nil else {
             
@@ -179,16 +183,26 @@ class MxGMailAdapter : NSObject, MxMailboxAdapter {
             
         if !labelsResponse.labels.isEmpty {
             MxLog.debug("Parsing labels")
-                
+            
             for response in labelsResponse.labels as! [GTLGmailLabel] {
                 
                 let label = MxLabelRemote()
                 
                 label.remoteId = MxRemoteId(value: response.identifier)
-                label.code = response.name
-                label.name = ""
-                label.ownerType = MxLabelOwnerType.SYSTEM
+                label.code = ""
+                label.name = response.name
+                
+                switch response.type {
+                case "system":
+                    label.ownerType = MxLabelOwnerType.SYSTEM
                     
+                case "user":
+                    label.ownerType = MxLabelOwnerType.USER
+                    
+                default:
+                    label.ownerType = MxLabelOwnerType.UNDEFINED
+                }
+                
                 labels.append(label)
                 
                 MxLog.debug("Parsed label \(label)")
@@ -196,21 +210,23 @@ class MxGMailAdapter : NSObject, MxMailboxAdapter {
         } else {
             MxLog.debug( "No label found.")
         }
-            
+        
         fetchLabelsCallback!( labels: labels, error: nil)
     }
     
     
     //MARK: - Fetch remote messages
     
-    func sendFetchMessagesRequest(labelId labelId: MxRemoteId, callback: MxFetchMessagesCallback) {
+    func sendFetchMessageListInLabelsRequest(labelIds labelIds: [MxLabelCode], callback: MxFetchMessageListCallback) {
         
-        MxLog.debug("Processing \(#function)")
+        MxLog.debug("Sending fetch messages request to mailbox \(mailbox.email)")
         
         self.fetchMessagesCallback = callback
         
         let query = GTLQueryGmail.queryForUsersMessagesList()
-        query.labelIds = [labelId.value]
+        query.labelIds = labelIds.map{ code in
+                return labelProviderCode(labelCode: code, providerCode: .GMAIL) ?? "NA"
+        }
         
         //    [query setLabelIds: labelsArray];
         
@@ -220,15 +236,16 @@ class MxGMailAdapter : NSObject, MxMailboxAdapter {
         
     }
     
-    func parseMessagesListWithTicket( ticket: GTLServiceTicket
-        , finishedWithObject messagesResponse: GTLGmailListMessagesResponse
-        , error: NSError?) {
+    func parseMessagesListWithTicket(
+        ticket: GTLServiceTicket,
+        finishedWithObject messagesResponse: GTLGmailListMessagesResponse,
+        error: NSError?) {
         
-        MxLog.debug("Processing \(#function)")
+        MxLog.debug("Receiving fetch messages response from mailbox \(mailbox.email)")
             
             if let error = error {
                 
-                MxLog.error("Fetching messages in label failed...")
+                MxLog.error("Fetching messages failed...")
                 MxLog.error(error.localizedDescription)
                 
                 fetchMessagesCallback!( messages: nil, error: MxAdapterError.ProviderReturnedConnectionError(rootError: error))
@@ -236,7 +253,7 @@ class MxGMailAdapter : NSObject, MxMailboxAdapter {
                 return
             }
             
-            var messages = [MxMessage]()
+            var messages = [MxMessageRemote]()
             
             if ( !messagesResponse.messages.isEmpty){
                 
@@ -246,7 +263,7 @@ class MxGMailAdapter : NSObject, MxMailboxAdapter {
                     
                     MxLog.debug("Message:\(response)")
                     
-                    let message = MxMessage()
+                    let message = MxMessageRemote()
                     message.remoteId = MxRemoteId( value: response.identifier)
                     
                     messages.append( message)

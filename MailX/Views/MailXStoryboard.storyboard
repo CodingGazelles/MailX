@@ -645,7 +645,7 @@
                 <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="MailX" customModuleProvider="target"/>
                 <customObject id="Ady-hI-5gd" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-529" y="-492"/>
+            <point key="canvasLocation" x="221" y="-1432"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="gdL-vb-vX9">
@@ -657,28 +657,28 @@
                         <rect key="screenRect" x="0.0" y="0.0" width="1280" height="777"/>
                     </window>
                     <connections>
-                        <segue destination="gf2-bU-xim" kind="relationship" relationship="window.shadowedContentViewController" id="o2U-Zk-rvZ"/>
+                        <segue destination="Nus-95-FhU" kind="relationship" relationship="window.shadowedContentViewController" id="4C2-OL-2El"/>
                     </connections>
                 </windowController>
                 <customObject id="0HH-Qf-iq6" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-519" y="232"/>
+            <point key="canvasLocation" x="276" y="-981"/>
         </scene>
         <!--Mx Mailbox Tab View Item Controller-->
         <scene sceneID="9o6-hk-W59">
             <objects>
-                <viewController id="npq-gu-N93" customClass="MxMailboxTabViewItemController" customModule="MailX" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController identifier="MailboxItemVC" storyboardIdentifier="MailboxItemVC" id="npq-gu-N93" customClass="MxMailboxTabViewItemController" customModule="MailX" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="pWm-lS-4Yy">
                         <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <containerView misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bbi-Kw-ZdM">
+                            <containerView translatesAutoresizingMaskIntoConstraints="NO" id="bbi-Kw-ZdM">
                                 <rect key="frame" x="0.0" y="46" width="450" height="254"/>
                                 <connections>
                                     <segue destination="SNZ-uq-u2S" kind="embed" id="Hx0-WR-V1Q"/>
                                 </connections>
                             </containerView>
-                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="p4l-Mc-Upx">
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="p4l-Mc-Upx">
                                 <rect key="frame" x="195" y="14" width="61" height="25"/>
                                 <buttonCell key="cell" type="roundTextured" title="Refresh" bezelStyle="texturedRounded" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="7tQ-Uo-0fl">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -690,10 +690,12 @@
                             </button>
                         </subviews>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="bbi-Kw-ZdM" secondAttribute="trailing" id="KSG-1Q-49g"/>
-                            <constraint firstItem="bbi-Kw-ZdM" firstAttribute="top" secondItem="pWm-lS-4Yy" secondAttribute="top" id="f1g-iN-8ZW"/>
-                            <constraint firstAttribute="bottom" secondItem="bbi-Kw-ZdM" secondAttribute="bottom" constant="10" id="fs4-c6-hp3"/>
-                            <constraint firstItem="bbi-Kw-ZdM" firstAttribute="leading" secondItem="pWm-lS-4Yy" secondAttribute="leading" id="na8-t6-5fc"/>
+                            <constraint firstItem="p4l-Mc-Upx" firstAttribute="top" secondItem="bbi-Kw-ZdM" secondAttribute="bottom" constant="8" symbolic="YES" id="IcM-Gu-eHu"/>
+                            <constraint firstAttribute="trailing" secondItem="bbi-Kw-ZdM" secondAttribute="trailing" id="NUQ-rY-sK1"/>
+                            <constraint firstItem="bbi-Kw-ZdM" firstAttribute="top" secondItem="pWm-lS-4Yy" secondAttribute="top" id="XK4-7w-6y2"/>
+                            <constraint firstAttribute="bottom" secondItem="p4l-Mc-Upx" secondAttribute="bottom" constant="16" id="c0T-k8-bHb"/>
+                            <constraint firstItem="bbi-Kw-ZdM" firstAttribute="centerX" secondItem="p4l-Mc-Upx" secondAttribute="centerX" id="ny8-OA-qX2"/>
+                            <constraint firstItem="bbi-Kw-ZdM" firstAttribute="leading" secondItem="pWm-lS-4Yy" secondAttribute="leading" id="oav-aI-56v"/>
                         </constraints>
                     </view>
                     <connections>
@@ -702,7 +704,22 @@
                 </viewController>
                 <customObject id="wPz-vL-nkM" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1059" y="-224"/>
+            <point key="canvasLocation" x="231" y="-291"/>
+        </scene>
+        <!--Mx Mailbox Tab View Controller-->
+        <scene sceneID="cyp-Lc-Y53">
+            <objects>
+                <tabViewController id="Nus-95-FhU" customClass="MxMailboxTabViewController" customModule="MailX" customModuleProvider="target" sceneMemberID="viewController">
+                    <tabView key="tabView" type="noTabsNoBorder" id="nYf-ut-IkL">
+                        <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <font key="font" metaFont="message"/>
+                        <tabViewItems/>
+                    </tabView>
+                </tabViewController>
+                <customObject id="qXr-Jr-gvq" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1088" y="-981"/>
         </scene>
         <!--Split View Controller-->
         <scene sceneID="SfU-PK-eNs">
@@ -723,58 +740,7 @@
                 </splitViewController>
                 <customObject id="JZ9-qL-GTd" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1675" y="-307"/>
-        </scene>
-        <!--Mx Mailbox Tab View Controller-->
-        <scene sceneID="av3-1t-Vak">
-            <objects>
-                <tabViewController selectedTabViewItemIndex="0" id="gf2-bU-xim" customClass="MxMailboxTabViewController" customModule="MailX" customModuleProvider="target" sceneMemberID="viewController">
-                    <tabViewItems>
-                        <tabViewItem id="mfK-Eg-hSk"/>
-                        <tabViewItem id="cfm-Bu-Dbz"/>
-                        <tabViewItem id="bu2-c9-yfq"/>
-                    </tabViewItems>
-                    <tabView key="tabView" type="noTabsNoBorder" id="gdM-EB-s34">
-                        <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                        <font key="font" metaFont="message"/>
-                        <tabViewItems/>
-                    </tabView>
-                    <connections>
-                        <segue destination="npq-gu-N93" kind="relationship" relationship="tabItems" id="baC-JT-tDI"/>
-                        <segue destination="bbm-n8-Kn1" kind="relationship" relationship="tabItems" id="toG-R3-GeM"/>
-                        <segue destination="H8P-sm-xY8" kind="relationship" relationship="tabItems" id="Dd8-hF-Hp3"/>
-                    </connections>
-                </tabViewController>
-                <customObject id="Hiy-yJ-s19" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="281" y="-173"/>
-        </scene>
-        <!--View Controller-->
-        <scene sceneID="T14-RJ-Jbe">
-            <objects>
-                <viewController id="bbm-n8-Kn1" sceneMemberID="viewController">
-                    <view key="view" id="N1o-p0-D1j">
-                        <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </view>
-                </viewController>
-                <customObject id="Hb7-hu-NlD" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="266" y="323"/>
-        </scene>
-        <!--View Controller-->
-        <scene sceneID="Uxe-A8-b1W">
-            <objects>
-                <viewController id="H8P-sm-xY8" sceneMemberID="viewController">
-                    <view key="view" id="3gc-5b-7uH">
-                        <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </view>
-                </viewController>
-                <customObject id="BiI-Ca-gvV" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="756" y="267"/>
+            <point key="canvasLocation" x="1063" y="-361"/>
         </scene>
         <!--Mx Labels View Controller-->
         <scene sceneID="FIc-Cd-MVX">
@@ -791,7 +757,7 @@
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" headerView="S6g-ey-b0E" viewBased="YES" id="TOW-kH-F2t">
-                                            <rect key="frame" x="0.0" y="0.0" width="449" height="247"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="448" height="247"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <size key="intercellSpacing" width="3" height="2"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -887,7 +853,7 @@
                 <customObject id="N5V-px-RsX" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
                 <userDefaultsController representsSharedInstance="YES" id="rrh-Ow-k9j"/>
             </objects>
-            <point key="canvasLocation" x="2263" y="-587"/>
+            <point key="canvasLocation" x="983" y="305"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="uZX-WO-Pcw">
@@ -900,7 +866,7 @@
                     </view>
                 </viewController>
             </objects>
-            <point key="canvasLocation" x="1795" y="483"/>
+            <point key="canvasLocation" x="1683" y="323"/>
         </scene>
     </scenes>
 </document>

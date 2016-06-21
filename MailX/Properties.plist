@@ -36,7 +36,7 @@
 			<string>Yahoo</string>
 		</dict>
 	</dict>
-	<key>SystemLabels</key>
+	<key>LabelNames</key>
 	<dict>
 		<key>INBOX</key>
 		<dict>

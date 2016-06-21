@@ -51,7 +51,6 @@
 		DFB84ED31CEAB24D0088090D /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFB84ED21CEAB24D0088090D /* SystemConfiguration.framework */; };
 		DFB84EF11CEAB62B0088090D /* GTL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFB84EEC1CEAB62B0088090D /* GTL.framework */; };
 		DFB84EF91CEAB6520088090D /* GTL.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DFB84EEC1CEAB62B0088090D /* GTL.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		DFB84F241CEB515F0088090D /* GTMOAuth2Window.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFB84F211CEB515F0088090D /* GTMOAuth2Window.xib */; };
 		DFB84F261CEB515F0088090D /* MxLabelsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB84F231CEB515F0088090D /* MxLabelsViewController.swift */; };
 		DFB84F2A1CEB51980088090D /* MxUIState.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB84F271CEB51980088090D /* MxUIState.swift */; };
 		DFB84F2B1CEB51980088090D /* MxMailboxState.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB84F281CEB51980088090D /* MxMailboxState.swift */; };
@@ -63,6 +62,7 @@
 		DFC21EAD1D14A34F003CF0F5 /* MxMailboxTabViewItemController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC21EAC1D14A34F003CF0F5 /* MxMailboxTabViewItemController.swift */; };
 		DFD1140C1D0B43B30032264B /* BrightFutures.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF241EFD1D05C02600C61196 /* BrightFutures.framework */; };
 		DFD1140D1D0B43B30032264B /* BrightFutures.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DF241EFD1D05C02600C61196 /* BrightFutures.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		DFD2ADD01D186FF300A656D6 /* MxMessageRemote.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFD2ADCF1D186FF300A656D6 /* MxMessageRemote.swift */; };
 		DFD3ACF11CFD0BC3007C909F /* MxDBInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFD3ACF01CFD0BC3007C909F /* MxDBInitializer.swift */; };
 		DFD44AB61D010796001DF6F5 /* CleanroomASL.framework.dSYM in Resources */ = {isa = PBXBuildFile; fileRef = DFD44AB21D010796001DF6F5 /* CleanroomASL.framework.dSYM */; };
 		DFD44AB71D010796001DF6F5 /* CleanroomLogger.framework.dSYM in Resources */ = {isa = PBXBuildFile; fileRef = DFD44AB31D010796001DF6F5 /* CleanroomLogger.framework.dSYM */; };
@@ -201,7 +201,6 @@
 		DFB84ED21CEAB24D0088090D /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		DFB84EE81CEAB5E50088090D /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		DFB84EEC1CEAB62B0088090D /* GTL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GTL.framework; path = Frameworks/GTL.framework; sourceTree = SOURCE_ROOT; };
-		DFB84F211CEB515F0088090D /* GTMOAuth2Window.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = GTMOAuth2Window.xib; path = Views/GTMOAuth2Window.xib; sourceTree = "<group>"; };
 		DFB84F231CEB515F0088090D /* MxLabelsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxLabelsViewController.swift; path = Views/MxLabelsViewController.swift; sourceTree = "<group>"; };
 		DFB84F271CEB51980088090D /* MxUIState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = MxUIState.swift; path = State/MxUIState.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		DFB84F281CEB51980088090D /* MxMailboxState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = MxMailboxState.swift; path = State/MxMailboxState.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -212,6 +211,7 @@
 		DFBBCEF91D03999500D8BB4E /* MxMemoryCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MxMemoryCache.swift; sourceTree = "<group>"; };
 		DFC21EAA1D149E46003CF0F5 /* MxMailboxTabViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MxMailboxTabViewController.swift; path = Views/MxMailboxTabViewController.swift; sourceTree = "<group>"; };
 		DFC21EAC1D14A34F003CF0F5 /* MxMailboxTabViewItemController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MxMailboxTabViewItemController.swift; sourceTree = "<group>"; };
+		DFD2ADCF1D186FF300A656D6 /* MxMessageRemote.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MxMessageRemote.swift; sourceTree = "<group>"; };
 		DFD3ACF01CFD0BC3007C909F /* MxDBInitializer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = MxDBInitializer.swift; path = Services/MxDBInitializer.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		DFD44AB21D010796001DF6F5 /* CleanroomASL.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = CleanroomASL.framework.dSYM; path = Carthage/Build/Mac/CleanroomASL.framework.dSYM; sourceTree = SOURCE_ROOT; };
 		DFD44AB31D010796001DF6F5 /* CleanroomLogger.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = CleanroomLogger.framework.dSYM; path = Carthage/Build/Mac/CleanroomLogger.framework.dSYM; sourceTree = SOURCE_ROOT; };
@@ -305,6 +305,7 @@
 			isa = PBXGroup;
 			children = (
 				DF6881B81D0F962500F74BF0 /* MxLabelRemote.swift */,
+				DFD2ADCF1D186FF300A656D6 /* MxMessageRemote.swift */,
 			);
 			name = RemoteObjects;
 			sourceTree = "<group>";
@@ -415,7 +416,6 @@
 		DFB84E8C1CEAAA450088090D /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				DFB84F211CEB515F0088090D /* GTMOAuth2Window.xib */,
 				DF4F05E51CF9D8B500123CA3 /* MailXStoryboard.storyboard */,
 				DFC21EAA1D149E46003CF0F5 /* MxMailboxTabViewController.swift */,
 				DFC21EAC1D14A34F003CF0F5 /* MxMailboxTabViewItemController.swift */,
@@ -694,7 +694,6 @@
 				DF7F25CF1D137D4200D612FC /* Codes in Resources */,
 				DF2FFBA41CFCB29A001DF44F /* MailXStoryboard.storyboard in Resources */,
 				DFD44AB61D010796001DF6F5 /* CleanroomASL.framework.dSYM in Resources */,
-				DFB84F241CEB515F0088090D /* GTMOAuth2Window.xib in Resources */,
 				DFD44AB71D010796001DF6F5 /* CleanroomLogger.framework.dSYM in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -814,6 +813,7 @@
 				DFE26F0A1CEC09A900FB401A /* MxLabelsState.swift in Sources */,
 				DFE26F1B1CEF46C000FB401A /* MxAppProperties.swift in Sources */,
 				DFFCE6451D0F2AB300154FEE /* MxMessage.swift in Sources */,
+				DFD2ADD01D186FF300A656D6 /* MxMessageRemote.swift in Sources */,
 				DFE26F311CEF7CB400FB401A /* MxStateArchiver.swift in Sources */,
 				DFB84E7D1CEAA8580088090D /* MxLogs.swift in Sources */,
 				DFFCE6351D0F22A900154FEE /* MxModel.xcdatamodeld in Sources */,
@@ -954,7 +954,7 @@
 				);
 				INFOPLIST_FILE = MailX/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = cool.dog16.MailX;
+				PRODUCT_BUNDLE_IDENTIFIER = cool.dog17.MailX;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "MailX-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -975,7 +975,7 @@
 				);
 				INFOPLIST_FILE = MailX/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = cool.dog16.MailX;
+				PRODUCT_BUNDLE_IDENTIFIER = cool.dog17.MailX;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "MailX-Bridging-Header.h";
 			};

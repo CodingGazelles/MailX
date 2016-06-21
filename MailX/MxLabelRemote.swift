@@ -11,12 +11,9 @@ import Foundation
 
 
 
-
-
-
 class MxLabelRemote: MxBaseRemoteOject, MxLabelProtocol {
     
-    var code: String?
+    var code: MxLabelCode = MxLabelCode.USER("NA")
     var name: String?
     var ownerType: MxLabelOwnerType = MxLabelOwnerType.UNDEFINED
     

@@ -36,11 +36,53 @@ struct MxSelectLabelAction: MxAction {
 
 
 
-// MARK: - Actions creators
+// MARK: - Refresh Mailbox State
 
-func dispatchRefreshAllMailboxesAction() {
+enum MxRefreshFrom {
+    case Local
+    case Remote
+}
+
+func dispatchRefreshAllMailboxesStateAction( from from: MxRefreshFrom = MxRefreshFrom.Local) {
     
-    MxLog.debug("Dispatching SetMailboxesDataAction")
+    switch from {
+        
+    case .Local:
+        
+        _dispatchRefreshAllMailboxesSateAction()
+        
+    case .Remote:
+        
+        let uiState = MxUIStateManager.defaultState()
+        let dataStack = MxDataStackManager.defaultStack()
+        
+        switch dataStack.getAllMailboxes() {
+            
+        case let .Success( mailboxes):
+            
+            for mailbox in mailboxes {
+                
+                // mailbox: MxMailboxSO( model: mailbox)
+                dispatchRefreshMailboxStateAction( mailboxId: mailbox.internalId!, from: .Remote)
+                
+            }
+            
+        case let .Failure(error):
+            
+            MxLog.error( "Failed to load mailboxes", error: error)
+            
+            let action = MxAddErrorsAction(errors: [MxErrorSO(error: error)])
+            uiState.dispatch(action)
+            
+        }
+        
+        
+    }
+}
+
+private func _dispatchRefreshAllMailboxesSateAction() {
+    
+    MxLog.debug("Dispatching RefreshAllMailboxesSateAction")
     
     
     let store = MxUIStateManager.defaultState()
@@ -53,11 +95,13 @@ func dispatchRefreshAllMailboxesAction() {
         
         for mailbox in results {
             
-            dispatchRefreshMailboxAction( mailbox: MxMailboxSO( model: mailbox))
+            _dispatchRefreshMailboxStateAction( mailboxId: mailbox.internalId!)
             
         }
         
     case let .Failure( error):
+        
+        MxLog.error( "Failed to load mailboxes", error: error)
         
         let action = MxAddErrorsAction(errors: [MxErrorSO(error: error)])
         store.dispatch(action)
@@ -65,23 +109,56 @@ func dispatchRefreshAllMailboxesAction() {
     }
 }
 
-func dispatchRefreshMailboxAction( mailbox mailbox: MxMailboxSO) {
+func dispatchRefreshMailboxStateAction( mailboxId mailboxId: MxInternalId, from: MxRefreshFrom = .Local) {
     
-    dispatchRefreshMailboxLabelsAction( mailbox: mailbox)
-    //    dispatchRefreshMailboxMessagesAction(mailbox: <#T##MxMailbox#>)
+    let uiState = MxUIStateManager.defaultState()
+    
+    switch from {
+        
+    case .Local:
+        _dispatchRefreshMailboxStateAction( mailboxId: mailboxId)
+        
+    case .Remote:
+        
+        let syncManager = MxSyncManager.defaultManager()
+        
+        syncManager.refreshMailboxData(mailboxId: mailboxId)
+            
+            .onSuccess {
+                
+                _dispatchRefreshMailboxStateAction( mailboxId: mailboxId)
+                
+            }
+            
+            .onFailure { error in
+                
+                MxLog.error( "Failed to refresh mailbox data \(mailboxId)", error: error)
+                
+                let action = MxAddErrorsAction(errors: [MxErrorSO(error: error)])
+                uiState.dispatch(action)
+                
+        }
+        
+    }
+}
+
+private func _dispatchRefreshMailboxStateAction( mailboxId mailboxId: MxInternalId) {
+    
+    dispatchRefreshMailboxLabelsStateAction( mailboxId: mailboxId)
+    //    dispatchRefreshMailboxMessagesStateAction(mailbox: <#T##MxMailbox#>)
     
 }
 
 
-func dispatchRefreshMailboxLabelsAction( mailbox mailbox: MxMailboxSO) {
+private func dispatchRefreshMailboxLabelsStateAction( mailboxId mailboxId: MxInternalId) {
     
-    MxLog.debug("Processing RefreshMailboxLabelsAction \(mailbox.email)")
+    MxLog.debug("Processing RefreshMailboxLabelsAction \(mailboxId)")
     
     let uiState = MxUIStateManager.defaultState()
     let stack = MxDataStackManager.defaultStack()
     
     
-    switch stack.getMailbox(mailboxId: mailbox.internalId!) {
+    switch stack.getMailbox(mailboxId: mailboxId) {
         
         
     case let .Success( result):
@@ -95,12 +172,16 @@ func dispatchRefreshMailboxLabelsAction( mailbox mailbox: MxMailboxSO) {
             
             let systemLabels = MxAppProperties.defaultProperties().systemLabels()
             let defaultLabels = MxAppProperties.defaultProperties().defaultLabels()
-                        .map{ MxLabelSO(
-                            internalId: nil,
-                            remoteId: nil,
-                            code: $0,
-                            name: systemLabels.labelName( labelCode: $0),
-                            ownerType: MxLabelOwnerType.SYSTEM)}
+                .map{ code -> MxLabelSO in
+                    
+                    let labelCode = MxLabelCode( string: code)
+                    
+                    return MxLabelSO(
+                        internalId: nil,
+                        remoteId: nil,
+                        code: labelCode,
+                        name: systemLabels.labelName( labelCode: labelCode),
+                        ownerType: MxLabelOwnerType.SYSTEM)}
             
             labels.appendContentsOf( defaultLabels)
             
@@ -113,7 +194,7 @@ func dispatchRefreshMailboxLabelsAction( mailbox mailbox: MxMailboxSO) {
         
     case let .Failure( error):
         
-        MxLog.error( "Failed to fetch mailbox \(mailbox.email)")
+        MxLog.error( "Failed to fetch mailbox \(mailboxId)")
         
         let action = MxAddErrorsAction(errors: [MxErrorSO(error: error)])
         uiState.dispatch(action)
@@ -123,7 +204,7 @@ func dispatchRefreshMailboxLabelsAction( mailbox mailbox: MxMailboxSO) {
 }
 
 
-func dispatchRefreshMailboxMessagesAction( mailbox mailbox: MxMailboxSO) {
+private func dispatchRefreshMailboxMessagesStateAction( mailboxId mailboxId: MxInternalId) {
     
     MxLog.debug("Processing MxSetMessagesAction")
 }

@@ -20,6 +20,7 @@ class MxMailboxProxy {
     
     private var connectPromise: Promise<Void, MxProxyError>!
     private var fetchLabelsPromise: Promise<[MxLabelRemote], MxProxyError>!
+    private var fetchMessageListPromise: Promise<[MxMessageRemote], MxProxyError>!
     
     
     init( mailbox: MxMailbox){
@@ -76,7 +77,7 @@ class MxMailboxProxy {
     
     // MARK: - Fetch labels
     
-    func fetchLabels() -> Future<[MxLabelRemote], MxProxyError>{
+    func fetchLabels() -> Future<[MxLabelRemote], MxProxyError> {
         
         MxLog.debug("Adding fetch labels command to operation queue for mailbox: \(mailbox.email)")
         
@@ -116,17 +117,29 @@ class MxMailboxProxy {
     
     // MARK: - Fetch messages
     
-    func fetchMessagesInLabel( labelId labelId: MxRemoteId) {
-        MxLog.debug("Processing \(#function). Args: labelId: \(labelId)")
+    func fetchMessageListInLabels( labelIds labelIds: [MxLabelCode]) -> Future<[MxMessageRemote], MxProxyError> {
         
-        MxLog.debug("Creating fetch messages ticket to mailbox: \(adapter.mailbox)")
+        MxLog.debug("Adding fetch messages command to operation queue for mailbox: \(mailbox.email)")
         
-        let ticket = MxFetchMessagesCommand( labelId: labelId, adapter: adapter, callback: adapterDidFetchMessagesInLabel)
-        operationsQueue.addOperation(ticket)
+        fetchMessageListPromise = Promise<[MxMessageRemote], MxProxyError>()
+        
+        ImmediateExecutionContext {
+        
+            let cmd = MxFetchMessageListCommand(
+                labelIds: labelIds,
+                adapter: self.adapter,
+                callback: self.adapterDidFetchMessageListInLabels)
+        
+            self.operationsQueue.addOperation(cmd)
+            
+        }
+        
+        return fetchMessageListPromise.future
     }
     
-    func adapterDidFetchMessagesInLabel( messages messages: [MxMessage]?, error: MxAdapterError?) {
-        MxLog.verbose("... Processing. Args: messages=\(messages), error=\(error)")
+    func adapterDidFetchMessageListInLabels( messages messages: [MxMessageRemote]?, error: MxAdapterError?) {
+        
+        MxLog.debug("Received response from fetchMessagesInLabels command \(mailbox.email) labels=\(messages), error=\(error)")
         
         
         

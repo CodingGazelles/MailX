@@ -21,7 +21,7 @@ class MxMailboxTabViewItemController: NSViewController {
     @IBOutlet weak var refreshMailboxButton: NSButton!
     
     @IBAction func refreshMailboxButtonTapped( sender: AnyObject){
-        dispatchRefreshMailboxLabelsAction( mailbox: mailbox)
+        dispatchRefreshMailboxStateAction( mailboxId: mailbox.internalId!, from: .Remote)
     }
     
     override func viewDidLoad() {

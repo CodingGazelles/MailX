@@ -205,7 +205,9 @@ class MxDataStackManager {
                                     code: String,
                                     name: String) -> Result<MxProvider, MxNoError> {
         
-        let provider = NSEntityDescription.insertNewObjectForEntityForName(MxProvider.modelName, inManagedObjectContext: self.moc) as! MxProvider
+        let provider = NSEntityDescription.insertNewObjectForEntityForName(
+            MxProvider.modelName,
+            inManagedObjectContext: self.moc) as! MxProvider
         
         provider.internalId = internalId
         provider.code = code
@@ -221,7 +223,9 @@ class MxDataStackManager {
                                    name: String,
                                    provider: MxProvider) -> Result<MxMailbox, MxNoError> {
         
-        let mailbox = NSEntityDescription.insertNewObjectForEntityForName(MxMailbox.modelName, inManagedObjectContext: self.moc) as! MxMailbox
+        let mailbox = NSEntityDescription.insertNewObjectForEntityForName(
+            MxMailbox.modelName,
+            inManagedObjectContext: self.moc) as! MxMailbox
         
         mailbox.internalId = internalId
         mailbox.remoteId = remoteId
@@ -236,12 +240,14 @@ class MxDataStackManager {
     
     func createLabel( internalId internalId: MxInternalId,
                                  remoteId: MxRemoteId,
-                                 code: String,
+                                 code: MxLabelCode,
                                  name: String,
                                  ownerType: MxLabelOwnerType,
                                  mailbox: MxMailbox) -> Result<MxLabel, MxNoError> {
         
-        let label = NSEntityDescription.insertNewObjectForEntityForName(MxLabel.modelName, inManagedObjectContext: self.moc) as! MxLabel
+        let label = NSEntityDescription.insertNewObjectForEntityForName(
+            MxLabel.modelName,
+            inManagedObjectContext: self.moc) as! MxLabel
         
         label.internalId = internalId
         label.remoteId = remoteId
@@ -266,6 +272,10 @@ class MxDataStackManager {
     
     
     // MARK: - Commit
+    
+    func hasChanges() -> Bool {
+        return moc.hasChanges
+    }
     
     func saveContext() -> Result< Void, MxStackError> {
         

@@ -10,6 +10,7 @@ import Foundation
 import CoreData
 
 
+
 class MxMailbox: MxBaseManagedObject, MxMailboxProtocol {
 
 // Insert code here to add functionality to your managed object subclass
@@ -18,6 +19,10 @@ class MxMailbox: MxBaseManagedObject, MxMailboxProtocol {
     
     var connected: Bool = false
     var proxy: MxMailboxProxy!
+    
+    func label( code code: MxLabelCode) -> MxLabel? {
+        return labels.filter{ $0.code == code }[0]
+    }
     
     
     override var internalId: MxInternalId? {

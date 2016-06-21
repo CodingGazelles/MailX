@@ -90,64 +90,82 @@ class MxSyncManager {
      Needs to run in background
      
      */
-    func refreshMailbox( mailbox mailbox: MxMailbox) -> Future<Void, MxSyncError>  {
+    func refreshMailboxData( mailboxId mailboxId: MxInternalId) -> Future<Void, MxSyncError>  {
         
-        MxLog.debug("Refreshing mailbox \(mailbox.email)")
+        MxLog.debug("Refreshing mailbox data \(mailboxId)")
         
         let promise = Promise<Void, MxSyncError>()
         
         Queue.global.context {
             
-            self.refreshLabelsOfMailbox(mailbox: mailbox)
+            switch self.dataStack.getMailbox(mailboxId: mailboxId) {
                 
-                .onSuccess { _ in
+            case let .Success( mailbox):
+                
+                self.refreshLabelsDataOfMailbox(mailbox: mailbox)
                     
-                    MxLog.debug("Refreshing labels successfull \(mailbox.email)")
-                    
-                    self.refreshMessagesOfMailbox(mailbox: mailbox)
+                    .onSuccess { _ in
                         
-                        .onSuccess { _ in
+                        MxLog.debug("Refreshing labels successfull \(mailbox.email)")
+                        
+                        self.refreshMessagesDataOfMailbox(mailbox: mailbox)
                             
-                            MxLog.debug("Refreshing messages successfull \(mailbox.email)")
+                            .onSuccess { _ in
+                                
+                                MxLog.debug("Refreshing messages successfull \(mailbox.email)")
+                                
+                                promise.success()
+                                
+                            }
                             
-                            promise.success()
-                            
+                            .onFailure { error in
+                                
+                                let syncError = MxSyncError.OperationFailed(
+                                    message: "Error occurred while refreshing messages of mailbox \(mailbox.email)",
+                                    rootError: error)
+                                
+                                MxLog.error("Error occurred while refreshing messages of mailbox \(mailbox.email)", error: error)
+                                
+                                promise.failure(syncError)
+                                
                         }
                         
-                        .onFailure { error in
-                            
-                            let syncError = MxSyncError.OperationFailed(
-                                message: "Error occurred while refreshing messages of mailbox \(mailbox.email)",
-                                rootError: error)
-                            
-                            MxLog.error("Error occurred while refreshing messages of mailbox \(mailbox.email)", error: error)
-                            
-                            promise.failure(syncError)
-                            
                     }
                     
+                    .onFailure { error in
+                        
+                        let syncError = MxSyncError.OperationFailed(
+                            message: "Error occurred while refreshing labels of mailbox \(mailbox.email)",
+                            rootError: error)
+                        
+                        MxLog.error("Error occurred while refreshing labels of mailbox \(mailbox.email)", error: error)
+                        
+                        promise.failure(syncError)
+                        
                 }
                 
-                .onFailure { error in
-                    
-                    let syncError = MxSyncError.OperationFailed(
-                        message: "Error occurred while refreshing labels of mailbox \(mailbox.email)",
-                        rootError: error)
-                    
-                    MxLog.error("Error occurred while refreshing labels of mailbox \(mailbox.email)", error: error)
-                    
-                    promise.failure(syncError)
-                    
+            case let .Failure( error):
+                
+                let syncError = MxSyncError.DBError(
+                    error: error,
+                    message: "Error occurred while fetching mailbox \(mailboxId)")
+                
+                MxLog.error("Error occurred while fetching mailbox \(mailboxId)", error: error)
+                
+                promise.failure(syncError)
+                
             }
+            
+            
         }
         
         return promise.future
     }
     
     
-    private func refreshLabelsOfMailbox( mailbox mailbox: MxMailbox) -> Future<Void, MxSyncError> {
+    private func refreshLabelsDataOfMailbox( mailbox mailbox: MxMailbox) -> Future<Void, MxSyncError> {
         
-        MxLog.debug("Refreshing labels of mailbox \(mailbox.email)")
+        MxLog.debug("Refreshing labels of mailbox data \(mailbox.email)")
         
         let promise = Promise<Void, MxSyncError>()
         
@@ -159,7 +177,7 @@ class MxSyncManager {
                 .onSuccess { values in
                     
                     // 2 Compare with local labels
-                    let operations: [ObjectSyncOperation] = diffMROArrays(
+                    let operations: [BaseSyncOperation] = diffMROArrays(
                         managedObjects: Array( mailbox.labels),
                         remoteObjects: values)
                     
@@ -185,7 +203,7 @@ class MxSyncManager {
                                 let createdLabel = self.dataStack.createLabel(
                                     internalId: MxInternalId(),
                                     remoteId:  labelToInsert.remoteId!,
-                                    code: labelToInsert.code!,
+                                    code: labelToInsert.code,
                                     name: labelToInsert.name!,
                                     ownerType: labelToInsert.ownerType,
                                     mailbox: mailbox)
@@ -199,7 +217,7 @@ class MxSyncManager {
                             let _ = operation.objects
                                 .map { object in
                                     
-                                    let label = object as! MxLabel
+                                    let label = object as! MxLabelRemote
                                     
                                     let labels = mailbox.labels
                                         .filter { $0.remoteId == label.remoteId }
@@ -229,7 +247,9 @@ class MxSyncManager {
                         
                     }
                     
-                    self.dataStack.saveContext()
+                    if self.dataStack.hasChanges() {
+                        self.dataStack.saveContext()
+                    }
                     
                     promise.success()
                     
@@ -305,7 +325,7 @@ class MxSyncManager {
     }
     
     
-    private func refreshMessagesOfMailbox( mailbox mailbox: MxMailbox) -> Future<[MxMessage], MxSyncError> {
+    private func refreshMessagesDataOfMailbox ( mailbox mailbox: MxMailbox) -> Future<[MxMessage], MxSyncError> {
         
         // 1 Fetch messages
         
@@ -330,41 +350,61 @@ class MxSyncManager {
     }
     
     
-    private func fetchMessagesOfMailbox( mailbox mailbox: MxMailbox) -> Future<[MxMessage], MxSyncError> {
+    private func fetchMessagesOfMailbox( mailbox mailbox: MxMailbox) -> Future<[MxMessageRemote], MxSyncError> {
         
         MxLog.debug("Fetching messages of mailbox \(mailbox.email)")
         
-        let promise = Promise<[MxMessage], MxSyncError>()
+        let promise = Promise<[MxMessageRemote], MxSyncError>()
         
         ImmediateExecutionContext {
             
-            //TODO: -
+            if mailbox.connected {
+                
+                let labelsIds = [
+                    MxLabelCode.SYSTEM(.INBOX),
+                    MxLabelCode.SYSTEM(.STARRED),
+                    MxLabelCode.SYSTEM(.UNREAD)]
+                
+                mailbox.proxy.fetchMessageListInLabels(labelIds: labelsIds)
+                    
+                    .onSuccess { values in
+                        
+                        MxLog.debug("Did fetch messages of mailbox: \(mailbox.email)")
+                        
+                        promise.success( values)
+                        
+                    }
+                    
+                    .onFailure { error in
+                        
+                        MxLog.error("Error occurred while fetching messages of mailbox \(mailbox.email)", error: error)
+                        
+                        let networkError = MxSyncError.NetworkError(
+                            error: MxNetworkError.FetchError,
+                            message: "Error occurred while fetching messages of mailbox \(mailbox.email)",
+                            rootError: error)
+                        
+                        promise.failure( networkError)
+                        
+                }
+                
+            } else {
+                
+                MxLog.error("Mailbox is not connected \(mailbox.email)", error: nil)
+                
+                let networkError = MxSyncError.NetworkError(
+                    error: MxNetworkError.ConnectError,
+                    message: "Mailbox is not connected \(mailbox.email)",
+                    rootError: nil)
+                
+                promise.failure( networkError)
+            }
             
         }
         
         return promise.future
         
     }
-    
-    
-    //    private func runIncrementalUpdate( mailboxId mailboxId: MxObjectId){
-    //
-    //        MxLog.debug("Doing incremental update of mailbox: \(mailboxId)")
-    //
-    //        fatalError("Func not implemented")
-    //    }
-    //
-    //
-    //    private func runFullUpdate(mailbox mailbox: MxMailbox){
-    //
-    //        MxLog.debug("Executing full update of mailbox \(mailbox.email)")
-    //
-    ////        emptyLocalData(mailbox: mailbox)
-    ////        fetchRemoteData(mailbox: mailbox)
-    //
-    //
-    
-    
     
     
 }

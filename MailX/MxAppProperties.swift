@@ -78,6 +78,17 @@ class MxAppProperties {
         return result as! [String:[String:AnyObject]]
     }
     
+    func provider( providerCode providerCode: MxProviderCode) -> MxProviderProperties? {
+        
+        let properties = providers()[ providerCode.rawValue]
+        
+        guard (properties != nil) else {
+            return nil
+        }
+        
+        return MxProviderProperties( properties: properties!)
+    }
+    
     func modelName() -> String {
         guard let result = _rootDictionary[MxAppProperties.kPFE_Model_Name] else {
             return ""
@@ -92,13 +103,32 @@ class MxAppProperties {
         return result as! String
     }
     
-//    func provider( providerCode providerCode: String) -> [String:AnyObject] {
-//        return providers()[providerCode]!
-//    }
-//    
-//    func providerLabels( providerCode providerCode: String) -> [String:String] {
-//        return provider( providerCode: providerCode)[MxAppProperties.k_Provider_Labels] as! [String:String]
-//    }
+}
+
+class MxProviderProperties {
+    
+    var proxyClassName: String
+    var name: String
+    var labels: [String:String]
+    
+    init( properties: [String:AnyObject]) {
+        self.proxyClassName = properties[ MxAppProperties.k_Provider_ProxyClassName]! as! String
+        self.name = properties[ MxAppProperties.k_Provider_Name]! as! String
+        self.labels = properties[ MxAppProperties.k_Provider_Labels] as! [String:String]
+    }
+    
+    func labelProviderCode( labelCode labelCode: MxLabelCode) -> String? {
+        
+        switch labelCode {
+        
+        case .SYSTEM( let code):
+            return labels[ code.rawValue ]
+        
+        case .USER( let code):
+            return labels[ code]
+        }
+        
+    }
     
 }
 
@@ -110,10 +140,18 @@ class MxSystemLabels {
         rootDictionary = labels
     }
     
-    func labelName( labelCode labelCode: String) -> String {
+    func labelName( labelCode labelCode: MxLabelCode) -> String? {
         
-        let result = rootDictionary[labelCode]![MxAppProperties.k_Label_Name]
-        return result!
+        switch labelCode {
+            
+        case .SYSTEM( let code):
+            return rootDictionary[code.rawValue]?[MxAppProperties.k_Label_Name]
+            
+            
+        case .USER(let code):
+            return rootDictionary[code]?[MxAppProperties.k_Label_Name]
+        }
+        
     }
 }
 

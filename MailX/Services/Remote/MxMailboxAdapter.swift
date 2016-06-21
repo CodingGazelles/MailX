@@ -13,7 +13,7 @@ protocol MxMailboxAdapter {
     
     func connect( callback callback: MxConnectCallback)
     func sendFetchLabelsRequest( callback callback: MxFetchLabelsCallback)
-    func sendFetchMessagesRequest(labelId labelId: MxRemoteId, callback: MxFetchMessagesCallback)
+    func sendFetchMessageListInLabelsRequest(labelIds labelIds: [MxLabelCode], callback: MxFetchMessageListCallback)
     
 //    func didFetchMessagesHandler( selector: Selector, error: NSError)
     

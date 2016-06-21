@@ -10,33 +10,33 @@ import Foundation
 
 
 
-typealias MxFetchMessagesCallback = (messages: [MxMessage]?, error: MxAdapterError?) -> Void
+typealias MxFetchMessageListCallback = (messages: [MxMessageRemote]?, error: MxAdapterError?) -> Void
 
 
-class MxFetchMessagesCommand : MxNetworkCommand {
+class MxFetchMessageListCommand : MxNetworkCommand {
     
-    var callback: MxFetchMessagesCallback
-    var labelId: MxRemoteId
+    var callback: MxFetchMessageListCallback
+    var labelIds: [MxLabelCode]
     
-    init( labelId: MxRemoteId, adapter: MxMailboxAdapter, callback: MxFetchMessagesCallback) {
+    init( labelIds: [MxLabelCode], adapter: MxMailboxAdapter, callback: MxFetchMessageListCallback) {
         
         self.callback = callback
-        self.labelId = labelId
+        self.labelIds = labelIds
         super.init( adapter: adapter)
         
     }
     
     override func main() {
         
-        MxLog.debug("\(#function) fetch messages ticket sending request to mailbox: \(adapter.mailbox.email)")
+        MxLog.debug("Fetch messages command sending request to mailbox: \(adapter.mailbox.email)")
         
-        adapter.sendFetchMessagesRequest( labelId: labelId, callback: adapterDidFetchMessages)
+        adapter.sendFetchMessageListInLabelsRequest( labelIds: labelIds, callback: adapterDidFetchMessageList)
         
     }
     
-    func adapterDidFetchMessages( messages messages: [MxMessage]?, error: MxAdapterError?) {
+    func adapterDidFetchMessageList( messages messages: [MxMessageRemote]?, error: MxAdapterError?) {
         
-        MxLog.debug("\(#function) fetch messages ticket received response of mailbox: \(adapter.mailbox.email)")
+        MxLog.debug("Fetch messages ticket received response of mailbox: \(adapter.mailbox.email)")
         
         state = .Finished
         callback( messages: messages, error: error)

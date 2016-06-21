@@ -46,9 +46,8 @@ extension MxLabelsViewController: StoreSubscriber {
     override func viewWillAppear() {
         super.viewWillAppear()
         
-        state.store.subscribe(self) {
-            
-        }
+        // TODO: subscribe to only the interesting part of the state 
+        state.store.subscribe(self)
     }
     
     override func viewWillDisappear() {
@@ -60,8 +59,13 @@ extension MxLabelsViewController: StoreSubscriber {
     func newState(state: MxAppState) {
         MxLog.debug("New State received by MxLabelsViewController: \(state)")
         
-        labels = state.mailboxList[state.selectedMailbox?]?.labelsState.visibleLabels()
-        showAllLabels = state.mailboxList[state.selectedMailbox?]?.labelsState.showAllLabels()
+        guard state.selectedMailbox != nil && state.mailboxList.count > 0 else {
+            return
+        }
+        
+        let labelsState = state.mailboxList[state.selectedMailbox!]!.labelsState
+        labels = labelsState.visibleLabels()
+        showAllLabels = labelsState.showAllLabels()
         showAllLabelsButton.state = showAllLabels ? NSOnState : NSOffState
         
         tableView.reloadData()

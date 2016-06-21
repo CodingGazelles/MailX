@@ -16,13 +16,13 @@ struct MxLabelSO: MxStateObjectProtocol, MxLabelProtocol {
     
     var internalId: MxInternalId?
     var remoteId: MxRemoteId?
-    var code: String?
+    var code: MxLabelCode = MxLabelCode.USER("NA")
     var name: String?
     var ownerType: MxLabelOwnerType = MxLabelOwnerType.UNDEFINED
     
     init(){}
     
-    init( internalId: MxInternalId?, remoteId: MxRemoteId?, code: String?, name: String?, ownerType: MxLabelOwnerType){
+    init( internalId: MxInternalId?, remoteId: MxRemoteId?, code: MxLabelCode, name: String?, ownerType: MxLabelOwnerType){
         self.internalId = internalId
         self.remoteId = remoteId
         self.code = code

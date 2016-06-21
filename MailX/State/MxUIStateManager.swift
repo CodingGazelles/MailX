@@ -87,7 +87,7 @@ class MxUIStateManager {
             
             dispatch( MxSetPropertiesAction(properties: MxPropertiesState.readDefaultProperties()))
             dispatchSetMailboxListAction()
-            dispatchRefreshAllMailboxesAction()
+            dispatchRefreshAllMailboxesStateAction()
             
         }
     }
