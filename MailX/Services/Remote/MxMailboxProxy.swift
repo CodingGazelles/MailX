@@ -20,7 +20,7 @@ class MxMailboxProxy {
     
     private var connectPromise: Promise<Void, MxProxyError>!
     private var fetchLabelsPromise: Promise<[MxLabelRemote], MxProxyError>!
-    private var fetchMessageListPromise: Promise<[MxMessageRemote], MxProxyError>!
+    private var fetchMessageListPromise: Promise<[MxLabelCode:[MxMessageRemote]], MxProxyError>!
     
     
     init( mailbox: MxMailbox){
@@ -85,7 +85,7 @@ class MxMailboxProxy {
         
         ImmediateExecutionContext {
             
-            let ticket = MxFetchLabelsCommand( adapter: self.adapter, callback: self.adapterDidFetchLabels)
+            let ticket = MxFetchLabelListCommand( adapter: self.adapter, callback: self.adapterDidFetchLabels)
             self.operationsQueue.addOperation(ticket)
             
         }
@@ -117,16 +117,16 @@ class MxMailboxProxy {
     
     // MARK: - Fetch messages
     
-    func fetchMessageListInLabels( labelIds labelIds: [MxLabelCode]) -> Future<[MxMessageRemote], MxProxyError> {
+    func fetchMessageListInLabels( labelCodes labelCodes: [MxLabelCode]) -> Future<[MxLabelCode:[MxMessageRemote]], MxProxyError> {
         
         MxLog.debug("Adding fetch messages command to operation queue for mailbox: \(mailbox.email)")
         
-        fetchMessageListPromise = Promise<[MxMessageRemote], MxProxyError>()
+        fetchMessageListPromise = Promise<[MxLabelCode:[MxMessageRemote]], MxProxyError>()
         
         ImmediateExecutionContext {
         
             let cmd = MxFetchMessageListCommand(
-                labelIds: labelIds,
+                labelCodes: labelCodes,
                 adapter: self.adapter,
                 callback: self.adapterDidFetchMessageListInLabels)
         
@@ -141,9 +141,23 @@ class MxMailboxProxy {
         
         MxLog.debug("Received response from fetchMessagesInLabels command \(mailbox.email) labels=\(messages), error=\(error)")
         
+        if error == nil {
+            
+            MxLog.debug("Proxy did fetch message list of mailbox: \(mailbox.email)")
+            
+            var result = [MxLabelCode:[MxMessageRemote]]()
+            result.updateValue(messages!, forKey: MxLabelCode.SYSTEM(.INBOX))
+            
+            fetchMessageListPromise.success(result)
+            
+        } else {
+            
+            MxLog.error("Unable to fetch message list of mailbox \(mailbox.email)", error: error)
+            
+            let proxyError = MxProxyError.AdapterDidNotFetchLabels(rootError: error!)
+            fetchMessageListPromise.failure( proxyError)
+        }
         
-        
-        MxLog.verbose("...")
     }
     
     

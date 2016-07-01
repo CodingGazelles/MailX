@@ -88,7 +88,7 @@ extension MxLabelsViewController: NSTableViewDelegate {
         
         MxLog.verbose("processing \(#function): \(tableView), \(tableColumn), \(row)")
         let view = tableView.makeViewWithIdentifier( kLabelViewIdentifier, owner: self) as! NSTableCellView?
-        view!.textField!.stringValue = self.labels[row].code!
+        view!.textField!.stringValue = self.labels[row].name!
         
         return view
     }

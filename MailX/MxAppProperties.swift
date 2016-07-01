@@ -18,7 +18,7 @@ class MxAppProperties {
     
     // Property file entries
     static let kPFE_DefaultLabels = "DefaultLabels"
-    static let kPFE_SystemLabels = "SystemLabels"
+    static let kPFE_Labels = "Labels"
     
     static let kPFE_Providers = "MailProviders"
     static let k_Provider_Name = "Name"
@@ -65,7 +65,7 @@ class MxAppProperties {
     }
     
     func systemLabels() -> MxSystemLabels {
-        guard let result = _rootDictionary[MxAppProperties.kPFE_SystemLabels] else {
+        guard let result = _rootDictionary[MxAppProperties.kPFE_Labels] else {
             return MxSystemLabels( labels: [String:[String:String]]())
         }
         return MxSystemLabels( labels: result as! [String:[String:String]])

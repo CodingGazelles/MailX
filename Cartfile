@@ -6,7 +6,7 @@
 github "realm/realm-cocoa"
 # github "ReactiveX/RxSwift" "2.5.0"
 # github "antitypical/Result" ~> 0.4
-# github "robrix/Box" "1.2.2"
+# github "robrix/Box" "2.0"
 # github "emaloney/CleanroomLogger"
 # github "ReSwift/ReSwift"
 # github "ReSwift/ReSwift-Recorder"

@@ -34,17 +34,24 @@ class MxMessage: MxBaseManagedObject, MxMessageProtocol {
         }
     }
     
-//    var labels: NSSet {
-//        return labels_ ?? NSSet()
-//    }
-//    
-//    var mailbox: MxMailboxProtocol? {
-//        get {
-//            return mailbox_ != nil ? (mailbox_ as! MxMailboxProtocol) : nil
-//        }
-//        set {
-//            self.mailbox_ = newValue != nil ? (newValue as! MxMailbox) : nil
-//        }
-//    }
+    var snippet: String? {
+        get {
+            return snippet_
+        }
+        set {
+            self.snippet_ = newValue
+        }
+    }
+    
+    var labels: Set<MxLabel> {
+        get {
+            return (labels_ ?? Set<MxLabel>()) as! Set<MxLabel>
+        }
+        set {
+            self.labels_ = newValue
+        }
+    }
+    
+
     
 }

@@ -16,12 +16,12 @@ typealias MxFetchMessageListCallback = (messages: [MxMessageRemote]?, error: MxA
 class MxFetchMessageListCommand : MxNetworkCommand {
     
     var callback: MxFetchMessageListCallback
-    var labelIds: [MxLabelCode]
+    var labelCodes: [MxLabelCode]
     
-    init( labelIds: [MxLabelCode], adapter: MxMailboxAdapter, callback: MxFetchMessageListCallback) {
+    init( labelCodes: [MxLabelCode], adapter: MxMailboxAdapter, callback: MxFetchMessageListCallback) {
         
         self.callback = callback
-        self.labelIds = labelIds
+        self.labelCodes = labelCodes
         super.init( adapter: adapter)
         
     }
@@ -30,7 +30,7 @@ class MxFetchMessageListCommand : MxNetworkCommand {
         
         MxLog.debug("Fetch messages command sending request to mailbox: \(adapter.mailbox.email)")
         
-        adapter.sendFetchMessageListInLabelsRequest( labelIds: labelIds, callback: adapterDidFetchMessageList)
+        adapter.sendFetchMessageListInLabelsRequest( labelCodes: labelCodes, callback: adapterDidFetchMessageList)
         
     }
     

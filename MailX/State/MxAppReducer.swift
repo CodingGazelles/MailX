@@ -45,17 +45,23 @@ struct MxAppReducer: Reducer {
             
         case _ as MxSetMailboxListAction:
             
+            var selectedMailbox = (mxAction as! MxSetMailboxListAction).selectedMailbox
+            var selectedIndex = 0
             
-            for mb in (mxAction as! MxSetMailboxListAction).mailboxes {
+            for mailbox in (mxAction as! MxSetMailboxListAction).mailboxes {
             
-                var mbState = MxMailboxState()
-                mbState.mailbox = mb
+                var tabItem = MxTabItemState( tabItemType: .MAILBOX, mailboxState: MxMailboxState())
                 
-                state.mailboxList.updateValue( mbState, forKey: mb)
+                tabItem.mailboxState?.mailbox = mailbox
+                
+                if mailbox == selectedMailbox! {
+                    state.selectedTabitem = selectedIndex
+                }
+                
+                state.tabList.append(tabItem)
                 
             }
             
-            state.selectedMailbox = (mxAction as! MxSetMailboxListAction).selectedMailbox
             state.errorsState.errors.appendContentsOf((mxAction as! MxSetMailboxListAction).errors )
 
             
@@ -64,16 +70,25 @@ struct MxAppReducer: Reducer {
             
         case _ as MxShowAllLabelsAction:
             
-            state.mailboxList[state.selectedMailbox!]!.labelsState.labelDisplay = MxLabelsState.MxLabelDisplay.All
+            state.tabList[state.selectedTabitem].mailboxState!.labelsState.labelDisplay = MxLabelsState.MxLabelDisplay.All
             
         case _ as MxShowDefaultsLabelsAction:
             
-            state.mailboxList[state.selectedMailbox!]!.labelsState.labelDisplay = MxLabelsState.MxLabelDisplay.Defaults
+            state.tabList[state.selectedTabitem].mailboxState!.labelsState.labelDisplay = MxLabelsState.MxLabelDisplay.Defaults
             
-        case _ as MxRefreshMailboxLabelsAction:
+        case _ as MxRefreshMailboxLabelListAction:
             
-            state.mailboxList[state.selectedMailbox!]!.labelsState.allLabels = (mxAction as! MxRefreshMailboxLabelsAction).labels
-            state.mailboxList[state.selectedMailbox!]!.labelsState.defaultLabels = state.propertiesState.labelShortListCodes
+            state.tabList[state.selectedTabitem].mailboxState!.labelsState.allLabels
+                = (mxAction as! MxRefreshMailboxLabelListAction).labels
+            
+            state.tabList[state.selectedTabitem].mailboxState!.labelsState.defaultLabels
+                = state.propertiesState.labelShortListCodes
+            
+        case _ as MxRefreshMailboxMessageListAction:
+            
+            state.tabList[state.selectedTabitem].mailboxState!.messagesState.
+            
+            
             
             
         // MARK: PropertiesActions

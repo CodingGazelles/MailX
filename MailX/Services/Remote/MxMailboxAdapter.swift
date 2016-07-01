@@ -12,8 +12,9 @@ import Foundation
 protocol MxMailboxAdapter {
     
     func connect( callback callback: MxConnectCallback)
-    func sendFetchLabelsRequest( callback callback: MxFetchLabelsCallback)
-    func sendFetchMessageListInLabelsRequest(labelIds labelIds: [MxLabelCode], callback: MxFetchMessageListCallback)
+    func sendFetchLabelListRequest( callback callback: MxFetchLabelListCallback)
+    func sendFetchMessageListInLabelsRequest(labelCodes labelCodes: [MxLabelCode], callback: MxFetchMessageListCallback)
+    func sendFetchMessageRequest(messagesId messageId: MxRemoteId, callback: MxFetchMessageCallback)
     
 //    func didFetchMessagesHandler( selector: Selector, error: NSError)
     

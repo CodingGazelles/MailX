@@ -50,7 +50,9 @@ class MxDataStackManager {
             let props = MxAppProperties.defaultProperties()
             var managedObjectContext: NSManagedObjectContext
             
-            guard let modelURL = NSBundle.mainBundle().URLForResource( props.modelName(), withExtension: props.modelExtension()) else {
+            guard let modelURL = NSBundle.mainBundle().URLForResource(
+                props.modelName(),
+                withExtension: props.modelExtension()) else {
                 
                 let error = MxStackError.SetupFailed(
                     message: "Error loading model from bundle",
@@ -257,6 +259,27 @@ class MxDataStackManager {
         label.mailbox = mailbox
         
         return .Success( label)
+        
+    }
+    
+    func createMessage( internalId internalId: MxInternalId,
+                                   remoteId: MxRemoteId,
+                                   snippet: String,
+                                   labels: [MxLabel]) -> Result<MxMessage, MxNoError> {
+        
+        let message = NSEntityDescription.insertNewObjectForEntityForName(
+            MxMessage.modelName,
+            inManagedObjectContext: self.moc)  as! MxMessage
+        
+        message.internalId = internalId
+        message.remoteId = remoteId
+        message.snippet = snippet
+        
+        for label in labels {
+            message.labels.insert(label)
+        }
+        
+        return .Success(message)
         
     }
     

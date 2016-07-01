@@ -41,6 +41,7 @@ protocol MxProviderProtocol: MxBusinessObjectProtocol {
 protocol MxMailboxProtocol: MxBusinessObjectProtocol {
     var email: String? { get set }
     var name: String? { get set }
+//    var labels: Set<MxLabel> { get set }
 }
 
 
@@ -52,22 +53,17 @@ protocol MxLabelProtocol: MxBusinessObjectProtocol {
     var ownerType: MxLabelOwnerType { get set }
 }
 
-enum MxLabelCode: Equatable {
+enum MxLabelCode: Hashable, Equatable {
     
     case SYSTEM( MxSystemLabelCode)
     case USER( String)
     
-    init( string: String?) {
+    init( code: String) {
         
-        guard string != nil else {
-            self = MxLabelCode.USER("NIL")
-            return
-        }
-        
-        let systemCode = MxSystemLabelCode(rawValue: string!)
+        let systemCode = MxSystemLabelCode(rawValue: code)
         
         guard systemCode != nil else {
-            self = MxLabelCode.USER(string!)
+            self = MxLabelCode.USER(code)
             return
         }
         
@@ -75,27 +71,34 @@ enum MxLabelCode: Equatable {
         
     }
     
-    func toString() -> String? {
+    func toString() -> String {
         
         switch self {
             
         case let .SYSTEM( systemCode):
             return systemCode.rawValue
-            
+
         case let .USER( userCode):
             return userCode
         }
         
     }
-
+    
+    var hashValue: Int {
+        return toString().hashValue
+    }
 }
 
 func ==(lhs: MxLabelCode, rhs: MxLabelCode) -> Bool{
+    
     switch (lhs, rhs) {
+    
     case ( let .SYSTEM( sysCode1), let .SYSTEM(sysCode2)):
         return sysCode1 == sysCode2
+    
     case (let .USER( usrCode1), let .USER( usrCode2)):
         return usrCode1 == usrCode2
+    
     default:
         return false
     }
@@ -131,6 +134,7 @@ func labelProviderCode( labelCode labelCode: MxLabelCode, providerCode: MxProvid
 // MARK: - Message
 
 protocol MxMessageProtocol: MxBusinessObjectProtocol {
+    var snippet: String? { get set }
 }
 
 

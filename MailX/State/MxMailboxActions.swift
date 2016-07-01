@@ -10,17 +10,18 @@ import Foundation
 
 import Result
 import BrightFutures
+import Pipes
 
 
 
 // MARK: - Actions
 
-struct MxRefreshMailboxLabelsAction: MxAction {
+struct MxRefreshMailboxLabelListAction: MxAction {
     var labels: [MxLabelSO]
     var errors: [MxErrorSO]
 }
 
-struct MxRefreshMailboxMessagesAction: MxAction {
+struct MxRefreshMailboxMessageListAction: MxAction {
     var messages: [MxMessageSO]
     var errors: [MxErrorSO]
 }
@@ -143,23 +144,20 @@ func dispatchRefreshMailboxStateAction( mailboxId mailboxId: MxInternalId, from:
 }
 
 private func _dispatchRefreshMailboxStateAction( mailboxId mailboxId: MxInternalId) {
-    
-    dispatchRefreshMailboxLabelsStateAction( mailboxId: mailboxId)
-    //    dispatchRefreshMailboxMessagesStateAction(mailbox: <#T##MxMailbox#>)
-    
+    _dispatchRefreshMailboxLabelListStateAction(mailboxId: mailboxId)
+    _dispatchRefreshMailboxMessageListStateAction(mailboxId: mailboxId)
 }
 
 
-private func dispatchRefreshMailboxLabelsStateAction( mailboxId mailboxId: MxInternalId) {
+private func _dispatchRefreshMailboxLabelListStateAction( mailboxId mailboxId: MxInternalId) {
     
-    MxLog.debug("Processing RefreshMailboxLabelsAction \(mailboxId)")
+    MxLog.debug("Processing RefreshMailboxLabelListStateAction \(mailboxId)")
     
     let uiState = MxUIStateManager.defaultState()
     let stack = MxDataStackManager.defaultStack()
     
     
     switch stack.getMailbox(mailboxId: mailboxId) {
-        
         
     case let .Success( result):
         
@@ -174,7 +172,7 @@ private func dispatchRefreshMailboxLabelsStateAction( mailboxId mailboxId: MxInt
             let defaultLabels = MxAppProperties.defaultProperties().defaultLabels()
                 .map{ code -> MxLabelSO in
                     
-                    let labelCode = MxLabelCode( string: code)
+                    let labelCode = MxLabelCode( code: code)
                     
                     return MxLabelSO(
                         internalId: nil,
@@ -188,7 +186,7 @@ private func dispatchRefreshMailboxLabelsStateAction( mailboxId mailboxId: MxInt
         }
         
         
-        let action = MxRefreshMailboxLabelsAction( labels: labels, errors: [MxErrorSO]())
+        let action = MxRefreshMailboxLabelListAction( labels: labels, errors: [MxErrorSO]())
         uiState.dispatch(action)
         
         
@@ -204,9 +202,35 @@ private func dispatchRefreshMailboxLabelsStateAction( mailboxId mailboxId: MxInt
 }
 
 
-private func dispatchRefreshMailboxMessagesStateAction( mailboxId mailboxId: MxInternalId) {
+private func _dispatchRefreshMailboxMessageListStateAction( mailboxId mailboxId: MxInternalId) {
     
-    MxLog.debug("Processing MxSetMessagesAction")
+    MxLog.debug("Processing RefreshMailboxMessageListStateAction \(mailboxId)")
+    
+    let uiState = MxUIStateManager.defaultState()
+    let stack = MxDataStackManager.defaultStack()
+    
+    
+    switch stack.getMailbox(mailboxId: mailboxId) {
+        
+    case let .Success( mailbox):
+        
+        
+        let messages = mailbox.label(code: .SYSTEM( .INBOX))?.messages
+            |> map{ MxMessageSO(model: $0) }
+        
+        let action = MxRefreshMailboxMessageListAction( messages: messages!, errors: [MxErrorSO]())
+        
+        uiState.dispatch(action)
+        
+        
+    case let .Failure( error):
+        
+        MxLog.error( "Failed to fetch mailbox \(mailboxId)")
+        
+        let action = MxAddErrorsAction(errors: [MxErrorSO(error: error)])
+        uiState.dispatch(action)
+        
+    }
 }
 
 

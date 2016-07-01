@@ -11,6 +11,5 @@ import Foundation
 
 
 class MxMessageRemote: MxBaseRemoteOject, MxMessageProtocol {
-    
-    
+    var snippet: String?
 }

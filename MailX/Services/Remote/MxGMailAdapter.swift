@@ -19,8 +19,9 @@ class MxGMailAdapter : NSObject, MxMailboxAdapter {
     private var service: GTLServiceGmail
     
     private var connectCallback: MxConnectCallback?
-    private var fetchLabelsCallback: MxFetchLabelsCallback?
-    private var fetchMessagesCallback: MxFetchMessageListCallback?
+    private var fetchLabelListCallback: MxFetchLabelListCallback?
+    private var fetchMessageListCallback: MxFetchMessageListCallback?
+    private var fetchMessageCallback: MxFetchMessageCallback?
     
     
     // For Google APIs, the scope strings are available
@@ -147,11 +148,11 @@ class MxGMailAdapter : NSObject, MxMailboxAdapter {
     
     //MARK: - Fetch Labels
     
-    func sendFetchLabelsRequest( callback callback: MxFetchLabelsCallback) {
+    func sendFetchLabelListRequest( callback callback: MxFetchLabelListCallback) {
         
         MxLog.debug("Sending fetch labels request to mailbox \(mailbox.email)")
         
-        self.fetchLabelsCallback = callback
+        self.fetchLabelListCallback = callback
     
         let query = GTLQueryGmail.queryForUsersLabelsList()
         
@@ -174,7 +175,7 @@ class MxGMailAdapter : NSObject, MxMailboxAdapter {
             
             MxLog.error("Fetching labels failed", error: adapterError)
             
-            fetchLabelsCallback!( labels: nil, error: MxAdapterError.ProviderReturnedFetchError(rootError: adapterError))
+            fetchLabelListCallback!( labels: nil, error: MxAdapterError.ProviderReturnedFetchError(rootError: adapterError))
             
             return
         }
@@ -184,13 +185,15 @@ class MxGMailAdapter : NSObject, MxMailboxAdapter {
         if !labelsResponse.labels.isEmpty {
             MxLog.debug("Parsing labels")
             
+            let systemLabels = MxAppProperties.defaultProperties().systemLabels()
+            
             for response in labelsResponse.labels as! [GTLGmailLabel] {
                 
                 let label = MxLabelRemote()
                 
                 label.remoteId = MxRemoteId(value: response.identifier)
-                label.code = ""
-                label.name = response.name
+                label.code = MxLabelCode( code: response.identifier)
+                label.name = systemLabels.labelName( labelCode: label.code) ?? response.name
                 
                 switch response.type {
                 case "system":
@@ -211,20 +214,20 @@ class MxGMailAdapter : NSObject, MxMailboxAdapter {
             MxLog.debug( "No label found.")
         }
         
-        fetchLabelsCallback!( labels: labels, error: nil)
+        fetchLabelListCallback!( labels: labels, error: nil)
     }
     
     
     //MARK: - Fetch remote messages
     
-    func sendFetchMessageListInLabelsRequest(labelIds labelIds: [MxLabelCode], callback: MxFetchMessageListCallback) {
+    func sendFetchMessageListInLabelsRequest(labelCodes labelCodes: [MxLabelCode], callback: MxFetchMessageListCallback) {
         
-        MxLog.debug("Sending fetch messages request to mailbox \(mailbox.email)")
+        MxLog.debug("Sending fetch message list request to mailbox \(mailbox.email)")
         
-        self.fetchMessagesCallback = callback
+        self.fetchMessageListCallback = callback
         
         let query = GTLQueryGmail.queryForUsersMessagesList()
-        query.labelIds = labelIds.map{ code in
+        query.labelIds = labelCodes.map{ code in
                 return labelProviderCode(labelCode: code, providerCode: .GMAIL) ?? "NA"
         }
         
@@ -241,14 +244,16 @@ class MxGMailAdapter : NSObject, MxMailboxAdapter {
         finishedWithObject messagesResponse: GTLGmailListMessagesResponse,
         error: NSError?) {
         
-        MxLog.debug("Receiving fetch messages response from mailbox \(mailbox.email)")
+        MxLog.debug("Receiving fetch message list response from mailbox \(mailbox.email)")
             
             if let error = error {
                 
                 MxLog.error("Fetching messages failed...")
                 MxLog.error(error.localizedDescription)
                 
-                fetchMessagesCallback!( messages: nil, error: MxAdapterError.ProviderReturnedConnectionError(rootError: error))
+                fetchMessageListCallback!(
+                    messages: nil,
+                    error: MxAdapterError.ProviderReturnedConnectionError(rootError: error))
                 
                 return
             }
@@ -273,7 +278,48 @@ class MxGMailAdapter : NSObject, MxMailboxAdapter {
                 MxLog.verbose( "No message found.")
             }
             
-            fetchMessagesCallback!( messages: messages, error: nil)
+            fetchMessageListCallback!( messages: messages, error: nil)
+    }
+    
+    func sendFetchMessageRequest(messagesId messageId: MxRemoteId, callback: MxFetchMessageCallback) {
+        
+        MxLog.debug("Sending fetch message request to mailbox \(mailbox.email) \(messageId)")
+        
+        self.fetchMessageCallback = callback
+        
+        let query = GTLQueryGmail.queryForUsersMessagesGet()
+        query.identifier = messageId.value
+        
+        service.executeQuery( query
+            , delegate:self
+            , didFinishSelector:#selector(MxGMailAdapter.parseMessageWithTicket(_:finishedWithObject:error:)))
+    }
+    
+    
+    func parseMessageWithTicket(
+        ticket: GTLServiceTicket,
+        finishedWithObject response: GTLGmailMessage ,
+                           error: NSError?) {
+        
+        MxLog.debug("Receiving fetch message response from mailbox \(mailbox.email)")
+        
+        if let error = error {
+            
+            MxLog.error("Fetching message failed...")
+            MxLog.error(error.localizedDescription)
+            
+            fetchMessageCallback!(
+                message: nil,
+                error: MxAdapterError.ProviderReturnedConnectionError(rootError: error))
+            
+            return
+        }
+        
+        let message = MxMessageRemote()
+        message.remoteId = MxRemoteId( value: response.identifier)
+        message.snippet = response.snippet
+        
+        fetchMessageCallback!( message: message, error: nil)
     }
     
     

@@ -14,17 +14,20 @@ struct MxMessageSO: MxStateObjectProtocol, MxMessageProtocol {
     
     var internalId: MxInternalId?
     var remoteId: MxRemoteId?
+    var snippet: String?
     
     init(){}
     
-    init( internalId: MxInternalId, remoteId: MxRemoteId){
+    init( internalId: MxInternalId, remoteId: MxRemoteId, snippet: String?){
         self.internalId = internalId
         self.remoteId = remoteId
+        self.snippet = snippet
     }
     
     init( model: MxMessage){
         self.internalId = model.internalId
         self.remoteId = model.remoteId
+        self.snippet = model.snippet
     }
     
 }

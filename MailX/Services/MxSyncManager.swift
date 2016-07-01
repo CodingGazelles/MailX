@@ -102,13 +102,13 @@ class MxSyncManager {
                 
             case let .Success( mailbox):
                 
-                self.refreshLabelsDataOfMailbox(mailbox: mailbox)
+                self._refreshLabelsDataOfMailbox(mailbox: mailbox)
                     
                     .onSuccess { _ in
                         
                         MxLog.debug("Refreshing labels successfull \(mailbox.email)")
                         
-                        self.refreshMessagesDataOfMailbox(mailbox: mailbox)
+                        self._refreshMessagesDataOfMailbox(mailbox: mailbox)
                             
                             .onSuccess { _ in
                                 
@@ -163,7 +163,7 @@ class MxSyncManager {
     }
     
     
-    private func refreshLabelsDataOfMailbox( mailbox mailbox: MxMailbox) -> Future<Void, MxSyncError> {
+    private func _refreshLabelsDataOfMailbox( mailbox mailbox: MxMailbox) -> Future<Void, MxSyncError> {
         
         MxLog.debug("Refreshing labels of mailbox data \(mailbox.email)")
         
@@ -172,7 +172,7 @@ class MxSyncManager {
         ImmediateExecutionContext {
             
             // 1 Fetch remote labels
-            self.fetchLabelsOfMailbox( mailbox: mailbox)
+            self._fetchLabelsOfMailbox( mailbox: mailbox)
                 
                 .onSuccess { values in
                     
@@ -273,7 +273,7 @@ class MxSyncManager {
     }
     
     
-    private func fetchLabelsOfMailbox( mailbox mailbox: MxMailbox) -> Future<[MxLabelRemote], MxSyncError> {
+    private func _fetchLabelsOfMailbox( mailbox mailbox: MxMailbox) -> Future<[MxLabelRemote], MxSyncError> {
         
         MxLog.debug("Fetching labels of mailbox \(mailbox.email)")
         
@@ -287,7 +287,7 @@ class MxSyncManager {
                     
                     .onSuccess { values in
                         
-                        MxLog.debug("Did fetch labels of mailbox: \(mailbox.email)")
+                        MxLog.debug("Did fetch labels of mailbox: \(mailbox.email) \(values)")
                         
                         promise.success( values)
                         
@@ -325,7 +325,7 @@ class MxSyncManager {
     }
     
     
-    private func refreshMessagesDataOfMailbox ( mailbox mailbox: MxMailbox) -> Future<[MxMessage], MxSyncError> {
+    private func _refreshMessagesDataOfMailbox ( mailbox mailbox: MxMailbox) -> Future<Void, MxSyncError> {
         
         // 1 Fetch messages
         
@@ -335,13 +335,106 @@ class MxSyncManager {
         
         MxLog.debug("Refreshing messages of mailbox \(mailbox.email)")
         
-        let promise = Promise<[MxMessage], MxSyncError>()
+        let promise = Promise<Void, MxSyncError>()
         
         ImmediateExecutionContext {
             
-            //TODO: -
+            // 1 Fetch remote labels
+            self._fetchMessagesOfMailbox( mailbox: mailbox, labelCodes: [MxLabelCode.SYSTEM(.INBOX)])
+                
+                .onSuccess { values in
+                    
+                    // 2 Compare with local labels
+                    let operations: [BaseSyncOperation] = diffMROArrays(
+                        managedObjects: Array( mailbox.label(code: .SYSTEM(.INBOX))!.messages ),  // TODO: remove
+                        remoteObjects: values[MxLabelCode.SYSTEM(.INBOX)]!)     // TODO: remove
+                    
+                    MxLog.debug("Diff \(operations.debugDescription)")
+                    
+                    // 3 Update, remove or add labels in local db
+                    for operation in operations {
+                        
+                        switch operation.type {
+                            
+                        case .Delete:
+                            
+                            let _ = operation.objects.map { messageToRemove in
+                                self.dataStack.removeObject(object: messageToRemove as! MxMessage)
+                            }
+                            
+                        case .Insert:
+                            
+                            let _ = operation.objects.map { value in
+                                
+                                let messageToInsert = value as! MxMessageRemote
+                                
+                                let createdMessage = self.dataStack.createMessage(
+                                    internalId: MxInternalId(),
+                                    remoteId:  messageToInsert.remoteId!,
+                                    snippet: messageToInsert.snippet ?? "",  // TODO: remove
+                                    labels: [mailbox.label(code: .SYSTEM(.INBOX))!])
+                                
+                                mailbox.label(code: .SYSTEM(.INBOX))!.messages.insert(createdMessage.value!)
+                                
+                            }
+                            
+                        case .Noop: /* update */
+                            
+                            let _ = operation.objects
+                                .map { object in
+                                    
+                                    let label = object as! MxLabelRemote
+                                    
+                                    let labels = mailbox.labels
+                                        .filter { $0.remoteId == label.remoteId }
+                                    
+                                    guard labels.count == 1 else {
+                                        
+                                        let error = MxSyncError.UndexpectedError(
+                                            object: label,
+                                            message: "Label to update can't be found in DB",
+                                            rootError: nil)
+                                        
+                                        MxLog.error("Label to update can't be found in DB \(label)", error: error)
+                                        
+                                        promise.failure( error)
+                                        
+                                        return
+                                    }
+                                    
+                                    let labelToUpdate = labels[0]
+                                    labelToUpdate.code = label.code
+                                    labelToUpdate.name = label.name
+                                    labelToUpdate.ownerType = label.ownerType
+                                    
+                            }
+                            
+                        }
+                        
+                    }
+                    
+                    if self.dataStack.hasChanges() {
+                        self.dataStack.saveContext()
+                    }
+                    
+                    promise.success()
+                    
+                }
+                
+                .onFailure { error in
+                    
+                    let networkError = MxSyncError.NetworkError(
+                        error: MxNetworkError.FetchError,
+                        message: "Error occurred while fetching labels of mailbox \(mailbox.email)",
+                        rootError: error)
+                    
+                    promise.failure( networkError)
+                    
+            }
+                
+           
             
-            promise.success([MxMessage]())
+            
             
         }
         
@@ -350,28 +443,34 @@ class MxSyncManager {
     }
     
     
-    private func fetchMessagesOfMailbox( mailbox mailbox: MxMailbox) -> Future<[MxMessageRemote], MxSyncError> {
+    private func _fetchMessagesOfMailbox( mailbox mailbox: MxMailbox, labelCodes: [MxLabelCode] = [MxLabelCode]()) -> Future<[MxLabelCode:[MxMessageRemote]], MxSyncError> {
         
         MxLog.debug("Fetching messages of mailbox \(mailbox.email)")
         
-        let promise = Promise<[MxMessageRemote], MxSyncError>()
+        let promise = Promise<[MxLabelCode:[MxMessageRemote]], MxSyncError>()
         
         ImmediateExecutionContext {
             
             if mailbox.connected {
                 
-                let labelsIds = [
-                    MxLabelCode.SYSTEM(.INBOX),
-                    MxLabelCode.SYSTEM(.STARRED),
-                    MxLabelCode.SYSTEM(.UNREAD)]
+                var codes = [MxLabelCode]()
                 
-                mailbox.proxy.fetchMessageListInLabels(labelIds: labelsIds)
+                codes.appendContentsOf(labelCodes)
+                
+                if codes.count == 0 {
+                    codes.appendContentsOf( [
+                        .SYSTEM(.INBOX),
+                        .SYSTEM(.STARRED),
+                        .SYSTEM(.UNREAD)])
+                }
+                
+                mailbox.proxy.fetchMessageListInLabels(labelCodes: codes)
                     
                     .onSuccess { values in
                         
-                        MxLog.debug("Did fetch messages of mailbox: \(mailbox.email)")
+                        MxLog.debug("Did fetch messages of mailbox: \(mailbox.email) \(values)")
                         
-                        promise.success( values)
+                        promise.success(values)
                         
                     }
                     

@@ -15,14 +15,13 @@
         <attribute name="name_" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="remoteId_" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <relationship name="labels_" toMany="YES" deletionRule="Cascade" destinationEntity="MxLabel" inverseName="mailbox_" inverseEntity="MxLabel" syncable="YES"/>
-        <relationship name="messages_" toMany="YES" deletionRule="Cascade" destinationEntity="MxMessage" inverseName="mailbox_" inverseEntity="MxMessage" syncable="YES"/>
         <relationship name="provider_" maxCount="1" deletionRule="Nullify" destinationEntity="MxProvider" inverseName="mailboxes_" inverseEntity="MxProvider" syncable="YES"/>
     </entity>
     <entity name="MxMessage" representedClassName=".MxMessage" syncable="YES">
         <attribute name="internalId_" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="remoteId_" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="snippet_" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="labels_" toMany="YES" deletionRule="Nullify" destinationEntity="MxLabel" inverseName="messages_" inverseEntity="MxLabel" syncable="YES"/>
-        <relationship name="mailbox_" maxCount="1" deletionRule="Nullify" destinationEntity="MxMailbox" inverseName="messages_" inverseEntity="MxMailbox" syncable="YES"/>
     </entity>
     <entity name="MxProvider" representedClassName=".MxProvider" syncable="YES">
         <attribute name="code_" optional="YES" attributeType="String" syncable="YES"/>
@@ -33,7 +32,7 @@
     </entity>
     <elements>
         <element name="MxLabel" positionX="-101" positionY="-193" width="128" height="150"/>
-        <element name="MxMailbox" positionX="-281" positionY="-297" width="128" height="150"/>
+        <element name="MxMailbox" positionX="-281" positionY="-297" width="128" height="135"/>
         <element name="MxMessage" positionX="-344" positionY="-18" width="128" height="105"/>
         <element name="MxProvider" positionX="-497" positionY="-315" width="128" height="120"/>
     </elements>

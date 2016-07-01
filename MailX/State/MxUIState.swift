@@ -19,8 +19,19 @@ protocol MxStateType : ReSwift.StateType, Loggable {}
 
 struct MxAppState: MxStateType {
     
-    var mailboxList = [MxMailboxSO:MxMailboxState]()
-    var selectedMailbox: MxMailboxSO?
+//    var mailboxList = [MxMailboxSO:MxMailboxState]()
+//    var selectedMailbox: MxMailboxSO?
+    
+    var tabList = [MxTabItemState]()
+    var selectedTabitem = 0
+    
+    func selectedTab() -> MxTabItemState {
+        
+    }
+    
+    func tabItemForEmail( email: String) -> MxTabItemState {
+        return tabList.filter{ $0.mailboxState?.mailbox.email == email }[0]
+    }
     
     var propertiesState = MxPropertiesState()
     var errorsState = MxErrorsState()
@@ -30,9 +41,16 @@ struct MxAppState: MxStateType {
     
 }
 
-//struct MxProvidersState: MxStateType {
-//    var providers = [MxProviderSO]()
-//}
+enum MxTabItemType {
+    case MAILBOX
+    case MAIL_READER
+    case MAIL_EDITOR
+}
+
+struct MxTabItemState: MxStateType {
+    var tabItemType = MxTabItemType.MAILBOX
+    var mailboxState: MxMailboxState?
+}
 
 struct MxMailboxState: MxStateType {
     
@@ -64,7 +82,9 @@ struct MxLabelsState: MxStateType {
             return allLabels
         default:
             return allLabels
-                |> filter(){ self.defaultLabels.contains($0.code!)}
+                |> filter{ (label: MxLabelSO) -> Bool in
+                    return self.defaultLabels.contains( label.code.toString())
+            }
         }
     }
     
@@ -75,7 +95,15 @@ struct MxLabelsState: MxStateType {
 }
 
 struct MxMessageState: MxStateType {
-//    var messages = [MxMessageRow]()
+    
+    var allMessages = [MxMessageSO]()
+    
+    func visibleMessages() -> [MxMessageSO] {
+        return allMessages
+            |> filter { (message: MxMessageSO) -> Bool in
+                return message.
+        }
+    }
 }
 
 struct MxPropertiesState: MxStateType {

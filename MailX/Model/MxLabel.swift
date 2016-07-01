@@ -14,8 +14,6 @@ import CoreData
 // MARK: - MxLabel
 
 class MxLabel: MxBaseManagedObject, MxLabelProtocol {
-
-// Insert code here to add functionality to your managed object subclass
     
     static let modelName = "MxLabel"
     
@@ -48,7 +46,7 @@ class MxLabel: MxBaseManagedObject, MxLabelProtocol {
     
     var code: MxLabelCode {
         get {
-            return MxLabelCode(string: code_)
+            return MxLabelCode(code: code_ ?? "NIL")
         }
         set {
             self.code_ = newValue.toString()
@@ -70,6 +68,15 @@ class MxLabel: MxBaseManagedObject, MxLabelProtocol {
         }
         set {
             self.mailbox_ = newValue
+        }
+    }
+    
+    var messages: Set<MxMessage> {
+        get {
+            return (messages_ ?? Set<MxMessage>()) as! Set<MxMessage>
+        }
+        set {
+            self.messages_ = newValue
         }
     }
     

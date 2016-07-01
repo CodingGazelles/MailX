@@ -10,14 +10,14 @@ import Foundation
 
 
 
-typealias MxFetchLabelsCallback = (labels: [MxLabelRemote]?, error: MxAdapterError?) -> Void
+typealias MxFetchLabelListCallback = (labels: [MxLabelRemote]?, error: MxAdapterError?) -> Void
 
-class MxFetchLabelsCommand : MxNetworkCommand {
+class MxFetchLabelListCommand : MxNetworkCommand {
     
 
-    var callback: MxFetchLabelsCallback
+    var callback: MxFetchLabelListCallback
     
-    init( adapter: MxMailboxAdapter, callback: MxFetchLabelsCallback) {
+    init( adapter: MxMailboxAdapter, callback: MxFetchLabelListCallback) {
         
         self.callback = callback
         super.init( adapter: adapter)
@@ -27,11 +27,11 @@ class MxFetchLabelsCommand : MxNetworkCommand {
     override func main() {
         
         MxLog.debug("\(#function) fetch labels ticket sending request to mailbox: \(adapter.mailbox.email)")
-        adapter.sendFetchLabelsRequest( callback: adapterDidFetchLabels)
+        adapter.sendFetchLabelListRequest( callback: adapterDidFetchLabelList)
         
     }
     
-    func adapterDidFetchLabels( labels labels: [MxLabelRemote]?, error: MxAdapterError?) {
+    func adapterDidFetchLabelList( labels labels: [MxLabelRemote]?, error: MxAdapterError?) {
         
         MxLog.debug("\(#function) fetch labels ticket received response of mailbox: \(adapter.mailbox.email)")
         state = .Finished
